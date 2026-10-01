@@ -1,0 +1,58 @@
+
+== S1  Corridor C: RP^2 (6-vertex triangulation) - Tor defect under coefficient change ==
+[OK]   every edge lies in exactly two triangles (closed surface)
+[OK]   Euler characteristic V-E+F = 6-15+10 = 1
+[OK]   boundary of boundary is zero (d1 @ d2 = 0)
+       Betti numbers over Q  : [1, 0, 0]
+       Betti numbers over F2 : [1, 1, 1]
+       Smith normal form of d2 over Z: invariant factors > 1 = [2]  -> torsion of H_1(Z)
+[OK]   H_*(RP^2;Z) = Z, Z/2, 0
+[OK]   dim H_*(;Q) = (1,0,0) but dim H_*(;F2) = (1,1,1)
+[OK]   Euler characteristic is coefficient-independent (= 1)
+[OK]   universal coefficient theorem prediction [1, 1, 1] matches direct computation [1, 1, 1]
+       Defect of the 'commuting square' H_n(C;Z)(x)k -> H_n(C(x)k) in degree 2 with k=F2: Tor(Z/2,F2)=F2 (dim 1)
+[OK]   graph: boundary rank is orientation- and coefficient-independent (V-c)
+[OK]   graph: no torsion (H_1 of a graph is free), so no Tor defect arises in 1-dim
+       graph beta_1 = E - V + c = 9 - 7 + 1 = 3
+
+== S2  Corridor B: weighted graph -> Markov kernel (loss, gauge, lumping) ==
+[OK]   directed case: row-normalisation forgets W ~ Lambda*W (row scales are the lost information)
+[OK]   undirected case: stationary law pi ~ degree
+[OK]   undirected case: W is recovered from (P, pi) up to ONE global scalar
+[OK]   spectrum of P equals spectrum of symmetric normalisation D^-1/2 W D^-1/2 (similarity by D^1/2)
+       lazy ring n=24, t=20: max|P^t - 1 pi| = 8.37e-02,  |lambda_2|^t = 7.09e-01
+       lazy ring n=24, t=60: max|P^t - 1 pi| = 3.10e-02,  |lambda_2|^t = 3.57e-01
+       lazy ring n=24, t=120: max|P^t - 1 pi| = 1.06e-02,  |lambda_2|^t = 1.27e-01
+[OK]   convergence rate of P^t is governed by |lambda_2| (spectral gap), non-vacuously (error is far above machine precision)
+[OK]   lumpable chain: intertwining P V = V P^ holds exactly (Kemeny-Snell)
+[OK]   non-lumpable chain: intertwining defect = 0.100 > 0 (naive aggregation is NOT a Markov kernel on blocks)
+[OK]   pi-weighted compression gives a genuine stochastic matrix on blocks
+[OK]   ...and its stationary law is the lumped stationary law  (same mechanism as Galerkin / conditional expectation)
+
+== S3  Corridor A/D: a matrix is typed by its gauge action, not by its shape ==
+[OK]   Endo (similarity P A P^-1): eigenvalues are gauge-invariant
+[OK]   Bil (congruence P^T A P): eigenvalues are NOT gauge-invariant -> 'eigenvalues of a Gram/Hessian matrix' need a declared metric
+[OK]   Bil: inertia (signature) (3, 3) is the congruence invariant (Sylvester)
+       cond(K) for n=16,32,64,128 : 116, 441, 1712, 6744  (ratio ~4 per doubling => O(h^-2))
+[OK]   stiffness-matrix conditioning grows like h^-2
+[OK]   eigenvalues of the stiffness matrix alone change with the basis
+[OK]   generalised eigenvalues of the pencil (K, M) are basis-invariant
+       smallest generalised eigenvalue 9.9702  vs  pi^2 = 9.8696
+[OK]   energy a(u_h,u_h) is gauge-invariant (x^T K x = x'^T K' x')
+[OK]   conditioning is basis-dependent: cond(K)=32.2, cond(K')=2725.9 -> cost is NOT a gauge-invariant observable
+[OK]   Galerkin orthogonality a(u-u_h, v_h) = 0 (max |.| = 1.2e-15)
+[OK]   u_h is the energy-norm best approximation in V_h (all 500 perturbations are worse)
+
+== S4  Composition of graded claims: affine error monoid and a rejected composition ==
+[OK]   (L,eps) composition is associative with unit (1,0)  [monoid of affine error bounds]
+[OK]   h=0.1: observed 1.60e-03 <= composed bound 1.68e-03
+[OK]   h=0.01: observed 1.13e-04 <= composed bound 1.17e-04
+[OK]   h=0.001: observed 9.97e-04 <= composed bound 1.00e-03
+[OK]   h=0.0001: observed 9.76e-03 <= composed bound 1.00e-02
+[OK]   stage 1 error 1e-6 is amplified to ~1e-2 by a downstream map with L ~ 1/h: composition needs a declared stability constant
+
+== S5  Composition of loss: observable flow ==
+[OK]   kernel pair of g.f contains kernel pair of f: information lost never returns (monotone)
+       in 2000 random finite trials, g destroyed an observable that f still preserved 20 times -> composition must be checked per observable
+
+All sanity checks passed.
