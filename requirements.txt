@@ -1,0 +1,5 @@
+# 计算验证依赖(mel-research/experiments/sanity_checks.py)
+# 测试环境:Python 3.11, numpy 2.4.6, scipy 1.17.1, sympy 1.14.0
+numpy>=1.26
+scipy>=1.11
+sympy>=1.12
