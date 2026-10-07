@@ -1,0 +1,149 @@
+OAI lean files: 121734
+
+== files / LOC / topics by area ==
+Analysis               files= 26412 loc=  6820967 topics=124
+NumberTheory           files= 23530 loc=  2993545 topics=28
+Combinatorics          files= 16338 loc=  5773156 topics=74
+Geometry               files= 14057 loc=  2245079 topics=62
+Probability            files= 12971 loc=  2250399 topics=71
+MathematicalPhysics    files=  6736 loc=  1281498 topics=24
+Computability          files=  5038 loc=  1457913 topics=29
+GroupTheory            files=  4192 loc=   539798 topics=22
+MeasureTheory          files=  2950 loc=   275770 topics=6
+Algebra                files=  2081 loc=   294472 topics=22
+Topology               files=  1249 loc=   140931 topics=6
+RepresentationTheory   files=  1108 loc=   359125 topics=23
+SetTheory              files=  1018 loc=   266449 topics=2
+LinearAlgebra          files=   954 loc=   279070 topics=10
+AlgebraicGeometry      files=   857 loc=   218533 topics=12
+Dynamics               files=   664 loc=   186764 topics=7
+RingTheory             files=   536 loc=   123464 topics=9
+InformationTheory      files=   339 loc=    72708 topics=8
+CategoryTheory         files=   312 loc=   176873 topics=4
+GameTheory             files=   303 loc=   109163 topics=2
+AlgebraicTopology      files=    45 loc=    20795 topics=5
+ModelTheory            files=    42 loc=    23801 topics=3
+Optimization           files=     2 loc=      269 topics=1
+
+import edges: intra-area=275614  cross-area=985  (cross share 0.4%)
+
+== top cross-area edges (src -> tgt: count) ==
+Combinatorics        -> Geometry             264
+Dynamics             -> Geometry             126
+Geometry             -> Analysis             120
+MathematicalPhysics  -> Computability        85
+InformationTheory    -> Analysis             59
+MathematicalPhysics  -> Analysis             56
+Combinatorics        -> Analysis             39
+Geometry             -> Dynamics             32
+GroupTheory          -> Computability        32
+Analysis             -> Geometry             21
+Probability          -> RepresentationTheory 16
+MathematicalPhysics  -> Geometry             9
+Probability          -> MathematicalPhysics  7
+Geometry             -> Combinatorics        6
+Topology             -> AlgebraicTopology    6
+GroupTheory          -> Combinatorics        6
+RepresentationTheory -> Analysis             6
+AlgebraicTopology    -> Geometry             6
+Combinatorics        -> GroupTheory          5
+Probability          -> Analysis             4
+Geometry             -> Topology             4
+Topology             -> GroupTheory          4
+Analysis             -> MeasureTheory        4
+RepresentationTheory -> Probability          4
+RepresentationTheory -> LinearAlgebra        4
+
+== cross-area imports received, by target area ==
+Geometry               428
+Analysis               288
+Computability          123
+Dynamics               32
+Combinatorics          20
+GroupTheory            20
+RepresentationTheory   19
+AlgebraicTopology      10
+MathematicalPhysics    9
+Probability            9
+LinearAlgebra          7
+Topology               6
+InformationTheory      4
+MeasureTheory          4
+RingTheory             3
+Algebra                1
+NumberTheory           1
+CategoryTheory         1
+
+== Mathlib modules most imported (files) ==
+ 30846 Mathlib
+   810 Mathlib.Tactic
+   766 Mathlib.Tactic.Linarith
+   716 Mathlib.Tactic.Ring
+   392 Mathlib.Tactic.NormNum
+   368 Mathlib.Tactic.FieldSimp
+   335 Mathlib.Basic.Real.Basic
+   322 Mathlib.Tactic.Positivity
+   238 Mathlib.Tactic.FinCases
+   220 Mathlib.Analysis.SpecialFunctions.Pow.Real
+   213 Mathlib.Analysis.SpecificLimits.Basic
+   194 Mathlib.Algebra.Order.BigOperators.Group.Finset
+   180 Mathlib.Analysis.Complex.Basic
+   172 Mathlib.Algebra.BigOperators.Ring.Finset
+   164 Mathlib.Data.Fintype.BigOperators
+   163 Mathlib.Analysis.SpecialFunctions.Log.Basic
+   162 Mathlib.Algebra.BigOperators.Fin
+   159 Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
+   140 Mathlib.MeasureTheory.Integral.Prod
+   137 Mathlib.Algebra.BigOperators.Group.Finset.Basic
+   131 Mathlib.MeasureTheory.Integral.DominatedConvergence
+   127 Mathlib.Analysis.Calculus.MeanValue
+   122 Mathlib.Tactic.IntervalCases
+   120 Mathlib.Analysis.Normed.Module.FiniteDimension
+   114 Mathlib.Analysis.SpecialFunctions.Exp
+   106 Mathlib.MeasureTheory.Integral.Bochner.Basic
+   105 Mathlib.Tactic.Abel
+   101 Mathlib.MeasureTheory.Function.L2Space
+   100 Mathlib.Data.Finset.Max
+    97 Mathlib.Data.Fintype.EquivFin
+    94 Mathlib.MeasureTheory.Integral.Bochner.Set
+    94 Mathlib.MeasureTheory.Measure.Lebesgue.Basic
+    89 Mathlib.Algebra.Order.BigOperators.Ring.Finset
+    87 Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+    87 Mathlib.Data.Fintype.Pi
+    86 Mathlib.Data.ZMod.Basic
+    84 Mathlib.Analysis.SpecificLimits.Normed
+    81 Mathlib.Analysis.InnerProductSpace.PiL2
+    81 Mathlib.Data.List.OfFn
+    80 Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+
+== selected hub-like Mathlib modules: files importing, number of OAI areas ==
+Homology                 modules= 64 file-imports=   222 areas=5/23
+Dual                     modules= 16 file-imports=   151 areas=10/23
+TensorProduct            modules= 23 file-imports=    97 areas=8/23
+Kernel                   modules= 30 file-imports=    98 areas=10/23
+ConditionalExpectation   modules=  9 file-imports=    34 areas=4/23
+Markov                   modules=  4 file-imports=    43 areas=7/23
+Kernel.Basic             modules=  1 file-imports=     5 areas=3/23
+Projection               modules=  9 file-imports=   113 areas=11/23
+Orthogonal               modules=  5 file-imports=    22 areas=3/23
+Quotient                 modules= 27 file-imports=   182 areas=12/23
+Galois                   modules=  3 file-imports=     5 areas=3/23
+Adjunction               modules=  6 file-imports=    16 areas=2/23
+Functor                  modules= 21 file-imports=    53 areas=5/23
+Representation           modules= 22 file-imports=    80 areas=3/23
+Semigroup                modules=  2 file-imports=     3 areas=3/23
+Fourier                  modules= 15 file-imports=   116 areas=9/23
+Lagrange                 modules=  1 file-imports=     9 areas=4/23
+Convex                   modules= 49 file-imports=   282 areas=15/23
+Hilbert                  modules=  1 file-imports=     4 areas=1/23
+InnerProduct             modules= 41 file-imports=   595 areas=9/23
+Spectrum                 modules= 10 file-imports=    35 areas=8/23
+Matrix                   modules= 64 file-imports=   451 areas=13/23
+Module.Basic             modules=  5 file-imports=    71 areas=7/23
+Simplicial               modules= 29 file-imports=    52 areas=4/23
+Cohomology               modules=  6 file-imports=    19 areas=3/23
+GroupAction              modules=  4 file-imports=    33 areas=8/23
+MulAction                modules=  3 file-imports=    15 areas=6/23
+Equiv                    modules= 34 file-imports=   397 areas=16/23
+Isometry                 modules=  3 file-imports=    14 areas=6/23
+Basis                    modules= 22 file-imports=   165 areas=9/23

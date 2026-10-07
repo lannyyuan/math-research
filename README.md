@@ -40,6 +40,8 @@
 ├── GLOSSARY.md                  术语表(中英对照)
 ├── CONTRIBUTING.md              证据标签、写作与复核规范
 ├── requirements.txt             计算验证依赖
+├── analysis/
+│   └── openai-math/             对 openai/math 的影响分析(含探针脚本与输出)
 ├── tools/
 │   └── build_complete_report.py 重新生成单一完整版
 ├── templates/

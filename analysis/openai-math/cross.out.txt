@@ -1,0 +1,32 @@
+cross-area edges: 904  distinct target families: 84  distinct source families: 70
+
+top target families (area.family):
+  263 OAI.Geometry.NilpotentCharts
+  107 OAI.Analysis.RCDHeat
+   70 OAI.Computability.QuantumFactoring
+   55 OAI.Analysis.Quantum
+   46 OAI.Geometry.SingularHomology
+   38 OAI.Analysis.MatrixSigning
+   32 OAI.Dynamics.EntropyCounterexample
+   32 OAI.Computability.FiniteCompiler
+   30 OAI.Analysis.CoulombRadii
+   11 OAI.Geometry.Cannon
+   10 OAI.Computability.SolenoidalRecorder
+    9 OAI.Combinatorics.Coboundary
+    9 OAI.Geometry.ComplexBundle
+    9 OAI.Computability.Interspersed
+    9 OAI.Geometry.RecorderBoxes
+
+top source families:
+  263 Combinatorics/SumProduct
+  111 MathematicalPhysics/ContinuumCoulomb
+  107 Geometry/RCD
+   51 InformationTheory/Entanglement
+   46 Dynamics/EntropyCounterexample
+   38 Combinatorics/ThinTrees
+   33 Geometry/SingularHomology
+   30 GroupTheory/SimpleOvergroups
+   20 MathematicalPhysics/RecorderFlows
+   12 Probability/CoordinateSweeps
+
+top-5 target families absorb 60% of cross-area edges; top-15 absorb 81%
