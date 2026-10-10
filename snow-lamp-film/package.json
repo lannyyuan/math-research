@@ -1,0 +1,30 @@
+{
+  "name": "snow-lamp-film",
+  "version": "1.0.0",
+  "private": true,
+  "description": "《雪地里的那盏灯》动画短片 — Remotion 源工程",
+  "scripts": {
+    "studio": "remotion studio",
+    "check": "node scripts/check-subtitles.mjs",
+    "bake": "node scripts/bake.mjs",
+    "music": "python3 -I scripts/make_music.py && ffmpeg -y -loglevel error -i public/audio/score.wav -c:a aac -b:a 160k public/audio/score.m4a",
+    "font": "python3 scripts/subset_font.py",
+    "stills": "node scripts/stills.mjs",
+    "audit": "python3 -I scripts/audit_warm.py out/audit",
+    "render": "bash scripts/render.sh"
+  },
+  "dependencies": {
+    "@remotion/bundler": "4.0.534",
+    "@remotion/cli": "4.0.534",
+    "@remotion/media-utils": "4.0.534",
+    "@remotion/renderer": "4.0.534",
+    "@types/react": "18.3.12",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "remotion": "4.0.534",
+    "typescript": "5.6.3"
+  },
+  "devDependencies": {
+    "lxgw-wenkai-webfont": "1.7.0"
+  }
+}
