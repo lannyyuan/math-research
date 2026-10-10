@@ -621,7 +621,6 @@ export const ASSETS: Record<string, Asset> = {
   'sky-dawn': {w: 2304, h: 900, format: 'jpeg', Comp: () => <Sky top="#7fa6cf" mid="#a9c8e0" low="#d3e5ee" haze="#eaf3f5" light seed={8} />},
   'trees-far': {w: 3400, h: 420, format: 'png', Comp: () => <Trees seed={5} w={3400} h={420} color="#1c2b5e" minH={120} maxH={250} gap={44} blur={1.8} fade={0.97} />},
   'trees-mid': {w: 3400, h: 520, format: 'png', Comp: () => <Trees seed={9} w={3400} h={520} color="#121d4a" minH={200} maxH={400} gap={84} blur={1.3} fade={1} />},
-  'trees-near': {w: 3400, h: 700, format: 'png', Comp: () => <Trees seed={14} w={3400} h={700} color="#0a1236" minH={340} maxH={640} gap={230} blur={0.9} fade={1} haze={false} />},
   'snow-a': {w: 3400, h: 700, format: 'png', Comp: () => <Snow w={3400} h={700} seed={2} />},
   'snow-b': {w: 3400, h: 700, format: 'png', Comp: () => <Snow w={3400} h={700} seed={7} amp={34} />},
 };

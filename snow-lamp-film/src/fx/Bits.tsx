@@ -1,6 +1,6 @@
 import React, {useMemo} from 'react';
 import {useCurrentFrame, useVideoConfig, interpolate} from 'remotion';
-import {Art, ink} from '../art/ink';
+import {Art} from '../art/ink';
 import {ArtView} from '../art/ArtView';
 import {C} from '../palette';
 import type {P} from '../art/ink';
@@ -55,7 +55,6 @@ export const QuestionMark: React.FC<{x: number; y: number; s?: number; age: numb
     </g>
   );
 };
-export const _unused = ink;
 
 /** 雪堆：白色水彩 + 蓝灰阴影，几笔断断续续的墨线 */
 export const Mound: React.FC<{x: number; y: number; w?: number; h?: number; seed?: number}> = ({x, y, w = 260, h = 76, seed = 1}) => {

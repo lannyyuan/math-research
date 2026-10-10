@@ -118,4 +118,3 @@ export const S8: React.FC<{len: number}> = ({len}) => {
     </SceneWrap>
   );
 };
-export const _hop = hopAt;

@@ -91,4 +91,3 @@ export const OilCan: React.FC<{x: number; y: number; s?: number; tip?: number}> 
     <rect x={20} y={-26} width={30} height={14} fill="#6f86b2" opacity={0.6} />
   </g>
 );
-export const _p: P[] = [];
