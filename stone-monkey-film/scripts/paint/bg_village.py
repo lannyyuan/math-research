@@ -3,6 +3,33 @@ from ccommon import *
 import sys
 W, H = 2900, 1080
 which = sys.argv[1:] or ['far', 'mid', 'near']
+ROSE, LILAC = hexc('#E9A38C'), hexc('#9C86B8')
+
+
+def dawn_of(L, kind):
+    """灯亮以后的晨光：天边红霞（#E9A38C）、高处淡紫霞（#9C86B8），仍然是透明的水彩 + 留白。"""
+    C = Canvas(L.w, L.h)
+    C.a = L.a.copy()
+    rgb = grade.dawn(L.rgb, sat=0.9)
+    yy = (np.arange(L.h, dtype=F) / L.h)[:, None, None]
+    xx = (np.arange(L.w, dtype=F) / L.w)[None, :, None]
+    if kind == 'far':
+        glow = np.exp(-(((yy - 0.62) / 0.2) ** 2)) * (0.5 + 0.5 * np.exp(-(((xx - 0.52) / 0.35) ** 2)))
+        high = np.clip((0.55 - yy) / 0.55, 0, 1) ** 1.2
+        a_rose = np.clip(glow * 0.62, 0, 0.7)
+        a_lilac = np.clip(high * 0.34, 0, 0.4)
+        rgb = rgb * (1 - a_lilac) + LILAC * a_lilac
+        rgb = rgb * (1 - a_rose) + ROSE * a_rose
+        rgb = rgb * np.array([1.03, 1.0, 0.98], F)
+    elif kind == 'mid':
+        k = 0.2 * np.exp(-(((yy - 0.75) / 0.25) ** 2))
+        rgb = rgb * (1 - k) + ROSE * k
+        rgb = rgb * np.array([1.04, 0.99, 0.95], F)
+    else:
+        rgb = rgb * np.array([1.05, 0.99, 0.94], F)
+    C.rgb = np.clip(rgb, 0, 1).astype(F)
+    return C
+
 
 # ───────── 远：天 + 雪山 + 灯盘的位置留空（灯由影片里叠上去）
 if 'far' in which:
@@ -13,7 +40,7 @@ if 'far' in which:
     r2 = ridge_y(W, 770, 250, 52, rough=0.55, scale=480)
     mountain(S, r2, 840, N['far2'], N['mid1'], seed=12, tex=0.8, tex_op=0.28, haze=0.22)
     mist(S, 0, W, 780, 70, seed=13, op=0.6)
-    save_plate('village_far', S, variants=('night', 'lit', 'day', 'dawn'), gain=0.6, keep=0.15)
+    save_plate('village_far', S, variants=('night', 'lit', 'day', 'dawn'), gain=0.6, keep=0.15, overrides={'dawn': lambda L_: dawn_of(L_, 'far')})
 
 # ───────── 中：近山 + 河 + 田 + 小村
 if 'mid' in which:
@@ -39,7 +66,7 @@ if 'mid' in which:
         thatch_hut(M, x, y, w, w * 0.72, seed=40 + i, wall=N['stone_lt'], snow=0.0, door=True, window=(i % 2 == 0))
     for i, x in enumerate([990, 1330, 1620, 1800]):
         willow(M, x, 915 + (i % 2) * 8, 120 + 30 * (i % 3), seed=70 + i)
-    save_plate('village_mid', M, variants=('night', 'lit', 'day', 'dawn'), gain=0.55, keep=0.18)
+    save_plate('village_mid', M, variants=('night', 'lit', 'day', 'dawn'), gain=0.55, keep=0.18, overrides={'dawn': lambda L_: dawn_of(L_, 'mid')})
 
 # ───────── 近：地面 + 大茅屋 + 老树 + 怪石 + 前景
 if 'near' in which:
@@ -64,7 +91,7 @@ if 'near' in which:
     for i, (x, w, h) in enumerate([(2400, 120, 70), (2560, 90, 50), (2760, 160, 90), (120, 140, 80)]):
         rock(Nn, x, 850, w, h, seed=60 + i, snow=0.2)
     grass_tufts(Nn, 0, W, gy, 90, seed=9, op=0.8)
-    save_plate('village_near', Nn, variants=('night', 'lit', 'day', 'dawn'), gain=0.55, keep=0.2)
+    save_plate('village_near', Nn, variants=('night', 'lit', 'day', 'dawn'), gain=0.55, keep=0.2, overrides={'dawn': lambda L_: dawn_of(L_, 'near')})
 
 
 # ───────── 近（空旷版）：没有大屋和老树的前景，给“远眺山谷”的镜头用
@@ -76,4 +103,4 @@ if 'near2' in which:
         rock(V, x, 880, w, h, seed=80 + i, snow=0.2)
     bamboo(V, 120, 880, 280, seed=18, n=4)
     grass_tufts(V, 0, W, gy, 80, seed=19, op=0.8)
-    save_plate('village_near2', V, variants=('night', 'lit', 'day', 'dawn'), gain=0.55, keep=0.2)
+    save_plate('village_near2', V, variants=('night', 'lit', 'day', 'dawn'), gain=0.55, keep=0.2, overrides={'dawn': lambda L_: dawn_of(L_, 'near')})

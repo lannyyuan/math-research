@@ -171,7 +171,7 @@ def main():
         kind = KIND.get(hero['img'].split('/')[0], '插图')
         hero['cap'] = f"{kind}：{hero['cap']}" if hero.get('cap') else kind
         hero.setdefault('alt', '')
-        pages.append({'i': p['i'], 'sec': p['sec'], 'startsSec': p['startsSec'], 'han': p['han'], 'hero': hero,
+        pages.append({'i': p['i'], 'sec': p['sec'], 'startsSec': p['startsSec'], 'han': p['han'], 'size': p['size'], 'hero': hero,
                       'paras': [{'text': q['text'], 'cont': q['cont'], 'tag': q['tag']} for q in p['paras']]})
 
     # —— 全文核对：页面上的字（章名 + 正文，去掉空白、引号、·）== 独立重新抽取的原文（按 ORDER 排序）
@@ -249,6 +249,7 @@ def main():
             for weight, cs in (('regular', chars), ('bold', bold_chars)):
                 out = pathlib.Path(td) / f'wk-{weight}.woff2'
                 miss = subset_font(weight, cs, out)
+                miss = [c for c in miss if c not in '‘’']      # 单引号只出现在代码里，故事正文没有；字体里没有它，无碍
                 if miss:
                     print(f'  （{weight}）字体里没有的字符：{"".join(miss)}')
                 fonts[weight] = base64.b64encode(out.read_bytes()).decode()

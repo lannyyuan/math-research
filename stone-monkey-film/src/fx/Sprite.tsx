@@ -38,9 +38,9 @@ export interface SpriteProps {
 export const Sprite: React.FC<SpriteProps> = ({name, layers, x, y, s = 0.7, flip = false, rot = 0, breathe = 0.008, sway = 0.5, walk = 0, t0 = 0, opacity = 1, style, filter, children, extra, clipBottom = 0, lo, pivot, alwaysShow, v: vOver}) => {
   const f = useCurrentFrame();
   const {fps} = useVideoConfig();
-  const showChars = useContext(CharsCtx);
+  const level = useContext(CharsCtx);
   const v = vOver ?? useVariant();
-  if (!showChars && !alwaysShow) return null;
+  if (level < 2 && !(alwaysShow && level >= 1)) return null;
   const t = f / fps + t0;
   const m = MT[name];
   if (!m) return null;
@@ -77,7 +77,7 @@ export const Sprite: React.FC<SpriteProps> = ({name, layers, x, y, s = 0.7, flip
 
 /** 脚下的软影（墨色，贴在地上） */
 export const GroundShadow: React.FC<{x: number; y: number; rx: number; ry?: number; o?: number}> = ({x, y, rx, ry, o = 0.5}) => {
-  const showChars = useContext(CharsCtx);
-  if (!showChars) return null;
+  const level = useContext(CharsCtx);
+  if (level < 2) return null;
   return <div style={{position: 'absolute', left: x - rx, top: y - (ry ?? rx * 0.14), width: rx * 2, height: (ry ?? rx * 0.14) * 2, borderRadius: '50%', background: `radial-gradient(ellipse at center, rgba(20,24,40,${o}) 0%, rgba(20,24,40,${o * 0.5}) 50%, rgba(20,24,40,0) 100%)`}} />;
 };

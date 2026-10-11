@@ -152,5 +152,99 @@
   "ax": 45.5,
   "ay": 147,
   "night": false
+ },
+ "girl_front": {
+  "w": 139,
+  "h": 355,
+  "ax": 69.0,
+  "ay": 340,
+  "night": true
+ },
+ "shiwa_side_up": {
+  "w": 127,
+  "h": 240,
+  "ax": 60.5,
+  "ay": 234,
+  "night": true
+ },
+ "shiwa_side_leg": {
+  "w": 127,
+  "h": 149,
+  "ax": 60.5,
+  "ay": 10,
+  "night": true
+ },
+ "herder_front": {
+  "w": 203,
+  "h": 561,
+  "ax": 101.0,
+  "ay": 545,
+  "night": true
+ },
+ "oldwoman_front": {
+  "w": 146,
+  "h": 342,
+  "ax": 73.0,
+  "ay": 328,
+  "night": true
+ },
+ "girl_side": {
+  "w": 117,
+  "h": 344,
+  "ax": 57.0,
+  "ay": 330,
+  "night": true
+ },
+ "herder_side": {
+  "w": 199,
+  "h": 562,
+  "ax": 101.0,
+  "ay": 546,
+  "night": true
+ },
+ "guard_front": {
+  "w": 245,
+  "h": 652,
+  "ax": 123.0,
+  "ay": 637,
+  "night": true
+ },
+ "shiwa_side_arm": {
+  "w": 55,
+  "h": 136,
+  "ax": 25.0,
+  "ay": 14.0,
+  "night": true
+ },
+ "shiwa_side_noarm": {
+  "w": 127,
+  "h": 379,
+  "ax": 52.5,
+  "ay": 375,
+  "night": true
+ },
+ "official_front": {
+  "w": 224,
+  "h": 547,
+  "ax": 112.0,
+  "ay": 531
+ },
+ "official_side": {
+  "w": 172,
+  "h": 545,
+  "ax": 87.0,
+  "ay": 529
+ },
+ "king_seated": {
+  "w": 372,
+  "h": 539,
+  "ax": 187.0,
+  "ay": 523
+ },
+ "god": {
+  "w": 538,
+  "h": 650,
+  "ax": 268.0,
+  "ay": 628
  }
 }

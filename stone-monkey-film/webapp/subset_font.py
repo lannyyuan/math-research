@@ -4,10 +4,11 @@
 需要：fonttools、brotli（pip）；node_modules/lxgw-wenkai-webfont（npm i 装好；本工程的 node_modules 指向 lighthouse-light-film 的）。
 build.py 直接 import subset_font() / subset_ttf_bytes() 来用。
 """
-import io, pathlib, re, sys, tempfile
+import io, logging, pathlib, re, sys, tempfile
 from fontTools.ttLib import TTFont
 from fontTools import subset, merge
 
+logging.getLogger('fontTools').setLevel(logging.ERROR)   # 裁字体时 FFTM/feat/morx 的“NOT subset”提示是无害的
 root = pathlib.Path(__file__).resolve().parent.parent
 pkg = root / "node_modules" / "lxgw-wenkai-webfont"
 

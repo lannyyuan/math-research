@@ -10,11 +10,11 @@ import './fx/fonts';
 export const totalFrames = (fps = timeline.fps) => timeline.scenes.reduce((a, s) => a + Math.round(s.len * fps), 0);
 
 /** subtitles=false：出不带字幕的干净画面；chars=false：只出背景和光（审计暖色/字幕带用） */
-export const Film: React.FC<{subtitles?: boolean; chars?: boolean; audio?: boolean}> = ({subtitles = true, chars = true, audio = true}) => {
+export const Film: React.FC<{subtitles?: boolean; chars?: boolean | 'none'; audio?: boolean}> = ({subtitles = true, chars = true, audio = true}) => {
   const {fps} = useVideoConfig();
   let from = 0;
   return (
-    <CharsCtx.Provider value={chars}>
+    <CharsCtx.Provider value={chars === 'none' ? 0 : chars ? 2 : 1}>
       <AbsoluteFill style={{background: '#080c18'}}>
         {audio ? <Audio src={staticFile('audio/score.m4a')} /> : null}
         {timeline.scenes.map((sc) => {

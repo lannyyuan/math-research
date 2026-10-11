@@ -58,5 +58,212 @@
   "ext": "png",
   "w": 2900,
   "h": 1080
+ },
+ "hill_far": {
+  "variants": [
+   "night",
+   "lit"
+  ],
+  "ext": "jpg",
+  "w": 2900,
+  "h": 1080
+ },
+ "hill_mid": {
+  "variants": [
+   "night",
+   "lit"
+  ],
+  "ext": "png",
+  "w": 2900,
+  "h": 1080
+ },
+ "hill_near": {
+  "variants": [
+   "night",
+   "lit"
+  ],
+  "ext": "png",
+  "w": 2900,
+  "h": 1080
+ },
+ "river_far": {
+  "variants": [
+   "night",
+   "lit"
+  ],
+  "ext": "jpg",
+  "w": 2900,
+  "h": 1500
+ },
+ "river_mid": {
+  "variants": [
+   "night",
+   "lit"
+  ],
+  "ext": "png",
+  "w": 2900,
+  "h": 1500
+ },
+ "gate_near": {
+  "variants": [
+   "night",
+   "lit"
+  ],
+  "ext": "png",
+  "w": 2900,
+  "h": 1080
+ },
+ "gate_far": {
+  "variants": [
+   "night",
+   "lit"
+  ],
+  "ext": "jpg",
+  "w": 2900,
+  "h": 1080
+ },
+ "river_near": {
+  "variants": [
+   "night",
+   "lit"
+  ],
+  "ext": "png",
+  "w": 2900,
+  "h": 1500
+ },
+ "gate_mid": {
+  "variants": [
+   "night",
+   "lit"
+  ],
+  "ext": "png",
+  "w": 2900,
+  "h": 1080
+ },
+ "river_bridge_broken": {
+  "variants": [
+   "night",
+   "lit"
+  ],
+  "ext": "png",
+  "w": 2900,
+  "h": 1500
+ },
+ "river_bridge_low": {
+  "variants": [
+   "night",
+   "lit"
+  ],
+  "ext": "png",
+  "w": 2900,
+  "h": 1500
+ },
+ "river_bridge_high": {
+  "variants": [
+   "night",
+   "lit"
+  ],
+  "ext": "png",
+  "w": 2900,
+  "h": 1500
+ },
+ "snow_hut_far": {
+  "variants": [
+   "night",
+   "lit"
+  ],
+  "ext": "jpg",
+  "w": 2900,
+  "h": 1080
+ },
+ "snow_hut_mid": {
+  "variants": [
+   "night",
+   "lit"
+  ],
+  "ext": "png",
+  "w": 2900,
+  "h": 1080
+ },
+ "snow_hut_near_clear": {
+  "variants": [
+   "night",
+   "lit"
+  ],
+  "ext": "png",
+  "w": 2900,
+  "h": 1080
+ },
+ "pagoda_near": {
+  "variants": [
+   "night",
+   "lit"
+  ],
+  "ext": "png",
+  "w": 1920,
+  "h": 3400
+ },
+ "snow_hut_near": {
+  "variants": [
+   "night",
+   "lit"
+  ],
+  "ext": "png",
+  "w": 2900,
+  "h": 1080
+ },
+ "shore_far": {
+  "variants": [
+   "night",
+   "lit"
+  ],
+  "ext": "jpg",
+  "w": 2900,
+  "h": 1080
+ },
+ "shore_mid": {
+  "variants": [
+   "night",
+   "lit"
+  ],
+  "ext": "png",
+  "w": 2900,
+  "h": 1080
+ },
+ "shore_near": {
+  "variants": [
+   "night",
+   "lit"
+  ],
+  "ext": "png",
+  "w": 2900,
+  "h": 1080
+ },
+ "shore_water_cover": {
+  "variants": [
+   "night",
+   "lit"
+  ],
+  "ext": "png",
+  "w": 2900,
+  "h": 1080
+ },
+ "pagoda_far": {
+  "variants": [
+   "night",
+   "lit"
+  ],
+  "ext": "jpg",
+  "w": 1920,
+  "h": 3400
+ },
+ "pagoda_mid": {
+  "variants": [
+   "night",
+   "lit"
+  ],
+  "ext": "png",
+  "w": 1920,
+  "h": 3400
  }
 }

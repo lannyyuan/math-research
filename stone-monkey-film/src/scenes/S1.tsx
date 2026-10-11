@@ -30,7 +30,7 @@ const Lamp: React.FC<{v: Variant}> = ({v}) => {
 
 export const S1: React.FC<{len: number}> = ({len}) => {
   const t = useT();
-  const show = useContext(CharsCtx);
+  const show = useContext(CharsCtx) >= 2;
   const night = ramp(t, 10.8, 14.2);       // 灯灭：白天 → 夜色
   // 镜头 A：远眺山谷（只有景）；镜头 B：村口（脚底始终在字幕带之上）
   const camA = useCam([{t: 0, ...at(1500, 540, 1.0)}, {t: T_WIPE + 2, ...at(1380, 548, 1.08)}]);
@@ -80,10 +80,10 @@ export const S1: React.FC<{len: number}> = ({len}) => {
         <PaperGlow x={STONE.mouth[0]} y={STONE.mouth[1] - 60} r={190} o={0.42 * speak + 0.8 * burst + 0.18 * crack} />
         {show && (
           <svg width={2900} height={1080} style={{position: 'absolute', left: 0, top: 0, mixBlendMode: 'screen', opacity: 0.9 * (1 - burst * 0.5)}}>
-            <defs><filter id="cg"><feGaussianBlur stdDeviation="2.5" /></filter></defs>
-            <g stroke="#e9e6da" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" fill="none" filter="url(#cg)"><path pathLength={100} strokeDasharray={100} strokeDashoffset={100 - 100 * crack} d="M1958 600 L1949 628 L1957 652 L1944 684 L1962 706 L1951 742 L1960 776 L1952 812" /></g>
-            <g stroke="#f7f4ea" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round" fill="none"><path pathLength={100} strokeDasharray={100} strokeDashoffset={100 - 100 * crack} d="M1958 600 L1949 628 L1957 652 L1944 684 L1962 706 L1951 742 L1960 776 L1952 812" /></g>
-            <g stroke="#f7f4ea" strokeWidth={1.2} strokeLinecap="round" fill="none" opacity={crack}><path d="M1957 652 L1976 664 L1990 680" /><path d="M1944 684 L1930 700" /><path d="M1951 742 L1970 750" /></g>
+            <defs><filter id="cg"><feGaussianBlur stdDeviation="2" /></filter></defs>
+            <g stroke="#dcd9cc" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" fill="none" filter="url(#cg)"><path pathLength={100} strokeDasharray={100} strokeDashoffset={100 - 100 * crack} d="M1958 600 L1949 628 L1957 652 L1944 684 L1962 706 L1951 742 L1960 776 L1952 812" /></g>
+            <g stroke="#efece0" strokeWidth={1.2} strokeLinecap="round" strokeLinejoin="round" fill="none"><path pathLength={100} strokeDasharray={100} strokeDashoffset={100 - 100 * crack} d="M1958 600 L1949 628 L1957 652 L1944 684 L1962 706 L1951 742 L1960 776 L1952 812" /></g>
+            <g stroke="#efece0" strokeWidth={0.9} strokeLinecap="round" fill="none" opacity={crack}><path d="M1957 652 L1976 664 L1990 680" /><path d="M1944 684 L1930 700" /><path d="M1951 742 L1970 750" /></g>
           </svg>
         )}
         <GroundShadow x={DOOR_X} y={GY + 2} rx={110} o={0.45 * nainaiO} />

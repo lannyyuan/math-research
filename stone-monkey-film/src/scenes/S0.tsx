@@ -17,7 +17,7 @@ export const S0: React.FC<{len: number}> = ({len}) => {
   const tw = 920, th = (TZ.h / TZ.w) * tw;
   const ew = 520, eh = (TE.h / TE.w) * ew;
   const tx = (W - tw) / 2, ty = 566;
-  const show = useContext(CharsCtx);
+  const show = useContext(CharsCtx) >= 2;
   return (
     <SceneWrap len={len} fadeIn={30} fadeOut={34}>
       <div style={{position: 'absolute', inset: 0, transform: `scale(${z})`, transformOrigin: '50% 40%'}}>

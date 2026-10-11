@@ -77,6 +77,21 @@
     return el;
   };
 
+  /* 翻页前先把前后几页的图解码好，翻过去时不会闪一下空白 */
+  const warmed = [];
+  function warm(pos) {
+    for (const d of [1, 2, -1]) {
+      const p = BOOK.pages[pos + d - 1];
+      if (!p) continue;
+      const im = new Image();
+      im.decoding = 'async';
+      im.src = imgSrc(p.hero.img);
+      im.decode().catch(() => {});
+      warmed.push(im);
+      if (warmed.length > 8) warmed.shift();
+    }
+  }
+
   /* ── 骨架 ── */
   const app = $('#app');
   const brand = h('button', {class: 'brand', 'aria-label': '回到封面', onclick: () => go(0)}, h('span', {html: ic.lamp}), h('span', {class: 't'}, BOOK.title));
@@ -106,7 +121,7 @@
       inner.append(h('div', {class: 'chap'}, h('span', {class: 'no'}, s.no), h('h2', {}, s.name), h('i', {class: 'rule'})));
     }
     for (const q of p.paras) inner.append(h('p', {class: q.cont ? 'cont' : ''}, q.tag ? h('span', {class: 'tag'}, q.tag) : null, q.text));
-    const size = p.han < 40 ? 'xs' : p.han < 100 ? 's' : '';
+    const size = p.size || '';
     const text = h('article', {class: `text ${size}`, tabindex: '-1', 'aria-label': `第 ${p.i} 页的文字`}, inner);
     text.addEventListener('scroll', () => fadeCue(text), {passive: true});
     return h('section', {class: 'spread', 'aria-label': `第 ${p.i} 页`}, pic, text);
@@ -167,6 +182,7 @@
     }
     lastHero = pos >= 1 && pos <= N ? heroKey(BOOK.pages[pos - 1]) : '';
     requestAnimationFrame(fadeAll);
+    if (pos >= 0 && pos <= N) warm(pos);
     app.dataset.pos = pos === 0 ? 'cover' : pos === END ? 'end' : 'page';
     prevBtn.disabled = pos === 0;
     nextBtn.disabled = pos === END;

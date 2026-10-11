@@ -43,7 +43,7 @@ export const Lit: React.FC<{world: (v: Variant) => React.ReactNode; pools: Pool[
           <VariantCtx.Provider value="lit">{world('lit')}</VariantCtx.Provider>
         </div>
       )}
-      {live.map((p, i) => (p.k === 'sand' ? <SandGlow key={i} x={p.x} y={p.y} r={p.r * 0.55} o={(p.o ?? 1) * 0.8} /> : p.k === 'fire' ? <FireGlow key={i} x={p.x} y={p.y} r={p.r * 0.8} o={p.o ?? 1} /> : <PearlGlow key={i} x={p.x} y={p.y} r={p.r * 0.75} o={p.o ?? 1} />))}
+      {live.map((p, i) => (p.k === 'sand' ? <SandGlow key={i} x={p.x} y={p.y} r={p.r * 0.55} o={(p.o ?? 1) * 0.8} /> : p.k === 'fire' ? <FireGlow key={i} x={p.x} y={p.y} r={p.r * 0.8} o={p.o ?? 1} /> : <PearlGlow key={i} x={p.x} y={p.y} r={p.r * 0.5} o={0.8 * (p.o ?? 1)} />))}
     </>
   );
 };

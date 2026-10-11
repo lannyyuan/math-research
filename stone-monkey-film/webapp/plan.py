@@ -26,13 +26,16 @@ ORDER = [
     '第十六分', '第十七分', '第十八分', '第十九分', '第二十分', '第二十一分',
 ]
 
-# —— 分页常数（1440×900 桌面下，文字区一行约放 CPL 个字，一页目标 CAP 行）。QA 里会列出需要滚动的页，据此微调。
-CPL = 24          # 一行能放多少个字符（含标点；考虑了避头尾，比理论值略小）
-CAP = 12.6        # 一页的目标行数（含段间距、章名占的行）
-SOFT_MAX = 14.2   # 超过这个行数就必须再切
-HEAD_LINES = 3.9  # 章名（小字章号 + 大字章名 + 小灯分隔线）占几行
-GAP = 0.5         # 段间距（行）
+# —— 分页常数。估算的是 1440×900 桌面下文字区一页要占多少“行”（行高 = 1 行）；文字区实际能放约 14.8 行。
+#    CPL / HEAD_LINES / GAP 是对 Chromium 实测（qa.mjs 写出的 out/book_qa/fill.json）拟合、再偏保守取的；
+#    要调就看 `npm run book:qa` 列出的“需要滚动的页”。
+CPL = 23.2        # 一行能放多少个字符（字号 1.72vw、字距 .04em、避头尾以后的有效值）
+HEAD_LINES = 2.7  # 章名（小字章号 + 大字章名 + 小灯分隔线）占几行
+GAP = 0.3         # 段间距（行）
 INDENT = 2        # 段首缩进（字）
+FIT = 14.0        # 一页最多估算占多少行（文字区实际约 14.8 行，留一点余量）
+# 短页放大：(倍数, 样式名, 字数上限)；按“倍数从大到小”试，放大后估算还放得下才用
+SIZES = [(1.9, 'xxs', 16), (1.5, 'xs', 45), (1.2, 's', 110)]
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 SRC = ROOT / 'story' / 'book_source.txt'
@@ -166,9 +169,10 @@ def build_units(chap):
 
 
 # ───────────────────────── 行数估算 ─────────────────────────
-def lines_between(chap, units, a, b, head=False):
-    """估算 units[a:b] 排成一页要占多少行：每段 ceil((字数+缩进+小标签)/每行字数) + 段间距；章首另加章名。"""
-    total = HEAD_LINES if head else 0.0
+def lines_between(chap, units, a, b, head=False, k=1.0):
+    """估算 units[a:b] 排成一页要占多少行（以正常字号的行高为 1）：每段 ceil((字数+缩进+小标签)/每行字数) + 段间距；
+       正文放大 k 倍时每行字数变成 CPL/k、每行高度变成 k 倍；章名不随放大而放大（CSS 里 .chap 除以 --k），另加 HEAD_LINES。"""
+    body = 0.0
     i = a
     while i < b:
         pi, j, n = units[i]['pi'], i, 0
@@ -177,9 +181,16 @@ def lines_between(chap, units, a, b, head=False):
         first = units[i]['k'] == 0
         tag = chap['paras'][pi]['tag']
         extra = (INDENT if first else 0) + ((len(tag) * 0.62 + 1.0) if (tag and first) else 0)
-        total += math.ceil((n + extra) / CPL) + GAP
+        body += math.ceil((n + extra) / (CPL / k)) + GAP
         i = j
-    return total
+    return (HEAD_LINES if head else 0.0) + body * k
+
+
+def size_class(chap, units, a, b, head, nhan):
+    for k, name, limit in SIZES:
+        if nhan < limit and lines_between(chap, units, a, b, head, k) <= FIT:
+            return name
+    return ''
 
 
 def cut_penalty(chap, units, x):
@@ -198,14 +209,14 @@ def cut_penalty(chap, units, x):
 
 
 def split_span(chap, units, a, b, head):
-    """把 units[a:b] 切成最少的几页，每页 ≤ SOFT_MAX 行；在这个页数下让各页行数尽量均匀、切点尽量落在段落/小节边界。"""
+    """把 units[a:b] 切成最少的几页，每页 ≤ FIT 行；在这个页数下让各页行数尽量均匀、切点尽量落在段落/小节边界。"""
     n = b - a
     L = lambda x, y: lines_between(chap, units, x, y, head=(head and x == a))
     total = L(a, b)
-    if total <= SOFT_MAX:
+    if total <= FIT:
         return [(a, b)]
     INF = 1e9
-    for k in range(max(2, math.ceil(total / SOFT_MAX)), n + 1):
+    for k in range(max(2, math.ceil(total / FIT)), n + 1):
         mean = total / k
         # dp[j][i]：把 units[a:i] 切成 j 页的最小代价
         dp = [[INF] * (n + 1) for _ in range(k + 1)]
@@ -217,7 +228,7 @@ def split_span(chap, units, a, b, head):
                     if dp[j - 1][s] >= INF:
                         continue
                     ln = L(a + s, a + i)
-                    if ln > SOFT_MAX:
+                    if ln > FIT:
                         continue
                     c = dp[j - 1][s] + (ln - mean) ** 2 * 0.35 + (cut_penalty(chap, units, a + s) if s else 0.0)
                     if c < dp[j][i]:
@@ -285,11 +296,12 @@ def make_plan():
                         paras.append({'text': '', 'cont': u['k'] != 0, 'tag': p['tag'] if u['k'] == 0 else '', 'mid': p['mid']})
                         last = u['pi']
                     paras[-1]['text'] += u['text']
-                pg = {'i': len(pages) + 1, 'sec': si, 'startsSec': x == 0, 'han': sum(u['n'] for u in units[x:y]),
-                      'paras': paras, 'seg': sidx}
+                nhan = sum(u['n'] for u in units[x:y])
+                pg = {'i': len(pages) + 1, 'sec': si, 'startsSec': x == 0, 'han': nhan,
+                      'size': size_class(c, units, x, y, x == 0, nhan), 'paras': paras, 'seg': sidx}
                 pages.append(pg)
                 report.append((pg['i'], c['key'], pg['han'], lines_between(c, units, x, y, head=(x == 0)),
-                               [p['mid'] for p in paras if p['mid'] and not p['cont']], sidx))
+                               [p['mid'] for p in paras if p['mid'] and not p['cont']], sidx, pg['size']))
     plan = {
         'tagline': tagline,
         'sections': [{'key': c['key'], 'no': c['no'], 'name': c['name'], 'raw': c['raw']} for c in chs],
@@ -306,8 +318,8 @@ def main():
     print(f"汉字 {plan['totalHan']}，{len(plan['sections'])} 章，共 {len(plan['pages'])} 页")
     if '-q' in sys.argv:
         return
-    for i, key, n, ln, beats, seg in report:
-        print(f"{i:3d}  {key:6s} {n:4d}字 {ln:5.1f}行  图#{'-' if seg is None else seg}  小节 {','.join(beats)}")
+    for i, key, n, ln, beats, seg, size in report:
+        print(f"{i:3d}  {key:6s} {n:4d}字 {ln:5.1f}行 {size:3s} 图#{'-' if seg is None else seg}  小节 {','.join(beats)}")
 
 
 if __name__ == '__main__':

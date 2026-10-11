@@ -32,6 +32,8 @@ def save_plate(name, L, variants=('night', 'lit'), ext=None, gain=0.7, keep=0.2,
     for v in variants:
         if overrides and v in overrides:
             C = overrides[v]
+            if callable(C):
+                C = C(L)
         else:
             C = Canvas(L.w, L.h)
             C.rgb = (VAR[v](L.rgb, gain, keep) if v == 'night' else VAR[v](L.rgb)).astype(F)

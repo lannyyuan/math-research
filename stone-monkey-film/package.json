@@ -15,7 +15,8 @@
     "render": "bash scripts/render.sh",
     "book:stills": "node scripts/storyboard_plan.mjs && node scripts/book_stills.mjs",
     "book": "python3 -I webapp/build.py",
-    "book:qa": "node webapp/qa.mjs --shots=out/book_qa"
+    "book:qa": "node webapp/qa.mjs --shots=out/book_qa",
+    "audit:band": "python3 -I scripts/audit_band.py out/audit_band"
   },
   "dependencies": {
     "@remotion/bundler": "4.0.534",
