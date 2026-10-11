@@ -76,3 +76,21 @@ export const Pair: React.FC<Common & {houzi?: boolean; kid?: number; houziGlow?:
     </>
   );
 };
+
+/** 骑在马背上的石娃：上半身 + 一条垂下来的腿 + 龟甲趴在肩上 + 手里的宝珠；hx,hy 是髋（坐在鞍子上）的位置。
+ *  相对髋：肩 (13.5,-108)·s，手里的宝珠 (51.5,-60)·s。flip = 脸朝左。 */
+export const Rider: React.FC<{hx: number; hy: number; legRot: number; flip?: boolean; pearl?: boolean; kid?: number; opacity?: number}> = ({hx, hy, legRot, flip = false, pearl = true, kid = KID_S, opacity = 1}) => {
+  const f = flip ? -1 : 1;
+  return (
+    <>
+      <Sprite name="shiwa_side_leg" x={hx} y={hy} s={kid} rot={legRot} flip={flip} opacity={opacity} breathe={0} sway={0} />
+      <Sprite name="shiwa_side_up" x={hx} y={hy} s={kid} flip={flip} opacity={opacity} breathe={0.008} sway={0.3} />
+      <Houzi view="side" kid={kid} x={hx + f * (13.5 * kid + 2)} y={hy - 108 * kid + 14} flip={!flip} opacity={opacity} sway={0.5} />
+      {pearl && <Pearl x={hx + f * 51.5 * kid} y={hy - 60 * kid} kid={kid} o={opacity} />}
+    </>
+  );
+};
+
+/** 马（horse_side）的缩放和鞍位：锚点 = 鞍子正下方的蹄底；骑手的髋 = 脚底 + SADDLE */
+export const HORSE_S = 0.8;
+export const SADDLE = {dx: 0, dy: -228};

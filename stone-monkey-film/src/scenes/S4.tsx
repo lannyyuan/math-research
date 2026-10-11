@@ -48,7 +48,7 @@ const ShotA: React.FC = () => {
       <Layer p={1}>
         <Bg name="hill_near" />
         <GroundShadow x={1560} y={GY + 4} rx={120} o={0.45} />
-        <Sprite name="oldwoman_sit_side" x={1600} y={GY + 4} s={0.84} breathe={0.01} sway={0.4} />
+        <Sprite name="oldwoman_sit_side" x={1600} y={GY + 4} s={0.84} flip breathe={0.01} sway={0.4} />
         <Sprite name="firewood" x={1440} y={GY + 6} s={0.8} opacity={1 - tied} breathe={0} sway={0} />
         <Sprite name="firewood_tied" x={1440} y={GY + 6} s={0.8} opacity={tied} breathe={0} sway={0} />
         <Walker x={kx} y={GY + 4} walk={walking ? 6 : 0} />
@@ -157,6 +157,7 @@ const ShotE: React.FC = () => {
         <Bg name="snow_hut_near_clear" />
         <GroundShadow x={gx} y={GY + 4} rx={60} o={0.45} />
         <Sprite name="girl_side" x={gx} y={GY + 4} s={0.84} flip walk={te > 0.4 && te < 3.6 ? 5 : 0} />
+        <Sprite name="bowl" x={gx - 14} y={GY + 4 - 108} s={0.9} flip walk={te > 0.4 && te < 3.6 ? 5 : 0} breathe={0} sway={0.3} />
         <Walker x={kx} y={GY + 4} />
         <Sprite name="bell" x={kx - 20} y={GY - 120} s={0.16} breathe={0} sway={2} />
       </Layer>

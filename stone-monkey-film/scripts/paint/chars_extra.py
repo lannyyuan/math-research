@@ -41,6 +41,20 @@ def bundle_red():
 
 
 @sprite
+def bowl():
+    """一只粗陶碗，冷灰，冒着冷白的热气。≈70×40（连热气 ≈ 70×80）。锚点 = 碗底中点。"""
+    L = new_canvas(160, 170)
+    bx, by = 80, 150
+    pts = [(bx - 36, by - 40), (bx + 36, by - 40), (bx + 28, by - 10), (bx + 16, by), (bx - 16, by), (bx - 28, by - 10)]
+    garment(L, pts, hexc('#a7a9aa'), 311, shade=0.38, stain=0.25, flick=0.3, ink_w=2.0, wob=0.6, smooth=2, rough=0.4)
+    wash(L, [(bx - 36, by - 41), (bx + 36, by - 41), (bx + 33, by - 34), (bx - 33, by - 34)], hexc('#e4e6e4'), op=0.95, wob=0.5, seed=312, smooth=1)
+    for k, (dx, ph) in enumerate([(-14, 0), (0, 1.5), (14, 3.0)]):
+        pts_ = [(bx + dx + math.sin(t * 0.9 + ph) * 6, by - 46 - t * 8) for t in range(10)]
+        line(L, pts_, 4.0, hexc('#f1efe8'), 0.8, 320 + k, 0.4, 0.2, 0.8, w1=1.2)
+    sheet_save(L, 'bowl', (bx, by), 311)
+
+
+@sprite
 def scale():
     """大鱼的一片鱼鳞：银蓝灰色的水滴形，边缘有一圈淡光。≈120×100，锚点 = 中心。"""
     L = new_canvas(220, 190)
@@ -220,7 +234,7 @@ def horse_side():
     leg(L, [(446, 346), (452, 430), (450, gy - 2)], 48, 26, hc, 651, shade=0.4, stain=0.4, ink_w=2.4, rough=1.0)
     for x_, sd in ((244, 660), (448, 661)):          # 蹄
         garment(L, [(x_ - 16, gy - 20), (x_ + 14, gy - 20), (x_ + 18, gy + 2), (x_ - 18, gy + 2)], K['dark2'], sd, shade=0.2, stain=0.2, flick=0.1, ink_w=1.8, wob=0.4, smooth=1)
-    sheet_save(L, 'horse_side', (cx + 120, gy), 601)
+    sheet_save(L, 'horse_side', (369, gy), 601)      # 锚点 = 鞍子正下方的地面（骑手的髋对着它）
 
 
 @sprite

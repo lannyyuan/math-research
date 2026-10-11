@@ -2,7 +2,7 @@ import React, {useContext} from 'react';
 import {CharsCtx, VariantCtx, Variant} from './Variant';
 
 /** 光池：{x,y 屏幕坐标, r 半径(px), kind} —— 光照到哪里，那里才有颜色，其余都沉在靛蓝里 */
-export interface Pool {x: number; y: number; r: number; k?: 'pearl' | 'sand' | 'fire'; o?: number}
+export interface Pool {x: number; y: number; r: number; k?: 'pearl' | 'sand' | 'fire' | 'none'; o?: number}
 
 /** 宝珠的光：奶白的核 + 灰金的晕（#F3D98A），不刺眼。mix-blend screen。 */
 export const PearlGlow: React.FC<{x: number; y: number; r: number; o?: number; core?: number}> = ({x, y, r, o = 1, core = 1}) => (
@@ -43,7 +43,7 @@ export const Lit: React.FC<{world: (v: Variant) => React.ReactNode; pools: Pool[
           <VariantCtx.Provider value="lit">{world('lit')}</VariantCtx.Provider>
         </div>
       )}
-      {live.map((p, i) => (p.k === 'sand' ? <SandGlow key={i} x={p.x} y={p.y} r={p.r * 0.55} o={(p.o ?? 1) * 0.8} /> : p.k === 'fire' ? <FireGlow key={i} x={p.x} y={p.y} r={p.r * 0.8} o={p.o ?? 1} /> : <PearlGlow key={i} x={p.x} y={p.y} r={p.r * 0.5} o={0.8 * (p.o ?? 1)} />))}
+      {live.map((p, i) => (p.k === 'none' ? null : p.k === 'sand' ? <SandGlow key={i} x={p.x} y={p.y} r={p.r * 0.55} o={(p.o ?? 1) * 0.8} /> : p.k === 'fire' ? <FireGlow key={i} x={p.x} y={p.y} r={p.r * 0.8} o={p.o ?? 1} /> : <PearlGlow key={i} x={p.x} y={p.y} r={p.r * 0.5} o={0.8 * (p.o ?? 1)} />))}
     </>
   );
 };

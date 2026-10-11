@@ -5,6 +5,7 @@ import {S2} from './S2';
 import {S3} from './S3';
 import {S4} from './S4';
 import {S5} from './S5';
+import {S6} from './S6';
 import {S7} from './S7';
 
 export const SCENE_COMPS: Record<string, React.FC<{len: number}>> = {
@@ -14,5 +15,6 @@ export const SCENE_COMPS: Record<string, React.FC<{len: number}>> = {
   's3-sea': S3,
   's4-snow': S4,
   's5-drum': S5,
+  's6-lamp': S6,
   's7-epilogue': S7,
 };

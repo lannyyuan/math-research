@@ -23,7 +23,7 @@ export const S2: React.FC<{len: number}> = ({len}) => {
   const camA = useCam([{t: 0, ...atg(1220, 1.22)}, {t: T_B + 1.5, ...atg(1300, 1.3)}]);
   const wrap = ramp(t, 0.8, 3.6);                                  // 红布一层层包上去
   const give = ramp(t, 4.4, 6.2);                                  // 递给石娃
-  const bx = lerp(905, 1560, give), by = lerp(668, 640, give) - Math.sin(give * Math.PI) * 40;
+  const bx = lerp(912, 1560, give), by = lerp(716, 690, give) - Math.sin(give * Math.PI) * 40;
   const bundleO = ramp(t, 0.5, 1.0) * (1 - ramp(t, 6.0, 6.7));
   const bundleRot = (1 - wrap) * Math.sin(t * 9) * 8 + give * 6;
 
@@ -87,7 +87,7 @@ export const S2: React.FC<{len: number}> = ({len}) => {
             <PaperGlow x={1780} y={470} r={260} o={0.4} />
             <GroundShadow x={1620} y={GY + 4} rx={90} o={0.5} />
             <Shiwa view="side" x={1620} y={GY + 4} flip t0={0.2} />
-            <Sprite name="bundle_red" x={bx} y={by} s={0.9 * (0.55 + 0.45 * wrap)} rot={bundleRot} opacity={bundleO} breathe={0} sway={0} v="lit" alwaysShow />
+            <Sprite name="bundle_red" x={bx} y={by} s={0.5 * (0.55 + 0.45 * wrap)} rot={bundleRot} opacity={bundleO} breathe={0} sway={0} v="lit" alwaysShow />
           </Layer>
         </Stage>
         {/* B：村口 */}
