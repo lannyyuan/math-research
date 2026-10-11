@@ -5,6 +5,8 @@
 | | |
 |---|---|
 | **成片** | [`dist/snow-lamp.mp4`](dist/snow-lamp.mp4)（1920×1080，30 fps，H.264 + AAC，**4 分 50.5 秒**，61 MB） |
+| **绘本网页** | [`dist/snow-lamp-book.html`](dist/snow-lamp-book.html)（单个 HTML，3.9 MB，离线可读：**故事全文 99 页 + 配图 + 分镜总览/放映**；和成片放在同一个文件夹，“看影片里的这一幕”就能播放） |
+| 分镜 PPT | [`dist/snow-lamp-storyboard.pptx`](dist/snow-lamp-storyboard.pptx)（41 页，每条字幕一页） |
 | 技术方案 | [Remotion](https://www.remotion.dev)（React + SVG）。人物、墨线、水彩滤镜全部是代码画的；大块的天空/树林/雪地先烘焙成图片 |
 | 字体 | 霞鹜文楷（LXGW WenKai，SIL OFL 1.1），只保留字幕用到的字，37 KB（`public/fonts/`，附 OFL.txt） |
 | 配乐 | 自己合成（`scripts/make_music.py`，纯 numpy，无采样、无外部素材） |
@@ -28,6 +30,25 @@ npm run render     # 分场景渲染 → 拼接 → 压成片并合上配乐 →
 * 改了 `src/bake/assets.tsx`：`npm run bake` 重新烘焙 `public/baked/`（已提交，不改就不用跑）。
 * 改了配乐：`npm run music`；改了字幕用字：`npm run check`（生成 `story/subtitle-chars.txt`）然后 `npm run font`（需要 `pip install -r requirements.txt`）。
 
+## 绘本网页（全文版）
+
+影片只放了 40 条字幕（全文的 3.5%），其余章节在**绘本网页**里：
+
+* 一个 HTML 文件，双击就能读（图片、字体、脚本全部内联；不联网）。封面 → 99 页 → 结尾；左图右文（手机上图在上、字在下）；
+* **一条影片字幕 = 一页 = 一张画面**（不带字幕的干净帧），那一页的文字里把字幕那一句标成金色；点一下可以看影片里的那一幕；
+* 影片里没有的章节（影子、问号的问题、学校、农夫伯伯的小院、雪人、古城墙、大海、星星、白鹿的心事、森林比赛……）用同一套角色和画笔补了 10 幅插图（`src/plates/Plates.tsx`），一幅图取不同的景撑几页；
+* **全文一个字不少、顺序不乱**：`webapp/build.py` 打包时核对一遍，`webapp/qa.mjs` 再在真浏览器里把 99 页逐页翻完、把显示出来的字拼回去和 `story/source.md` 逐字比对；
+* 目录、**分镜总览**（影片的 41 个画面，点一张跳到对应的书页）、**放映**（全屏逐张，字幕叠在底部，可自动播放）、字号 4 档、雪夜/纸色两种背景、朗读本页（浏览器自带）、读到哪记到哪；
+* 字体仍是霞鹜文楷（OFL），按页面用到的 1480 个字符裁成 313 KB。
+
+```bash
+npm run book:stills   # 出不带字幕的画面 + 10 幅补充插图 → out/book_img/
+npm run book          # 分页、配图、核对全文、打包 → dist/snow-lamp-book.html
+npm run book:qa       # 真浏览器逐页核对 + 桌面/平板/手机截图（需要 playwright 和本机 Chromium）
+```
+
+配图表在 `webapp/heroes.json`（按章写，页数变了不用改）；分页的几个常数在 `webapp/plan.py` 顶部。做法和踩过的坑见 [`../skills/ink-storybook-film/`](../skills/ink-storybook-film/)。
+
 ## 文件结构
 
 ```
@@ -39,10 +60,13 @@ src/scenes/S0…S10.tsx    每个场景的镜头、动作（按场景内秒数�
 src/chars/               角色：Boy（小石头/爸爸/妈妈/换衣服后）、Rabbit、Turtle、Deer、Others（守林人/狼妈妈/小狼）
 src/art/                 画风工具：ink.ts（变宽、断笔、带起稿辅助线的墨线）、ArtView.tsx（水彩滤镜）、geom.ts
 src/fx/                  雪、灯光、火堆、小木屋、镜头（Stage/Layer 视差）、字幕、心里的家……
+src/plates/              绘本网页用的补充插图（影片里没有的章节）
+webapp/                  绘本网页：plan.py 分页、heroes.json 配图、build.py 打包、app.js/app.css/template.html、qa.mjs 检查
 src/bake/                离线烘焙的水彩层：天空、纸纹、树林、雪地、山、山洞、河、房间……
 scripts/                 check-subtitles / render / stills / bake / make_music / subset_font / audit_warm
 public/baked|fonts|audio 烘焙图、字幕字体、配乐
-dist/snow-lamp.mp4       成片
+dist/                    snow-lamp.mp4 成片、snow-lamp-book.html 绘本网页、snow-lamp-storyboard.pptx 分镜
+analysis/literacy/       字幕/全文 与“识字 1300”的覆盖率对比
 ```
 
 ## 十段剧情（按要求的顺序）
@@ -61,7 +85,7 @@ dist/snow-lamp.mp4       成片
 | 9 | 和伙伴们告别 | 3:48 | 爸爸妈妈赶来抱住他；拉勾；慢慢壳上的路；白鹿“你也可以做别人的灯”；他们下山，朋友的身影越来越小 |
 | 10 | 在自己窗边点灯 | 4:22 | 划火柴点灯；把画着朋友的画贴在窗上；远处山顶也有一点光；他微笑着闭上眼睛。结束在窗边的灯上 |
 
-故事原文很长，剧情之外的章节（问号的一连串问题、学校、农夫伯伯的小院、雪地游戏、乌龟壳上的各地、古城、大海、星星、森林比赛……）都没有放进来，只保留了十个必须的情节和它们之间必要的衔接。
+故事原文很长，剧情之外的章节（问号的一连串问题、学校、农夫伯伯的小院、雪地游戏、乌龟壳上的各地、古城、大海、星星、森林比赛……）没有放进影片，只保留了十个必须的情节和它们之间必要的衔接；这些章节在**绘本网页**里有全文和插图。
 
 ## 字幕
 
