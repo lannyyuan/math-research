@@ -8,6 +8,8 @@ description: 把一篇儿童故事做成「水彩手绘风动画短片（MP4，4
 参考实现：[`snow-lamp-film/`](../../snow-lamp-film/)（《雪地里的那盏灯》，4 分 50 秒，99 页绘本，一个 3.9 MB 的 HTML）。
 本技能把“怎么做出来的”写成可以照着重做的方法；`templates/` 里是从参考实现里拎出来的通用工具和代码，`references/` 里是每一步的细节和踩过的坑。
 
+> 有“角色设定图 + 封面”的任务（造型以设定图为准）：先读 `references/05-reference-sheet-sprites.md`（纸偶精灵 + 水彩背景的做法，参考实现 `lighthouse-light-film/`）。
+
 ## 什么时候用
 
 - 用户给一篇儿童故事（文字稿），要一部**短动画**，风格是手绘/水彩/墨线，并且字幕要**只用原文**；
@@ -108,7 +110,8 @@ skills/ink-storybook-film/
 │   ├── 01-film-pipeline.md         ← 做 MP4 的全过程（含参数、公式、验收）
 │   ├── 02-webapp-pipeline.md       ← 做单文件绘本网页的全过程
 │   ├── 03-lessons-and-pitfalls.md  ← 踩过的坑和修法（环境、渲染、版式、交付）
-│   └── 04-optional-deliverables.md ← 分镜 PPT、字表覆盖率、交付大文件
+│   ├── 04-optional-deliverables.md ← 分镜 PPT、字表覆盖率、交付大文件
+│   └── 05-reference-sheet-sprites.md ← 有“角色设定图 + 封面”时：抠精灵、图层状态、水彩背景、字幕只用原文、暖色审计
 ├── templates/{film-tools,engine,webapp}/
 └── scripts/sync_from_project.sh
 ```

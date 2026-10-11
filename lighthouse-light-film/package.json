@@ -1,0 +1,31 @@
+{
+  "name": "lighthouse-light-film",
+  "version": "1.0.0",
+  "private": true,
+  "description": "《The Lighthouse Light》动画短片 — Remotion 源工程",
+  "scripts": {
+    "studio": "remotion studio",
+    "check": "node scripts/check-subtitles.mjs",
+    "stills": "node scripts/stills.mjs",
+    "sprites": "python3 scripts/extract_sprites.py && python3 scripts/make_bud_variants.py && python3 scripts/make_more_sprites.py && python3 scripts/sprite_meta.py",
+    "plates": "bash scripts/paint_all.sh",
+    "music": "python3 -I scripts/make_music.py && ffmpeg -y -loglevel error -i public/audio/score.wav -c:a aac -b:a 160k public/audio/score.m4a",
+    "audit": "python3 -I scripts/audit_warm.py out/audit",
+    "render": "bash scripts/render.sh"
+  },
+  "dependencies": {
+    "@remotion/bundler": "4.0.534",
+    "@remotion/cli": "4.0.534",
+    "@remotion/media-utils": "4.0.534",
+    "@remotion/renderer": "4.0.534",
+    "@types/react": "18.3.12",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "remotion": "4.0.534",
+    "typescript": "5.6.3"
+  },
+  "devDependencies": {
+    "lxgw-wenkai-webfont": "1.7.0",
+    "pptxgenjs": "4.0.1"
+  }
+}
