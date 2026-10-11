@@ -1,0 +1,232 @@
+{
+ "title": "The Lighthouse Light",
+ "fps": 30,
+ "scenes": [
+  {
+   "id": "s0-title",
+   "name": "Title",
+   "len": 6,
+   "lead": 0,
+   "cues": []
+  },
+  {
+   "id": "s1-snow",
+   "name": "Snow on Christmas Eve",
+   "len": 28,
+   "lead": 1.5,
+   "cues": [
+    {
+     "text": "It was the morning of Christmas Eve,"
+    },
+    {
+     "text": "and the snow was falling on the little village by the sea.",
+     "gap": 0.5
+    },
+    {
+     "text": "And your dad is out on the boat."
+    },
+    {
+     "text": "Dad will see Grandad's light."
+    }
+   ]
+  },
+  {
+   "id": "s2-grandad",
+   "name": "Grandad's fall; off to the city",
+   "len": 25,
+   "lead": 1.2,
+   "cues": [
+    {
+     "text": "Bud gave the snowman his cap."
+    },
+    {
+     "text": "Grandad fell on the icy steps of the lighthouse"
+    },
+    {
+     "text": "So the lighthouse is dark,"
+    },
+    {
+     "text": "I can fetch the lightbulb."
+    }
+   ]
+  },
+  {
+   "id": "s3-bolts",
+   "name": "Mrs Mallet's workshop",
+   "len": 26,
+   "lead": 1.2,
+   "cues": [
+    {
+     "text": "It was as big as a melon"
+    },
+    {
+     "text": "A long journey is better with a friend."
+    },
+    {
+     "text": "The robot's eyes lit up, yellow and bright."
+    },
+    {
+     "text": "Hello. Happy to meet you,"
+    }
+   ]
+  },
+  {
+   "id": "s4-walk",
+   "name": "No buses, no trains; Comet follows",
+   "len": 27,
+   "lead": 1.2,
+   "cues": [
+    {
+     "text": "NO BUSES TODAY. SNOW."
+    },
+    {
+     "text": "No trains today."
+    },
+    {
+     "text": "Then we have to walk."
+    },
+    {
+     "text": "Behind them, in the snow, stood a small brown reindeer"
+    },
+    {
+     "text": "It sounded like yes."
+    }
+   ]
+  },
+  {
+   "id": "s5-farm",
+   "name": "The farm and the hedgehog",
+   "len": 24,
+   "lead": 1.0,
+   "cues": [
+    {
+     "text": "Then, through the snow, they saw a light."
+    },
+    {
+     "text": "She gave Bud a woolly hat with a pompom."
+    },
+    {
+     "text": "The pile was moving."
+    },
+    {
+     "text": "Pebbles climbed in,"
+    }
+   ]
+  },
+  {
+   "id": "s6-ice",
+   "name": "Bud falls through the ice",
+   "len": 25,
+   "lead": 1.0,
+   "cues": [
+    {
+     "text": "Crack!"
+    },
+    {
+     "text": "Bud fell through into the black, freezing water."
+    },
+    {
+     "text": "She pushed the ladder flat across the ice,"
+    },
+    {
+     "text": "Comet! Pull!"
+    },
+    {
+     "text": "wet and shaking."
+    }
+   ]
+  },
+  {
+   "id": "s7-cliff",
+   "name": "The cliff path",
+   "len": 26,
+   "lead": 1.0,
+   "cues": [
+    {
+     "text": "the storm was terrible."
+    },
+    {
+     "text": "the hat with Pebbles fell out of his pocket"
+    },
+    {
+     "text": "and her fingers closed around the hat."
+    },
+    {
+     "text": "Of course we came back. You're our friend."
+    }
+   ]
+  },
+  {
+   "id": "s8-lamp",
+   "name": "The lighthouse; Bolts's battery",
+   "len": 29,
+   "lead": 1.0,
+   "cues": [
+    {
+     "text": "they saw it: the lighthouse, tall and dark,"
+    },
+    {
+     "text": "Nothing happened."
+    },
+    {
+     "text": "Use my battery."
+    },
+    {
+     "text": "Goodnight, friends,"
+    },
+    {
+     "text": "The engine roared into life."
+    },
+    {
+     "text": "the great lamp lit up."
+    }
+   ]
+  },
+  {
+   "id": "s9-boats",
+   "name": "The boats come home",
+   "len": 28,
+   "lead": 1.0,
+   "cues": [
+    {
+     "text": "Then, far away, a small light answered."
+    },
+    {
+     "text": "the boats sailed in out of the storm,"
+    },
+    {
+     "text": "That's Dad's boat!"
+    },
+    {
+     "text": "And then I saw Grandad's light."
+    },
+    {
+     "text": "It was Hazel's."
+    }
+   ]
+  },
+  {
+   "id": "s10-morning",
+   "name": "Christmas morning; the lamp goes off",
+   "len": 34,
+   "lead": 1.0,
+   "cues": [
+    {
+     "text": "On Christmas morning, the storm was over."
+    },
+    {
+     "text": "Bolts's eyes lit up, yellow and bright."
+    },
+    {
+     "text": "Shall I leave your lamp on?"
+    },
+    {
+     "text": "No. You can turn it off."
+    },
+    {
+     "text": "The room was dark. But it was not scary any more."
+    }
+   ]
+  }
+ ]
+}
