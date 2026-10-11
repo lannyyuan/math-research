@@ -31,6 +31,7 @@
     gear: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3.2"/><path d="M12 3v2.6M12 18.4V21M3 12h2.6M18.4 12H21M5.6 5.6l1.9 1.9M16.5 16.5l1.9 1.9M18.4 5.6l-1.9 1.9M7.5 16.5l-1.9 1.9"/></svg>',
     film: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="14" rx="2.5"/><path d="M10 9.2v5.6l4.6-2.8z" fill="currentColor"/></svg>',
     lamp: '<svg viewBox="0 0 32 32" width="26" height="26"><circle cx="16" cy="16" r="13" fill="#cfc29a" opacity=".20"/><circle cx="16" cy="16" r="7" fill="#cfc29a" opacity=".42"/><circle cx="16" cy="16" r="3.4" fill="#f4eedd"/></svg>',
+    spk: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5v5h3.6L12 18.5v-13L7.6 9.5z" fill="currentColor" stroke-width="1.4"/><path d="M15.4 9a4.2 4.2 0 0 1 0 6M18 6.6a7.8 7.8 0 0 1 0 10.8"/></svg>',
   };
 
   /* ── 状态与保存的设置 ── */
@@ -45,6 +46,8 @@
     fs: typeof saved.fs === 'number' ? saved.fs : 1,
     theme: saved.theme || (prefersLight ? 'paper' : 'night'),
     tags: saved.tags !== false,
+    py: saved.py !== false,            // 点字看拼音、听发音
+    pyAuto: saved.pyAuto === true,     // 悬停即发声（默认关：悬停只显示拼音，点击才发声）
   };
   const secOf = (i) => BOOK.pages[i - 1].sec;
   const secPages = BOOK.sections.map(() => []);
@@ -118,9 +121,9 @@
     const inner = h('div', {class: 'inner'});
     if (p.startsSec) {
       const s = BOOK.sections[p.sec];
-      inner.append(h('div', {class: 'chap'}, h('span', {class: 'no'}, s.no), h('h2', {}, s.name), h('i', {class: 'rule'})));
+      inner.append(h('div', {class: 'chap'}, h('span', {class: 'no'}, hanSpans(s.no, s.pyNo)), h('h2', {}, hanSpans(s.name, s.pyName)), h('i', {class: 'rule'})));
     }
-    for (const q of p.paras) inner.append(h('p', {class: q.cont ? 'cont' : ''}, q.tag ? h('span', {class: 'tag'}, q.tag) : null, q.text));
+    for (const q of p.paras) inner.append(h('p', {class: q.cont ? 'cont' : ''}, q.tag ? h('span', {class: 'tag'}, q.tag) : null, hanSpans(q.text, q.py)));
     const size = p.size || '';
     const text = h('article', {class: `text ${size}`, tabindex: '-1', 'aria-label': `第 ${p.i} 页的文字`}, inner);
     text.addEventListener('scroll', () => fadeCue(text), {passive: true});
@@ -195,6 +198,7 @@
     labR.textContent = pos >= 1 && pos <= N ? `${pos} / ${N}` : '';
     document.title = pos === 0 || pos === END ? `${BOOK.title} · 绘本` : `${secLabel(sec)} · ${BOOK.title}`;
     stopSpeech();
+    pyHide(); pyAudio.stop(); pyPreload();
     syncToc();
     if (pos >= 1 && pos <= N) store.set({page: pos});
     try { history.replaceState(null, '', pos === 0 ? '#cover' : pos === END ? '#end' : `#p${pos}`); } catch (e) { /* file:// 下有的浏览器不让改 */ }
@@ -347,13 +351,18 @@
     h('div', {class: 'r'}, h('div', {class: 'lab'}, '字号'), seg(FS, state.fs, (v) => applyPrefs({fs: v}))),
     h('div', {class: 'r'}, h('div', {class: 'lab'}, '背景'), seg([['night', '夜色'], ['paper', '纸色']], state.theme, (v) => applyPrefs({theme: v}))),
     h('div', {class: 'r'}, h('div', {class: 'lab'}, '小标签', h('small', {}, '段落前的小字（春游、工坊……）')), seg([[true, '开'], [false, '关']], state.tags, (v) => applyPrefs({tags: v}))),
+    h('div', {class: 'r'}, h('div', {class: 'lab'}, '点字看拼音、听发音', h('small', {}, '鼠标放在字上看拼音，点一下听真人发音（触屏：轻点）')), seg([[true, '开'], [false, '关']], state.py, (v) => applyPrefs({py: v}))),
+    h('div', {class: 'r'}, h('div', {class: 'lab'}, '悬停即发声', h('small', {}, '不用点击，鼠标停在字上就念（要先点一下页面）')), seg([[true, '开'], [false, '关']], state.pyAuto, (v) => applyPrefs({pyAuto: v}))),
+    h('div', {class: 'r'}, h('div', {class: 'lab'}, '发音致谢', h('small', {html: '真人录音：<a href="https://github.com/hugolpz/audio-cmn" target="_blank" rel="noopener">Chen Wang 王琛（audio-cmn）</a>，<a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener">CC-BY-SA 3.0</a>；已裁剪静音并转码，轻声为模拟。仅供识字参考，不是教材认证录音。'}))),
     h('div', {class: 'r'}, h('div', {class: 'lab'}, '更多'), h('div', {class: 'row', style: 'gap:6px;flex-wrap:wrap;justify-content:flex-end'}, speakBtn, fsBtn)));
   function applyPrefs(o) {
     Object.assign(state, o);
     root.style.setProperty('--fs', state.fs);
     root.dataset.theme = state.theme;
     root.dataset.tags = state.tags ? 'on' : 'off';
-    store.set({fs: state.fs, theme: state.theme, tags: state.tags});
+    root.dataset.py = state.py ? 'on' : 'off';
+    if (!state.py) { pyHide(); pyAudio.stop(); }
+    store.set({fs: state.fs, theme: state.theme, tags: state.tags, py: state.py, pyAuto: state.pyAuto});
     requestAnimationFrame(fadeAll);
   }
   function togglePop(force) {
@@ -382,9 +391,12 @@
     if (v) u.voice = v; else if (vs.length) { toast('这台设备没有中文朗读声音'); return; }
     u.onend = u.onerror = () => { speakBtn.textContent = '朗读本页'; };
     speakBtn.textContent = '停止朗读';
+    pyAudio.stop();
     speechSynthesis.speak(u);
     togglePop(false);
   }
+
+  /*@@include app_pinyin.js@@*/
 
   /* ── 关掉所有弹层 ── */
   function closeAll(keepScrim) {
@@ -398,7 +410,7 @@
   const toastEl = h('div', {class: 'toast', role: 'status'});
   let toastT;
   function toast(msg) { toastEl.textContent = msg; toastEl.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => toastEl.classList.remove('on'), 2600); }
-  document.body.append(scrim, drawer, sbModal, vidModal, showEl, pop, toastEl);
+  document.body.append(scrim, drawer, sbModal, vidModal, showEl, pop, toastEl, pyb);
 
   /* ── 键盘 / 手势 ── */
   document.addEventListener('keydown', (e) => {

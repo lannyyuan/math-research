@@ -142,6 +142,7 @@ def to_webp_uri(im: Image.Image, width: int, quality: int, method=6):
 # ───────────── 主流程 ─────────────
 def main():
     no_font = '--no-font' in sys.argv
+    no_pinyin = '--no-pinyin' in sys.argv      # 不要“点字看拼音/发音”（调试：省 ffmpeg 和 pypinyin）
     plan, _ = planmod.make_plan()
     OUT.mkdir(exist_ok=True)
     (OUT / 'plan.json').write_text(json.dumps(plan, ensure_ascii=False, indent=1), 'utf8')
@@ -197,6 +198,36 @@ def main():
     nhan = len(re.findall(r'[一-鿿]', A))
     print(f"全文核对通过：{len(A)} 个字（含章名与标点，不含引号/空白），其中汉字 {nhan}；{sum(len(pg['paras']) for pg in pages)} 个段落块，{len(pages)} 页")
 
+    # —— 拼音：构建期给每个汉字标读音（页面段落 + 章名），再把用到的音节打包成一份（同音只存一条）
+    pya = {}
+    if not no_pinyin:
+        import pinyin as pinyinmod
+        import pinyin_audio
+        HAN = re.compile('[一-鿿]')
+        used = set()
+
+        def tag(text):
+            py = pinyinmod.annotate(text)
+            n = len(HAN.findall(text))
+            if len(py) != n:
+                sys.exit(f'拼音数量对不上：{text[:20]}…（汉字 {n}，拼音 {len(py)}）')
+            used.update(py)
+            return ' '.join(py)
+        for pg in pages:
+            for q in pg['paras']:
+                q['py'] = tag(q['text'])
+        for s_ in secs:
+            s_['pyNo'] = tag(s_['no'])
+            s_['pyName'] = tag(s_['name'])
+        pya, rep = pinyin_audio.build(used, pinyinmod.neutral_spec(), print)
+        ntok = sum(len(q['py'].split()) for pg in pages for q in pg['paras'])
+        tok_ok = sum(1 for pg in pages for q in pg['paras'] for i in q['py'].split() if i in pya)
+        print(f"拼音：{ntok} 个汉字 → {len(used)} 种读音，打包 {rep['clips']} 条录音（同音共用）{rep['bytes'] / 1e6:.2f} MB"
+              f"（来自 Pinyin_Drill {rep['from_drill']} 条，上游补 {rep['from_upstream']} 条，轻声模拟 {len(rep['neutral'])} 条）；"
+              f"有声音的汉字 {tok_ok}/{ntok} = {tok_ok / ntok * 100:.2f}%")
+        if rep['missing']:
+            print('  缺录音（只显示拼音、不出声或用系统语音）：' + ' '.join(rep['missing']))
+
     # —— 图 → WebP → base64
     cover = dict(heroes['cover'])
     cover_file = cover.pop('file', None)
@@ -224,7 +255,7 @@ def main():
     data = {
         'title': '小石猴点灯',
         'tagline': plan['tagline'],
-        'sections': [{'no': s['no'], 'name': s['name']} for s in secs],
+        'sections': [{k: s[k] for k in ('no', 'name', 'pyNo', 'pyName') if k in s} for s in secs],
         'pages': pages,
         'cover': cover, 'end': end,
         'filmFile': FILM_FILES,
@@ -233,6 +264,7 @@ def main():
     # —— 字体：页面上出现过的所有字符（常规）；标题/按钮/封面标语用的字符（粗体）
     css = (HERE / 'app.css').read_text('utf8')
     js = (HERE / 'app.js').read_text('utf8')
+    js = re.sub(r'/\*@@include (\S+?)@@\*/', lambda m: (HERE / m.group(1)).read_text('utf8').rstrip('\n'), js)   # 拼成同一个闭包（源文件各自 <500 行）
     tpl = (HERE / 'template.html').read_text('utf8')
     strip_c = lambda s: re.sub(r'(?<![:\'"\w])//[^\n]*', '', re.sub(r'/\*.*?\*/', '', s, flags=re.S))
     ascii_set = {chr(i) for i in range(32, 127)}
@@ -259,7 +291,7 @@ def main():
     def js_json(o):
         return json.dumps(o, ensure_ascii=False, separators=(',', ':')).replace('</', '<\\/')
     html = (tpl.replace('{{CSS}}', css).replace('{{FONT_REGULAR}}', fonts['regular']).replace('{{FONT_BOLD}}', fonts['bold'])
-            .replace('{{DATA}}', js_json(data)).replace('{{IMAGES}}', js_json(imgs)).replace('{{JS}}', js))
+            .replace('{{DATA}}', js_json(data)).replace('{{IMAGES}}', js_json(imgs)).replace('{{PYAUDIO}}', js_json(pya)).replace('{{JS}}', js))
     DIST.mkdir(exist_ok=True)
     out = DIST / 'xiaoshihou-book.html'
     out.write_text(html, 'utf8')
