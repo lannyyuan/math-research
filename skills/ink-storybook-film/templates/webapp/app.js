@@ -125,7 +125,7 @@
         h('p', {class: 'meta'}, `全文 ${N} 页　·　影片画面 ${BOOK.cues.length} 个　·　字体：霞鹜文楷（开源）`, h('span', {class: 'kb'}, '　·　← → 翻页'))));
   };
   const endView = () => h('section', {class: 'endpage', 'aria-label': '结尾'},
-    h('img', {class: 'bg', src: IMG[BOOK.end.img], alt: BOOK.end.alt, style: 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:saturate(.9)'}),
+    h('img', {class: 'bg', src: IMG[BOOK.end.img], alt: BOOK.end.alt, style: 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:blur(4px) saturate(.9)'}),
     h('div', {class: 'in'},
       h('h2', {}, '完'),
       h('div', {class: 'row'},
