@@ -31,14 +31,15 @@ export interface SpriteProps {
   pivot?: [number, number]; // 旋转的支点（精灵像素，相对脚底锚点；默认脚底）
   extra?: {name: string; dx: number; dy: number; s?: number; rot?: number; opacity?: number; clip?: number; flip?: boolean}[];
   alwaysShow?: boolean; // 不受 chars=false 影响（背景里的东西）
+  v?: string; // 强制使用某个光照版本的精灵（自己会发光的东西，如龟甲）
 }
 
 /** 纸偶：把设定图抠出来的精灵摆在画面上，只做轻微的呼吸、晃动、走路颠簸（局部关节动作由叠加的小精灵/children 完成）。 */
-export const Sprite: React.FC<SpriteProps> = ({name, layers, x, y, s = 0.7, flip = false, rot = 0, breathe = 0.008, sway = 0.5, walk = 0, t0 = 0, opacity = 1, style, filter, children, extra, clipBottom = 0, lo, pivot, alwaysShow}) => {
+export const Sprite: React.FC<SpriteProps> = ({name, layers, x, y, s = 0.7, flip = false, rot = 0, breathe = 0.008, sway = 0.5, walk = 0, t0 = 0, opacity = 1, style, filter, children, extra, clipBottom = 0, lo, pivot, alwaysShow, v: vOver}) => {
   const f = useCurrentFrame();
   const {fps} = useVideoConfig();
   const showChars = useContext(CharsCtx);
-  const v = useVariant();
+  const v = vOver ?? useVariant();
   if (!showChars && !alwaysShow) return null;
   const t = f / fps + t0;
   const m = MT[name];

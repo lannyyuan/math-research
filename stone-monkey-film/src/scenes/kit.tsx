@@ -20,6 +20,9 @@ export const lerp = (a: number, b: number, u: number) => a + (b - a) * u;
 /** 镜头对准世界坐标 (wx, wy)，缩放 z（世界坐标 = 1920×1080 的画面坐标系，起始镜头中心在 (960, 540)） */
 export const at = (wx: number, wy: number, z = 1) => ({x: wx - W / 2, y: wy - H / 2, z});
 
+/** 角色站在地面 y=gy（世界坐标）；镜头缩放 z 时，让脚底落在屏幕 y=fy（默认 820，字幕带的上沿是 845）：字幕带里不压角色 */
+export const atg = (wx: number, z = 1, gy = 832, fy = 820) => at(wx, gy - (fy - H / 2) / z, z);
+
 /** 场景外壳：开头结尾各有一小段缓缓的“墨色”过渡（没有闪白、没有硬切） */
 export const SceneWrap: React.FC<{len: number; children: React.ReactNode; bg?: string; fadeIn?: number; fadeOut?: number}> = ({len, children, bg = '#0c1222', fadeIn = 20, fadeOut = 24}) => {
   const f = useCurrentFrame();

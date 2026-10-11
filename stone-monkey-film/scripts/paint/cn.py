@@ -39,6 +39,10 @@ def mix(a, b, t):
     return a + (b - a) * t
 
 
+def rect(x0, y0, x1, y1):
+    return np.array([(x0, y0), (x1, y0), (x1, y1), (x0, y1)], F)
+
+
 # ───────────────────────── 笔触工具 ─────────────────────────
 _DRY = {}
 
@@ -310,36 +314,43 @@ def mountain(L, ridge, bottom, top_col, bot_col, seed=0, tex=0.5, tex_col=INK, t
 
 # ───────────────────────── 植物 ─────────────────────────
 def pine(L, x, y, h, seed=0, col=None, dark=None, snow=0.0, lean=0.0, op=1.0):
-    """一棵松：弯曲的墨色树干 + 几团压扁的针叶（一圈圈短笔）+ 下垂的枝。x,y 是树脚。"""
+    """一棵松（水墨的画法）：细而弯的树干 + 几片参差的叶团（层层罩染 + 边缘的点苔），不画成圣诞树。x,y 是树脚。"""
     col = N['pine'] if col is None else np.asarray(col, F)
     dark = N['pine_dk'] if dark is None else np.asarray(dark, F)
     r = np.random.default_rng(seed)
     top = (x + lean * h, y - h)
-    mid = (x + lean * h * 0.4 + r.normal(0, h * 0.04), y - h * 0.5)
-    brush(L, [(x, y), mid, top], w0=max(h * 0.05, 2.5), w1=max(h * 0.012, 1.0), color=N['wood_dk'] * 0.55, op=0.9 * op, seed=seed, wob=h * 0.01, taper=0.1)
-    nclump = 4 + int(h / 90)
+    mid = (x + lean * h * 0.5 + r.normal(0, h * 0.05), y - h * 0.5)
+    brush(L, [(x, y), mid, top], w0=max(h * 0.045, 2.2), w1=max(h * 0.012, 1.0), color=N['wood_dk'] * 0.55, op=0.9 * op, seed=seed, wob=h * 0.012, taper=0.08)
+    nclump = 3 + int(h / 110)
     for i in range(nclump):
-        f = 0.35 + 0.62 * (i / max(nclump - 1, 1)) + r.normal(0, 0.03)
-        cx = x + lean * h * f + r.normal(0, h * 0.05) * (1.1 - f)
+        f = 0.42 + 0.55 * (i / max(nclump - 1, 1)) + r.normal(0, 0.03)
+        side = (-1 if i % 2 == 0 else 1) * r.uniform(0.0, 1.0)
+        cx = x + lean * h * f + side * h * 0.1 * (1.15 - f)
         cy = y - h * f
-        rx = h * (0.20 - 0.11 * f) * r.uniform(0.8, 1.2) + 6
-        ry = rx * r.uniform(0.32, 0.46)
-        # 叶团：椭圆水彩块 + 外缘一圈短笔
-        pts = [(cx + math.cos(a) * rx * (1 + 0.13 * math.sin(a * 3 + i)), cy + math.sin(a) * ry * (1 + 0.1 * math.cos(a * 4))) for a in np.linspace(0, 2 * math.pi, 14, endpoint=False)]
-        wash(L, pts, mix(col, dark, r.uniform(0.0, 0.5)), op=0.92 * op, wob=1.6, seed=int(r.integers(1e6)), smooth=2, tex_k=0.2, rim=0.2, rim_w=2.0)
+        rx = h * (0.17 - 0.07 * f) * r.uniform(0.85, 1.25) + 5
+        ry = rx * r.uniform(0.30, 0.42)
+        n = 11
+        pts = []
+        for k, a in enumerate(np.linspace(0, 2 * math.pi, n, endpoint=False)):
+            jit = r.uniform(0.78, 1.18)
+            pts.append((cx + math.cos(a) * rx * jit, cy + math.sin(a) * ry * jit * (1.0 if math.sin(a) < 0 else 0.7)))
+        wash(L, pts, mix(col, dark, r.uniform(0.0, 0.45)), op=0.9 * op, wob=2.2, seed=int(r.integers(1e6)), smooth=2, tex_k=0.25, rim=0.25, rim_w=2.5)
+        # 上沿提亮一笔（受光的叶面）
+        wash(L, [(cx - rx * 0.6, cy - ry * 0.1), (cx - rx * 0.1, cy - ry * 0.75), (cx + rx * 0.5, cy - ry * 0.6), (cx + rx * 0.1, cy - ry * 0.2)], mix(col, N['paper'], 0.28), op=0.4 * op, wob=1.5, seed=int(r.integers(1e6)), smooth=2, tex_k=0.1, rim=0.0)
         st = []
-        for _ in range(int(rx * 1.4)):
-            a = r.uniform(0, 2 * math.pi)
-            px, py = cx + math.cos(a) * rx * 0.96, cy + math.sin(a) * ry * 0.96
-            L_ = r.uniform(5, 13)
-            st.append((px, py, px + math.cos(a + r.normal(0, 0.5)) * L_, py + math.sin(a) * L_ * 0.8 + r.uniform(0, 3), r.uniform(0.9, 1.6), r.uniform(0.35, 0.8) * op))
+        for _ in range(int(rx * 0.9)):
+            a = r.uniform(math.pi * 0.9, math.pi * 2.1)
+            px, py = cx + math.cos(a) * rx * r.uniform(0.7, 1.12), cy + math.sin(a) * ry * r.uniform(0.7, 1.15)
+            st.append((px, py, px + r.normal(0, 2.5), py + r.uniform(1.5, 6), r.uniform(1.4, 2.8), r.uniform(0.4, 0.85) * op))
         flicks(L, st, color=dark)
+        # 垂下的枝
+        brush(L, [(cx - rx * 0.9, cy + ry * 0.2), (cx - rx * 1.0, cy + ry * 1.0), (cx - rx * 0.95, cy + ry * 1.9)], w0=1.4, color=dark, op=0.6 * op, seed=int(r.integers(1e6)), taper=0.4, wob=0.8)
         if snow > 0:
-            wash(L, [(cx - rx * 0.8, cy - ry * 0.25), (cx - rx * 0.2, cy - ry * 0.85), (cx + rx * 0.5, cy - ry * 0.7), (cx + rx * 0.8, cy - ry * 0.2), (cx, cy - ry * 0.35)], N['snow'], op=snow * op, wob=1.2, seed=int(r.integers(1e6)), smooth=2, tex_k=0.08)
+            wash(L, [(cx - rx * 0.8, cy - ry * 0.25), (cx - rx * 0.2, cy - ry * 0.9), (cx + rx * 0.5, cy - ry * 0.75), (cx + rx * 0.8, cy - ry * 0.2), (cx, cy - ry * 0.35)], N['snow'], op=snow * op, wob=1.2, seed=int(r.integers(1e6)), smooth=2, tex_k=0.08)
 
 
-def old_tree(L, x, y, h, seed=0, col=None, depth=5, spread=0.85, leaf=0.0, op=1.0, trunk_w=None):
-    """老树 / 光秃秃的树：粗而扭的树干 + 递归的细枝（墨线），枝头可挂一点叶/雪。"""
+def old_tree(L, x, y, h, seed=0, col=None, depth=5, spread=0.85, leaf=0.0, op=1.0, trunk_w=None, snow=0.0):
+    """老树 / 光秃秃的树：粗而扭的树干（一侧加深、树皮的竖皴）+ 递归的细枝（下粗上细、收尖的墨线），枝头可挂一点叶/雪。"""
     col = N['wood_dk'] * 0.6 if col is None else np.asarray(col, F)
     r = np.random.default_rng(seed)
     tw = trunk_w or h * 0.07
@@ -350,36 +361,44 @@ def old_tree(L, x, y, h, seed=0, col=None, depth=5, spread=0.85, leaf=0.0, op=1.
         a = ang
         cx, cy = px, py
         for k in range(n):
-            a += r.normal(0, 0.16)
+            a += r.normal(0, 0.2) - 0.05 * math.copysign(1, math.cos(a)) * (1 if d > 2 else 0)
             cx += math.cos(a) * ln / n
             cy += math.sin(a) * ln / n
             pts.append((cx, cy))
-        brush(L, pts, w0=wd, w1=max(wd * 0.55, 0.9), color=col, op=0.92 * op, seed=int(r.integers(1e6)), wob=ln * 0.02, taper=0.12 if d < 2 else 0.4, dry=0.18 if wd > 4 else 0)
+        brush(L, pts, w0=wd, w1=max(wd * 0.34, 0.9), color=col, op=0.95 * op, seed=int(r.integers(1e6)), wob=ln * 0.025, taper=0.06 if d < 2 else 0.25, dry=0.0)
+        if wd > 5:
+            brush(L, [(p[0] + wd * 0.18, p[1]) for p in pts], w0=wd * 0.35, w1=0.8, color=col * 0.6, op=0.55 * op, seed=int(r.integers(1e6)), wob=ln * 0.03, taper=0.2)
         if d >= depth:
+            if snow > 0:
+                brush(L, [(cx - 14, cy + 2), (cx, cy - 1), (cx + 14, cy + 2)], w0=3.0, color=N['snow'], op=snow * op, seed=int(r.integers(1e6)), taper=0.4)
             if leaf > 0:
                 for _ in range(2):
                     wash(L, [(cx + r.normal(0, 6) + dx, cy + r.normal(0, 4) + dy) for dx, dy in ((-9, 0), (0, -7), (9, 0), (0, 6))], N['grass_dk'], op=leaf * op, wob=1.5, seed=int(r.integers(1e6)), smooth=2)
             return
-        for s in (-1, 1):
-            if r.random() < 0.88:
-                branch(cx, cy, a + s * spread * r.uniform(0.5, 1.1), ln * r.uniform(0.62, 0.78), wd * 0.66, d + 1)
-        if r.random() < 0.5:
-            branch(cx, cy, a + r.normal(0, 0.2), ln * 0.7, wd * 0.6, d + 1)
+        for s_ in (-1, 1):
+            if r.random() < 0.9:
+                branch(cx, cy, a + s_ * spread * r.uniform(0.45, 1.0), ln * r.uniform(0.6, 0.78), wd * 0.62, d + 1)
+        if r.random() < 0.55:
+            branch(cx, cy, a + r.normal(0, 0.2), ln * 0.66, wd * 0.55, d + 1)
 
-    # 树干：弯曲，下粗上细
-    pts = [(x, y), (x + r.normal(0, h * 0.04), y - h * 0.18), (x + r.normal(0, h * 0.07), y - h * 0.38)]
-    brush(L, pts, w0=tw * 1.5, w1=tw, color=col, op=0.95 * op, seed=seed, wob=2.0, taper=0.05, dry=0.25)
-    # 树皮：几道竖的短皴
+    # 树干：弯曲，下粗上细，底部像盘根
+    t0 = (x, y)
+    t1 = (x + r.normal(0, h * 0.03), y - h * 0.2)
+    t2 = (x + r.normal(0, h * 0.05), y - h * 0.4)
+    brush(L, [t0, t1, t2], w0=tw * 1.7, w1=tw * 0.95, color=col, op=0.97 * op, seed=seed, wob=3.0, taper=0.04, dry=0.0)
+    brush(L, [(x + tw * 0.45, y), (t1[0] + tw * 0.3, t1[1]), (t2[0] + tw * 0.2, t2[1])], w0=tw * 0.6, w1=tw * 0.35, color=col * 0.55, op=0.5 * op, seed=seed + 3, wob=3.0, taper=0.1)
+    for s_ in (-1, 1):   # 树根
+        brush(L, [(x + s_ * tw * 0.5, y - 8), (x + s_ * tw * 1.1, y + 2), (x + s_ * tw * 1.9, y + 6)], w0=tw * 0.5, w1=2, color=col, op=0.85 * op, seed=seed + 5 + s_, wob=2.0, taper=0.1)
     st = []
-    for _ in range(int(h * 0.28)):
-        t = r.uniform(0, 0.38)
-        px = x + r.uniform(-tw * 0.7, tw * 0.7) * (1.2 - t)
+    for _ in range(int(h * 0.3)):
+        t = r.uniform(0, 0.4)
+        px = x + r.uniform(-tw * 0.75, tw * 0.75) * (1.3 - t)
         py = y - h * t
-        st.append((px, py, px + r.normal(0, 2), py - r.uniform(6, 22), r.uniform(0.8, 1.6), r.uniform(0.25, 0.6) * op))
-    flicks(L, st, color=col)
-    ex, ey = pts[-1]
-    for s in (-1, 0, 1):
-        branch(ex, ey, -math.pi / 2 + s * 0.55 + r.normal(0, 0.1), h * 0.42, tw * 0.62, 1)
+        st.append((px, py, px + r.normal(0, 2), py - r.uniform(8, 26), r.uniform(0.9, 1.9), r.uniform(0.25, 0.6) * op))
+    flicks(L, st, color=col * 0.5)
+    ex, ey = t2
+    for s_ in (-1, 0, 1):
+        branch(ex, ey, -math.pi / 2 + s_ * 0.6 + r.normal(0, 0.1), h * 0.44, tw * 0.6, 1)
 
 
 def willow(L, x, y, h, seed=0, col=None, op=1.0):
@@ -563,55 +582,124 @@ def curve_roof(L, cx, y_eave, w, rise, seed=0, col=None, edge=None, thick=14, op
     brush(L, upper[::-1], w0=2.4, color=INK, op=0.8 * op, seed=seed + 2, wob=0.6, taper=0.1)
 
 
-def thatch_hut(L, x, y, w, h, seed=0, wall=None, snow=0.0, door=True, window=True, op=1.0, lit=None):
-    """茅屋：矮的石/土墙 + 厚厚的草顶（密密的短笔）+ 木门 + 小窗。x,y 是墙脚中点。lit 是窗/门的光色（None 表示不亮）。"""
+def thatch_hut(L, x, y, w, h, seed=0, wall=None, snow=0.0, door=True, window=True, op=1.0, lit=None, roof_rise=0.34, eave=0.62):
+    """茅屋：矮的石/土墙 + 宽檐的草顶（层层的草束）+ 木门 + 小窗。x,y 是墙脚中点；h 是墙+屋顶的总高。lit 是窗/门的光色（None 表示不亮）。"""
     wall = N['stone'] if wall is None else np.asarray(wall, F)
     r = np.random.default_rng(seed)
-    wh = h * 0.55
-    wash(L, rect(x - w / 2, y - wh, x + w / 2, y), wall, op=op, wob=1.6, seed=seed, smooth=0, tex_k=0.22, rim=0.18, rim_w=2.5)
-    # 石块缝
+    rh = w * roof_rise
+    wh = max(h - rh, h * 0.45)
+    top = y - wh
+    wash(L, rect(x - w / 2, top, x + w / 2, y), wall, op=op, wob=1.6, seed=seed, smooth=0, tex_k=0.22, rim=0.18, rim_w=2.5)
     st = []
-    for row in range(int(wh / 22)):
-        yy = y - row * 22 - 8
+    for row in range(int(wh / 24)):
+        yy = y - row * 24 - 10
         xx = x - w / 2 + r.uniform(0, 30)
         while xx < x + w / 2 - 20:
-            ln = r.uniform(28, 60)
-            st.append((xx, yy, min(xx + ln, x + w / 2 - 2), yy + r.normal(0, 1), r.uniform(1.0, 1.8), r.uniform(0.2, 0.45) * op))
-            xx += ln + r.uniform(2, 10)
+            ln = r.uniform(30, 70)
+            st.append((xx, yy, min(xx + ln, x + w / 2 - 2), yy + r.normal(0, 1), r.uniform(1.0, 1.9), r.uniform(0.2, 0.45) * op))
+            xx += ln + r.uniform(2, 12)
     flicks(L, st, color=INK)
-    # 草顶
-    rh = h * 0.5
-    roof = [(x - w * 0.62, y - wh + 12), (x - w * 0.36, y - wh - rh * 0.55), (x - w * 0.1, y - wh - rh), (x + w * 0.1, y - wh - rh), (x + w * 0.36, y - wh - rh * 0.55), (x + w * 0.62, y - wh + 12)]
-    wash(L, roof, N['thatch'], op=op, wob=2.0, seed=seed + 1, smooth=2, tex_k=0.25, rim=0.2, rim_w=3)
-    st = []
-    for _ in range(int(w * rh / 55)):
-        t = r.random()
-        px = x + r.uniform(-w * 0.58, w * 0.58)
-        top_edge = y - wh - rh * (1 - (abs(px - x) / (w * 0.62)) ** 1.6) * 0.98
-        py = r.uniform(top_edge, y - wh + 10)
-        ln = r.uniform(10, 28)
-        st.append((px, py, px + r.normal(0, 3), py + ln, r.uniform(1.0, 2.0), r.uniform(0.25, 0.65) * op))
-    flicks(L, st, color=N['thatch_dk'] * 0.85)
-    # 草顶下沿的毛边
-    st = [(x + r.uniform(-w * 0.6, w * 0.6), y - wh + 10, 0, 0, 0, 0) for _ in range(0)]
-    brush(L, [(x - w * 0.62, y - wh + 12), (x, y - wh + 18), (x + w * 0.62, y - wh + 12)], w0=3.2, color=INK, op=0.6 * op, seed=seed + 3, wob=1.2, dry=0.35, taper=0.1)
-    brush(L, roof[:4][::1], w0=2.2, color=INK, op=0.55 * op, seed=seed + 4, wob=1.0, dry=0.3, taper=0.15)
+    # 墙角两道竖线
+    for sx in (-1, 1):
+        brush(L, [(x + sx * w / 2, y), (x + sx * w / 2, top)], w0=2.6, color=INK, op=0.6 * op, seed=seed + 11 + sx, wob=0.8, taper=0.05, dry=0.2)
+    # 草顶：宽檐，两侧微微下凹，屋脊略平
+    ex = w * eave
+    roof = [(x - ex, top + 18), (x - ex * 0.78, top - rh * 0.28), (x - w * 0.34, top - rh * 0.8), (x - w * 0.2, top - rh), (x + w * 0.2, top - rh), (x + w * 0.34, top - rh * 0.8), (x + ex * 0.78, top - rh * 0.28), (x + ex, top + 18)]
+    wash(L, roof, N['thatch'], op=op, wob=2.0, seed=seed + 1, smooth=2, tex_k=0.28, rim=0.25, rim_w=3)
+    # 檐下阴影带
+    wash(L, [(x - ex, top + 18), (x - ex * 0.8, top - rh * 0.1), (x + ex * 0.8, top - rh * 0.1), (x + ex, top + 18), (x + ex * 0.6, top + 26), (x - ex * 0.6, top + 26)], N['thatch_dk'], op=0.55 * op, wob=2.0, seed=seed + 2, smooth=2, tex_k=0.2, rim=0.0)
+    st, st2 = [], []
+    for _ in range(int(ex * rh / 38)):
+        px = x + r.uniform(-ex * 0.96, ex * 0.96)
+        edge = abs(px - x) / ex
+        top_edge = top - rh * (1 - edge ** 1.8) * 0.98 + 14 * edge
+        py = r.uniform(top_edge, top + 16)
+        ln = r.uniform(12, 34)
+        a_ = (st if r.random() < 0.6 else st2)
+        a_.append((px, py, px + r.normal(0, 2.5) + (px - x) * 0.04, py + ln, r.uniform(1.0, 2.2), r.uniform(0.25, 0.7) * op))
+    flicks(L, st, color=N['thatch_dk'] * 0.8)
+    flicks(L, st2, color=mix(N['thatch'], N['paper'], 0.45))
+    # 屋脊：压着几根横杆
+    brush(L, [(x - w * 0.22, top - rh + 4), (x, top - rh - 2), (x + w * 0.22, top - rh + 4)], w0=4.0, color=INK, op=0.7 * op, seed=seed + 3, wob=1.2, dry=0.3, taper=0.1)
+    brush(L, [roof[0], roof[1], roof[2], roof[3]], w0=2.6, color=INK, op=0.7 * op, seed=seed + 4, wob=1.2, dry=0.3, taper=0.15)
+    brush(L, [roof[7], roof[6], roof[5], roof[4]], w0=2.6, color=INK, op=0.7 * op, seed=seed + 5, wob=1.2, dry=0.3, taper=0.15)
+    brush(L, [(x - ex, top + 22), (x, top + 30), (x + ex, top + 22)], w0=3.6, color=INK, op=0.55 * op, seed=seed + 6, wob=1.2, dry=0.4, taper=0.1)
     if snow > 0:
-        sp = [(x - w * 0.6, y - wh + 6), (x - w * 0.34, y - wh - rh * 0.5), (x - w * 0.1, y - wh - rh * 0.95), (x + w * 0.1, y - wh - rh * 0.95), (x + w * 0.34, y - wh - rh * 0.5), (x + w * 0.6, y - wh + 6),
-              (x + w * 0.45, y - wh - rh * 0.25), (x + w * 0.2, y - wh - rh * 0.55), (x - w * 0.1, y - wh - rh * 0.7), (x - w * 0.4, y - wh - rh * 0.3)]
-        wash(L, sp, N['snow'], op=snow * op, wob=3, seed=seed + 6, smooth=2, tex_k=0.08, rim=0.1)
+        sp = [roof[1], roof[2], roof[3], roof[4], roof[5], roof[6], (x + w * 0.3, top - rh * 0.55), (x, top - rh * 0.78), (x - w * 0.3, top - rh * 0.55)]
+        wash(L, sp, N['snow'], op=snow * op, wob=3, seed=seed + 7, smooth=2, tex_k=0.08, rim=0.1)
     if door:
-        dw, dh = w * 0.2, wh * 0.72
+        dw, dh = w * 0.19, wh * 0.9
         dx = x + w * 0.08
-        wash(L, rect(dx - dw / 2, y - dh, dx + dw / 2, y), N['wood'] * 0.8 if lit is None else np.asarray(lit, F), op=op, wob=1.0, seed=seed + 7, smooth=0, tex_k=0.15, rim=0.2)
-        brush(L, [(dx - dw / 2, y), (dx - dw / 2, y - dh), (dx + dw / 2, y - dh), (dx + dw / 2, y)], w0=2.2, color=INK, op=0.75 * op, seed=seed + 8, smooth=False, taper=0.05)
+        wash(L, rect(dx - dw / 2, y - dh, dx + dw / 2, y), N['wood'] * 0.8 if lit is None else np.asarray(lit, F), op=op, wob=1.0, seed=seed + 8, smooth=0, tex_k=0.15, rim=0.2)
+        for k in range(1, 4):
+            brush(L, [(dx - dw / 2 + dw * k / 4, y), (dx - dw / 2 + dw * k / 4, y - dh)], w0=1.4, color=INK, op=0.35 * op, seed=seed + 20 + k, taper=0.05, smooth=False)
+        brush(L, [(dx - dw / 2 - 6, y), (dx - dw / 2 - 6, y - dh - 6), (dx + dw / 2 + 6, y - dh - 6), (dx + dw / 2 + 6, y)], w0=4.5, color=N['wood_dk'] * 0.8, op=0.9 * op, seed=seed + 9, smooth=False, taper=0.03)
     if window:
-        ww = w * 0.13
-        wx, wy = x - w * 0.28, y - wh * 0.62
-        wash(L, rect(wx - ww / 2, wy - ww / 2, wx + ww / 2, wy + ww / 2), N['wood_dk'] if lit is None else np.asarray(lit, F), op=op, wob=0.8, seed=seed + 9, smooth=0, tex_k=0.1)
-        brush(L, [(wx - ww / 2, wy - ww / 2), (wx + ww / 2, wy - ww / 2), (wx + ww / 2, wy + ww / 2), (wx - ww / 2, wy + ww / 2), (wx - ww / 2, wy - ww / 2)], w0=2.0, color=INK, op=0.75 * op, seed=seed + 10, smooth=False, taper=0.05)
+        ww = w * 0.12
+        wx, wy = x - w * 0.27, y - wh * 0.6
+        wash(L, rect(wx - ww / 2, wy - ww / 2, wx + ww / 2, wy + ww / 2), N['wood_dk'] if lit is None else np.asarray(lit, F), op=op, wob=0.8, seed=seed + 12, smooth=0, tex_k=0.1)
+        for k in (0.5,):
+            brush(L, [(wx - ww / 2, wy), (wx + ww / 2, wy)], w0=2.0, color=INK, op=0.7 * op, seed=seed + 13, smooth=False, taper=0.05)
+            brush(L, [(wx, wy - ww / 2), (wx, wy + ww / 2)], w0=2.0, color=INK, op=0.7 * op, seed=seed + 14, smooth=False, taper=0.05)
+        brush(L, [(wx - ww / 2, wy - ww / 2), (wx + ww / 2, wy - ww / 2), (wx + ww / 2, wy + ww / 2), (wx - ww / 2, wy + ww / 2), (wx - ww / 2, wy - ww / 2)], w0=3.0, color=N['wood_dk'] * 0.7, op=0.9 * op, seed=seed + 10, smooth=False, taper=0.05)
 
 
 def finish(L, name, out_dir, jpg=False, q=92):
     (out_dir).mkdir(parents=True, exist_ok=True)
     L.save(out_dir / f'{name}.{"jpg" if jpg else "png"}', jpg=jpg, q=q)
+
+
+# ───────────────────────── 星图灯盘 ─────────────────────────
+def lamp_disc(L, cx, cy, r, seed=0, col=None, lit=0.0, rim=True, chart=True):
+    """天上那盏灯：一个圆。灭着的时候是灰色的，带淡淡的星图（同心圆、刻度、星点连线）。"""
+    col = hexc('#c3c6c8') if col is None else np.asarray(col, F)
+    rng = np.random.default_rng(seed)
+    n = 40
+    pts = [(cx + math.cos(a) * r * (1 + 0.012 * math.sin(a * 5 + seed)), cy + math.sin(a) * r * (1 + 0.012 * math.cos(a * 4 + seed))) for a in np.linspace(0, 2 * math.pi, n, endpoint=False)]
+    wash(L, pts, col, op=0.95, wob=2.5, seed=seed, smooth=2, tex_k=0.22, rim=0.32, rim_w=6.0)
+    # 内部再罩两层，做出水渍的深浅
+    for k in range(3):
+        rr = r * rng.uniform(0.45, 0.8)
+        ox, oy = rng.normal(0, r * 0.12), rng.normal(0, r * 0.12)
+        p2 = [(cx + ox + math.cos(a) * rr * rng.uniform(0.9, 1.1), cy + oy + math.sin(a) * rr * rng.uniform(0.9, 1.1)) for a in np.linspace(0, 2 * math.pi, 12, endpoint=False)]
+        wash(L, p2, mix(col, INK, 0.12 + 0.05 * k), op=0.28, wob=6, seed=seed + k + 1, smooth=2, tex_k=0.18, rim=0.2, rim_w=4)
+    if chart:
+        for k, f in enumerate((0.93, 0.74, 0.5, 0.26)):
+            brush(L, [(cx + math.cos(a) * r * f, cy + math.sin(a) * r * f) for a in np.linspace(0.0, 2 * math.pi * 0.985, 28)], w0=1.6, color=INK, op=0.32, seed=seed + 20 + k, wob=0.8, taper=0.05, dry=0.35)
+        for k in range(36):
+            a = k * math.pi / 18 + rng.normal(0, 0.01)
+            l0, l1 = (0.93, 0.98) if k % 3 else (0.9, 1.0)
+            brush(L, [(cx + math.cos(a) * r * l0, cy + math.sin(a) * r * l0), (cx + math.cos(a) * r * l1, cy + math.sin(a) * r * l1)], w0=1.4, color=INK, op=0.3, seed=seed + 60 + k, smooth=False, taper=0.1)
+        # 星点连线
+        stars = [(cx + rng.normal(0, r * 0.38), cy + rng.normal(0, r * 0.38)) for _ in range(9)]
+        stars = [s for s in stars if math.hypot(s[0] - cx, s[1] - cy) < r * 0.82]
+        for a_, b_ in zip(stars[:-1], stars[1:]):
+            brush(L, [a_, ((a_[0] + b_[0]) / 2 + rng.normal(0, 3), (a_[1] + b_[1]) / 2 + rng.normal(0, 3)), b_], w0=1.2, color=INK, op=0.28, seed=int(rng.integers(1e6)), taper=0.2)
+        dots(L, [(x, y, rng.uniform(2.0, 3.8)) for x, y in stars], INK, op=0.55)
+    if rim:
+        brush(L, [(cx + math.cos(a) * r, cy + math.sin(a) * r) for a in np.linspace(0.2, 2 * math.pi * 0.96, 30)], w0=2.8, color=INK, op=0.5, seed=seed + 99, wob=1.2, taper=0.15, dry=0.4)
+
+
+# ───────────────────────── 整张画的“水彩化” ─────────────────────────
+def watercolorize(L, seed=1, grain_k=0.05, pool_k=0.06, edge_k=0.35, wobble=1.6):
+    """整张画布的收尾：颜料颗粒、色块里的深浅积色、色块边缘的积色（湿边）、整体极轻微的手抖位移。只动 RGB，不动 alpha。"""
+    h, w = L.h, L.w
+    rgb = L.rgb
+    fine = fbm(h, w, seed, 6, 2, 0.5)
+    mid = fbm(h, w, seed + 1, 70, 4, 0.55, warp=25)
+    big = fbm(h, w, seed + 2, 260, 3, 0.5)
+    k = 1 + (fine - 0.5) * grain_k * 2 + (mid - 0.5) * pool_k * 2 + (big - 0.5) * pool_k
+    rgb = rgb * k[..., None]
+    lum = rgb @ np.array([0.299, 0.587, 0.114], F)
+    e = cv2.GaussianBlur(lum, (0, 0), 1.0) - cv2.GaussianBlur(lum, (0, 0), 4.5)
+    # 比周围暗一点的边（色块边缘）更暗一些；比周围亮的边略提亮——湿边
+    rgb = rgb * (1 + np.clip(e, -0.12, 0.12)[..., None] * edge_k * 2.2)
+    if wobble > 0:
+        n1 = fbm(h, w, seed + 7, 140, 3, 0.5)
+        n2 = fbm(h, w, seed + 8, 140, 3, 0.5)
+        yy, xx = np.mgrid[0:h, 0:w].astype(F)
+        mx, my = xx + (n1 - 0.5) * wobble * 2, yy + (n2 - 0.5) * wobble * 2
+        rgb = cv2.remap(rgb, mx, my, cv2.INTER_LINEAR, borderMode=cv2.BORDER_REFLECT)
+        L.a = cv2.remap(L.a, mx, my, cv2.INTER_LINEAR, borderMode=cv2.BORDER_REFLECT)
+    L.rgb = np.clip(rgb, 0, 1).astype(F)
+    return L

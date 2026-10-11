@@ -3,102 +3,154 @@
   "w": 153,
   "h": 378,
   "ax": 77.0,
-  "ay": 374
+  "ay": 374,
+  "night": true
  },
  "shiwa_side": {
   "w": 127,
   "h": 379,
   "ax": 52.5,
-  "ay": 375
+  "ay": 375,
+  "night": true
  },
  "houzi_front": {
   "w": 116,
   "h": 157,
   "ax": 58.5,
-  "ay": 152
+  "ay": 152,
+  "night": true
  },
  "houzi_side": {
   "w": 103,
   "h": 152,
   "ax": 45.5,
-  "ay": 147
+  "ay": 147,
+  "night": true
  },
  "nainai_front": {
   "w": 144,
   "h": 391,
   "ax": 73.5,
-  "ay": 386
+  "ay": 386,
+  "night": true
  },
  "nainai_side": {
   "w": 134,
   "h": 394,
   "ax": 60.0,
-  "ay": 389
+  "ay": 389,
+  "night": true
  },
  "fish_front": {
   "w": 162,
   "h": 406,
   "ax": 77.0,
-  "ay": 405
+  "ay": 405,
+  "night": true
  },
  "fish_side": {
   "w": 126,
   "h": 405,
   "ax": 67.0,
-  "ay": 404
+  "ay": 404,
+  "night": true
  },
  "turtle_front": {
   "w": 209,
   "h": 283,
   "ax": 105.5,
-  "ay": 278
+  "ay": 278,
+  "night": true
  },
  "turtle_side": {
   "w": 162,
   "h": 261,
   "ax": 91.0,
-  "ay": 255
+  "ay": 255,
+  "night": true
  },
  "dragon_front": {
   "w": 184,
   "h": 483,
   "ax": 159.0,
-  "ay": 482
+  "ay": 482,
+  "night": true
  },
  "dragon_side": {
   "w": 180,
   "h": 470,
   "ax": 116.5,
-  "ay": 469
+  "ay": 469,
+  "night": true
  },
  "bell": {
   "w": 310,
   "h": 291,
   "ax": 155.0,
-  "ay": 287
+  "ay": 287,
+  "night": true
  },
  "fire": {
   "w": 245,
   "h": 301,
   "ax": 122.5,
-  "ay": 297
+  "ay": 297,
+  "night": false
  },
  "drum": {
   "w": 372,
   "h": 285,
   "ax": 186.0,
-  "ay": 280
+  "ay": 280,
+  "night": true
  },
  "needle": {
   "w": 295,
   "h": 285,
   "ax": 147.5,
-  "ay": 281
+  "ay": 281,
+  "night": true
  },
  "pearl_stone": {
   "w": 344,
   "h": 257,
   "ax": 172.0,
-  "ay": 252
+  "ay": 252,
+  "night": true
+ },
+ "pearl": {
+  "w": 156,
+  "h": 156,
+  "ax": 78.0,
+  "ay": 78.0,
+  "night": false
+ },
+ "nainai_front_red": {
+  "w": 144,
+  "h": 391,
+  "ax": 73.5,
+  "ay": 386,
+  "night": false
+ },
+ "nainai_side_red": {
+  "w": 134,
+  "h": 394,
+  "ax": 60.0,
+  "ay": 389,
+  "night": false
+ },
+ "houzi_front_eyes": {
+  "w": 116,
+  "h": 157,
+  "ax": 58.5,
+  "ay": 152,
+  "night": false
+ },
+ "houzi_side_eyes": {
+  "w": 103,
+  "h": 152,
+  "ax": 45.5,
+  "ay": 147,
+  "night": false
  }
 }

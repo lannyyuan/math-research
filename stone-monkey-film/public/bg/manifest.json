@@ -1,1 +1,62 @@
-{}
+{
+ "title_sky": {
+  "variants": [
+   "night"
+  ],
+  "ext": "jpg",
+  "w": 1920,
+  "h": 1080
+ },
+ "village_far": {
+  "variants": [
+   "night",
+   "lit",
+   "day",
+   "dawn"
+  ],
+  "ext": "jpg",
+  "w": 2900,
+  "h": 1080
+ },
+ "village_mid": {
+  "variants": [
+   "night",
+   "lit",
+   "day",
+   "dawn"
+  ],
+  "ext": "png",
+  "w": 2900,
+  "h": 1080
+ },
+ "village_near": {
+  "variants": [
+   "night",
+   "lit",
+   "day",
+   "dawn"
+  ],
+  "ext": "png",
+  "w": 2900,
+  "h": 1080
+ },
+ "lamp_dead": {
+  "variants": [
+   "night"
+  ],
+  "ext": "png",
+  "w": 440,
+  "h": 440
+ },
+ "village_near2": {
+  "variants": [
+   "night",
+   "lit",
+   "day",
+   "dawn"
+  ],
+  "ext": "png",
+  "w": 2900,
+  "h": 1080
+ }
+}

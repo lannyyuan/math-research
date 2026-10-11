@@ -12,6 +12,8 @@ import json, pathlib, sys
 import numpy as np, cv2
 from scipy import ndimage as ndi
 from skimage import color as skc
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+from retouch import retouch
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 SHEET = ROOT / 'ref/character-sheet.png'
@@ -120,7 +122,8 @@ def extract(img, name, box, ground, near_px):
 
 
 def main():
-    img = cv2.cvtColor(cv2.imread(str(SHEET)), cv2.COLOR_BGR2RGB)
+    img = retouch(cv2.cvtColor(cv2.imread(str(SHEET)), cv2.COLOR_BGR2RGB))   # 老龙改成慈眉半垂眼；龟甲添胸前裂纹
+    cv2.imwrite(str(ROOT / 'out/sheet_retouched.png'), cv2.cvtColor(img, cv2.COLOR_RGB2BGR))
     meta = {}
     only = sys.argv[1:]
     for name, (x0, y0, x1, y1, g, npx) in BOXES.items():
