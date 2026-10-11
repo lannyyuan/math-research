@@ -9,6 +9,7 @@ description: 把一篇儿童故事做成「水彩手绘风动画短片（MP4，4
 本技能把“怎么做出来的”写成可以照着重做的方法；`templates/` 里是从参考实现里拎出来的通用工具和代码，`references/` 里是每一步的细节和踩过的坑。
 
 > 有“角色设定图 + 封面”的任务（造型以设定图为准）：先读 `references/05-reference-sheet-sprites.md`（纸偶精灵 + 水彩背景的做法，参考实现 `lighthouse-light-film/`）。
+> 故事是**英文**的：绘本网页用 `templates/webapp-en/`（见 `references/02-webapp-pipeline.md` §9；参考实现 `lighthouse-light-film/dist/lighthouse-light-book.html`，135 页、4.5 MB）。
 
 ## 什么时候用
 
@@ -79,7 +80,8 @@ node webapp/qa.mjs --all                             # 真浏览器逐页核对 
 
 - `templates/film-tools/` — 字幕调度/检查、渲染脚本、取帧脚本、暖色审计、配乐合成示例、PPT 分镜生成、`timeline.example.json`；
 - `templates/engine/` — 画法引擎（`art/ink.ts`、`ArtView.tsx`、`geom.ts`）、镜头（`Stage.tsx`）、字幕组件、`Film.tsx`/`Root.tsx` 骨架、`Plates.example.tsx`（补充插图的写法）；
-- `templates/webapp/` — 绘本网页的分页、配图、打包、字体裁剪、自动检查，`heroes.example.json` 是配图表示例。
+- `templates/webapp/` — 绘本网页的分页、配图、打包、字体裁剪、自动检查，`heroes.example.json` 是配图表示例；
+- `templates/webapp-en/` — 同一套，英文故事版（句子分页、Andika 字体、多个影片文件名、`book_stills.mjs` / `storyboard_plan.mjs` 一并放在里面）。
 
 > `templates/` 是从 `snow-lamp-film/` 同步过来的副本；改了工程里的工具后运行 `scripts/sync_from_project.sh` 同步。
 
@@ -112,6 +114,6 @@ skills/ink-storybook-film/
 │   ├── 03-lessons-and-pitfalls.md  ← 踩过的坑和修法（环境、渲染、版式、交付）
 │   ├── 04-optional-deliverables.md ← 分镜 PPT、字表覆盖率、交付大文件
 │   └── 05-reference-sheet-sprites.md ← 有“角色设定图 + 封面”时：抠精灵、图层状态、水彩背景、字幕只用原文、暖色审计
-├── templates/{film-tools,engine,webapp}/
+├── templates/{film-tools,engine,webapp,webapp-en}/   ← webapp-en = 英文版绘本网页（含 storyboard_plan/book_stills）；engine/plates-en = 补充插图的 Plate.tsx + 水彩背景示例
 └── scripts/sync_from_project.sh
 ```

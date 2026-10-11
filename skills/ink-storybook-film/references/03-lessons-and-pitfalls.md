@@ -69,3 +69,16 @@
 | Stop hook：仓库里有未提交的文件 | 提交并推到指定分支（`git push -u origin <branch>`；网络错误才重试，2/4/8/16 s） |
 | pptxgenjs 没装 | `npm i --save-dev --save-exact pptxgenjs`；生成后用 pptx 技能的 `validate.py` + LibreOffice 渲染抽检 |
 | 用户问“怎么把原版高清拉回来” | 给 `gh api … Accept: application/vnd.github.raw` 或 `gh repo clone … --sparse` 的完整命令（见 04） |
+
+## 英文绘本（lighthouse-light-film）追加
+
+| 现象 | 修法 |
+|---|---|
+| `plan.py` 报某条字幕 “not found in story order” | 影片里这几条字幕的顺序和原文不一致。改 `timeline.json` 的 cue 顺序，并让场景里的动作用 `cuesOf(场景id)[i].t` 取时间；重渲该场景 + 重跑 `book:stills` |
+| 补充插图全是同一幅 | `book_stills.mjs` 里每个插图要 `selectComposition({id:'Plate', inputProps:{which}})`，不能共用一个 composition 对象 |
+| 镜头移动露出画布边缘 | `Layer` 传 `w/h`，按镜头缩放后的视口夹紧偏移 |
+| 夜景窗里的灯看不见 | 背景先 `grade('night')`，`LitWindow` 用 `screen`，不要叠白房子上的亮 `Tint` |
+| 页面文字超过一屏 | `plan.py` 的 `chunks()` 先按逗号切长句，`split_span()` 再平均切；用 `CAP/SOFT_MAX` 调；`qa.mjs` 在 1440×900 列出仍需滚动的页 |
+| `ffmpeg -ss` 时间字符串解析失败 | 时间用 `toFixed(2)` 输出，别直接 `String(float)`（可能出 `1e-7`） |
+| `pgrep -f` 轮询脚本把自己匹配上，永远不退出 | 轮询产物文件或 PID，不要 `pgrep -f` 自己的命令行 |
+

@@ -15,23 +15,23 @@ export const S3: React.FC<{len: number}> = ({len}) => {
   const cam = useCam([
     {t: 0, ...at(900, 540, 1.0)},
     {t: 5.5, ...at(1200, 560, 1.15)},
-    {t: 7.2, ...at(1130, 580, 1.2)},
-    {t: 13.5, ...at(1040, 590, 1.28)},
-    {t: 18.5, ...at(1060, 580, 1.2)},
-    {t: 22.0, ...at(840, 570, 1.05)},
+    {t: 8.0, ...at(1130, 580, 1.2)},
+    {t: 14.0, ...at(1060, 590, 1.3)},
+    {t: 20.5, ...at(1060, 580, 1.22)},
+    {t: 23.0, ...at(840, 570, 1.05)},
     {t: len, ...at(640, 560, 1.02)},
   ]);
   // 角色走进来
   const enter = ramp(t, 0.0, 2.2);
   // 最后 Bolts 跳下台面，跟着他们往外走
-  const hop = ramp(t, 20.2, 21.6);
-  const leave = ramp(t, 22.6, 25.4);
+  const hop = ramp(t, 21.9, 23.1);
+  const leave = ramp(t, 23.4, 25.7);
   const hx = lerp(-120, 640, enter) - leave * 560;
   const bx = lerp(-230, 530, enter) - leave * 560;
-  const eyes = ramp(t, C[1].t + 0.9, C[1].t + 2.0);
+  const eyes = ramp(t, C[2].t + 0.9, C[2].t + 2.0);
   const boltsX = lerp(1050, 780, hop) - leave * 560;
   const boltsY = lerp(BENCH_Y, FLOOR_Y, hop) - Math.sin(hop * Math.PI) * 70;
-  const talk = t > C[2].t && t < C[2].t + C[2].d ? 0.03 : 0.008;
+  const talk = t > C[3].t && t < C[3].t + C[3].d ? 0.03 : 0.008;
   return (
     <SceneWrap len={len} bg="#445273">
       <Stage cam={cam}>

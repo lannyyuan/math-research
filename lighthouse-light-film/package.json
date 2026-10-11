@@ -11,7 +11,10 @@
     "plates": "bash scripts/paint_all.sh",
     "music": "python3 -I scripts/make_music.py && ffmpeg -y -loglevel error -i public/audio/score.wav -c:a aac -b:a 160k public/audio/score.m4a",
     "audit": "python3 -I scripts/audit_warm.py out/audit",
-    "render": "bash scripts/render.sh"
+    "render": "bash scripts/render.sh",
+    "book:stills": "node scripts/storyboard_plan.mjs && node scripts/book_stills.mjs",
+    "book": "python3 -I webapp/build.py",
+    "book:qa": "node webapp/qa.mjs --shots=out/book_qa"
   },
   "dependencies": {
     "@remotion/bundler": "4.0.534",

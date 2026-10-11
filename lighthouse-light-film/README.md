@@ -29,3 +29,16 @@ python3 -I scripts/check_subtitle_fit.py   # 字幕宽度
 npm run stills -- "Film:s8+24" --scale=0.5 # 看某一帧（场景id+场景内秒数）
 npm run audit                       # 暖色审计：只出背景和光（不画角色），暖色像素标成洋红
 ```
+
+## 绘本网页（单文件，英文，离线可读）
+- 成品：`dist/lighthouse-light-book.html`（约 4.5 MB，图 / 字体 / 脚本全内联）：封面 → 135 页（全文 + 配图）→ 结尾；目录、分镜总览（46 个影片场景 + 补充插图）、放映模式、字号 / 纸色主题 / 朗读 / 全屏。
+- 全文来自 `story/source.md`，不改一个字；每条影片字幕所在的页用该字幕的**无字幕干净画面**，影片没覆盖的章节（城里、城堡及城堡里面、游乐场、篷车、梦、春天）用 `src/plates/Plate.tsx` 补了同一画风的插图（背景在 `scripts/paint/bg_book.py`）。
+- “Watch this scene in the film”：把 `lighthouse-light-720p.mp4`（或 `lighthouse-light.mp4`）放在 HTML 同一个文件夹里就能跳到那一幕；没有影片文件时页面会给出提示，其它功能不受影响。
+- 重新生成（先装好 Chromium / Remotion，见上）：
+```bash
+npm run book:stills   # 分镜计划 + 干净画面 + 补充插图 → out/book_img/
+npm run book          # 分页（webapp/plan.py）+ 配图（webapp/heroes.json）+ 全文校验 + 内联打包 → dist/lighthouse-light-book.html
+npm run book:qa       # 真浏览器：逐页拼回全文逐字比对、溢出、控制台、多尺寸截图（out/book_qa/）
+```
+- 配图表 `webapp/heroes.json`（没有字幕的页按章节顺序取图，`fx/fy/z` 是取景中心和放大倍数）；每页行数上限在 `webapp/plan.py` 顶部（`CPL / CAP / SOFT_MAX`）。
+- 注意：影片字幕的顺序必须和故事原文一致（`plan.py` 按故事顺序给字幕找锚点）。S3 里 “A long journey is better with a friend.” 一句原先排在 “The robot's eyes lit up” 之后，已改回原文顺序（`src/timeline.json` + `src/scenes/S3.tsx` 的动作时间随之调整）。

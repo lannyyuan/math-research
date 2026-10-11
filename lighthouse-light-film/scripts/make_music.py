@@ -180,7 +180,7 @@ for k in range(26):
     put(pluck(hz(nm), 1.0, 0.09), S('s3', 0.4 + k * 0.9), 0.3 + 0.4 * (k % 2))
 for j, ch in enumerate([D_, G_, D_, A_] * 2):
     chord(ch, S('s3', j * 3.2), 4.0, amp=0.045)
-ping(S('s3', 8.8))
+ping(S('s3', 15.0))
 motif(S('s3', 19.4), 0.12, gap=0.8)
 
 # S4 走路：轻轻的脚步（拨弦打点）+ 小调；Comet 出现时加一个钟琴

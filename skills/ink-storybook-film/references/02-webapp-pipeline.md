@@ -120,3 +120,26 @@ webapp/plan.py（分页）─► webapp/out/plan.json ─► webapp/build.py ◄
 - **字大 + 短页**：6–8 岁识字阶段，一页别放太多；字号可调；
 - **不加拼音**：自动注音在多音字上会错（“得、着、了、地”…），给识字的孩子一个错的拼音比没有更糟；要做就接一份人工校对过的注音表；
 - **不依赖外部服务**：朗读用浏览器自带的，视频是本地文件。
+
+## 9. 英文故事 / 有设定图的版本（`lighthouse-light-film/`，`templates/webapp-en/`）
+
+《The Lighthouse Light》（约 6,900 词、38,898 个字符）按同一条管线做成 135 页、57 张图、4.5 MB 的英文绘本。和中文版不同的地方：
+
+| 项 | 中文版（`templates/webapp/`） | 英文版（`templates/webapp-en/`） |
+|---|---|---|
+| 分页单位 | 句号（。！？）+ 段 | 句子（含 “…” 引语和缩写）；`curly()` 先把直引号统一成弯引号；`sentences()` 切句，`chunks()` 把过长的列举句按逗号再切 |
+| 行宽估计 | 每行 ≈ 18~20 个汉字 | `CPL=44` 字符/行（Andika 偏宽），`CAP=14.2` 行/页，`SOFT_MAX=15.8`，`MIN_STUB=16` 词（锚点前的碎片并进锚点页），`LONG=250` 字符以上的段落尝试再切；`split_span()` 把超长一段平均切成几页，不留一两句的“尾巴” |
+| 字体 | LXGW WenKai（OFL） | Andika（OFL，`public/fonts/andika-latin-{400,700}-normal.woff2`，随 `OFL.txt`）；拉丁子集已含弯引号、破折号、é |
+| 全文校验 | 去标点后比汉字 | 去空白和引号后比字符（chapter 标题 + 正文）；`qa.mjs` 在真浏览器里逐页取文字再比一次 |
+| 影片入口 | `filmFile` 一个名字 | `filmFile: ['xxx-720p.mp4','xxx.mp4']`，网页依次尝试同目录下的文件；都没有就给提示，其他功能不受影响 |
+| 补充插图 | `Plates.tsx` | `src/plates/Plate.tsx`（`<Composition id="Plate" defaultProps={{which}}>`）+ `scripts/paint/bg_book.py` 画背景（`python3 bg_book.py [名字]`）；`book_stills.mjs` 对每个插图单独 `selectComposition` 传 `inputProps`（否则每张出来都是同一幅） |
+
+要点（在这个故事里踩过的）：
+
+1. **影片字幕的顺序必须和原文一致。** `plan.py` 按故事顺序给每条字幕找锚点；S3 有一句 “A long journey is better with a friend.” 排在了 “The robot's eyes lit up” 之后，`plan.py` 报 “cue not found”。正确做法是改影片（调 `timeline.json` 的 cue 顺序 + 场景里按 `cuesOf()` 取时间的动作），不是改网页；改完要重渲该场景并重跑 `book:stills`。
+2. **镜头要有边界。** 补充插图的视差层用 `Layer` 的 `w/h` 做边界夹紧，否则镜头偏移会露出画布边缘。
+3. **亮着的窗**在白房子上用 `screen` 混合会看不见：先把背景图 `grade('night')`，再叠 `LitWindow`，`Tint` 压低。
+4. **暗图**（夜景）在网页里会“一团黑”：`build.py` 对平均亮度 < 45 的图自动提亮（日志里 “brightened cue/NN”）。
+5. **验收**：桌面 1440×900 不许有需要滚动的页（`qa.mjs` 列出来）；平板 / 手机里文字区可以内部滚动（底部有渐隐提示），但图、题注、“Watch this scene in the film” 都要在首屏；设置浮层里按钮不许被裁（给 `.seg` `flex:none`、`.lab` `min-width:0`）。
+6. 命令：`npm run book:stills` → `npm run book` → `npm run book:qa`。
+
