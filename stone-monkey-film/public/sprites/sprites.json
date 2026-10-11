@@ -227,72 +227,210 @@
   "w": 224,
   "h": 547,
   "ax": 112.0,
-  "ay": 531
+  "ay": 531,
+  "night": true
  },
  "official_side": {
   "w": 172,
   "h": 545,
   "ax": 87.0,
-  "ay": 529
+  "ay": 529,
+  "night": true
  },
  "king_seated": {
   "w": 372,
   "h": 539,
   "ax": 187.0,
-  "ay": 523
+  "ay": 523,
+  "night": true
  },
  "god": {
   "w": 538,
   "h": 650,
   "ax": 268.0,
-  "ay": 628
+  "ay": 628,
+  "night": true
  },
  "villager1": {
   "w": 183,
   "h": 492,
   "ax": 94.0,
-  "ay": 477
+  "ay": 477,
+  "night": true
  },
  "villager2": {
   "w": 188,
   "h": 511,
   "ax": 96.0,
-  "ay": 495
+  "ay": 495,
+  "night": true
  },
  "villager3": {
   "w": 160,
   "h": 374,
   "ax": 71.0,
-  "ay": 362
+  "ay": 362,
+  "night": true
  },
  "villager4": {
   "w": 165,
   "h": 408,
   "ax": 72.0,
-  "ay": 395
+  "ay": 395,
+  "night": true
  },
  "kid1": {
   "w": 180,
   "h": 363,
   "ax": 88.0,
-  "ay": 351
+  "ay": 351,
+  "night": true
  },
  "kid2": {
   "w": 183,
   "h": 277,
   "ax": 92.0,
-  "ay": 266
+  "ay": 266,
+  "night": true
  },
  "kid3": {
   "w": 150,
   "h": 353,
   "ax": 68.0,
-  "ay": 341
+  "ay": 341,
+  "night": true
  },
  "girl_flower": {
   "w": 257,
   "h": 374,
   "ax": 139.0,
-  "ay": 362
+  "ay": 362,
+  "night": true
+ },
+ "bundle_red": {
+  "w": 173,
+  "h": 135,
+  "ax": 72.0,
+  "ay": 128,
+  "night": true
+ },
+ "scale": {
+  "w": 123,
+  "h": 123,
+  "ax": 61.0,
+  "ay": 61,
+  "night": true
+ },
+ "plank": {
+  "w": 314,
+  "h": 40,
+  "ax": 155.0,
+  "ay": 20,
+  "night": true
+ },
+ "firewood": {
+  "w": 175,
+  "h": 265,
+  "ax": 93.0,
+  "ay": 248,
+  "night": true
+ },
+ "firewood_tied": {
+  "w": 126,
+  "h": 273,
+  "ax": 62.0,
+  "ay": 256,
+  "night": true
+ },
+ "boulder": {
+  "w": 523,
+  "h": 444,
+  "ax": 262.0,
+  "ay": 429,
+  "night": true
+ },
+ "lever": {
+  "w": 49,
+  "h": 706,
+  "ax": 24.0,
+  "ay": 699,
+  "night": true
+ },
+ "flat_stone": {
+  "w": 165,
+  "h": 60,
+  "ax": 83.0,
+  "ay": 53,
+  "night": true
+ },
+ "wick_fixed": {
+  "w": 35,
+  "h": 228,
+  "ax": 15.0,
+  "ay": 221,
+  "night": true
+ },
+ "horse_side": {
+  "w": 523,
+  "h": 506,
+  "ax": 335.0,
+  "ay": 489,
+  "night": true
+ },
+ "sheep": {
+  "w": 151,
+  "h": 116,
+  "ax": 64.0,
+  "ay": 105,
+  "night": true
+ },
+ "phoenix_a": {
+  "w": 462,
+  "h": 433,
+  "ax": 285.0,
+  "ay": 230,
+  "night": true
+ },
+ "phoenix_b": {
+  "w": 454,
+  "h": 370,
+  "ax": 285.0,
+  "ay": 140,
+  "night": true
+ },
+ "bird_up": {
+  "w": 119,
+  "h": 81,
+  "ax": 64.0,
+  "ay": 62,
+  "night": true
+ },
+ "bird_down": {
+  "w": 120,
+  "h": 70,
+  "ax": 64.0,
+  "ay": 16,
+  "night": true
+ },
+ "swallow_up": {
+  "w": 123,
+  "h": 91,
+  "ax": 66.0,
+  "ay": 62,
+  "night": true
+ },
+ "swallow_down": {
+  "w": 122,
+  "h": 72,
+  "ax": 67.0,
+  "ay": 17,
+  "night": true
+ },
+ "oldwoman_sit_side": {
+  "w": 220,
+  "h": 319,
+  "ax": 80.0,
+  "ay": 305,
+  "night": true
  }
 }
