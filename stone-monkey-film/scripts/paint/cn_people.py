@@ -677,3 +677,15 @@ def scale_pattern(L, mask, bb, col, seed=0, dx=17.0, dy=13.0, dark=None, op=1.0,
     a = np.ones((h, w), F)
     m = mask[y0:y1, x0:x1] * op
     L.over(y0, y1, x0, x1, np.clip(rgb, 0, 1).astype(F), m)
+
+
+def paste_layer(L, U, pivot, deg=0.0, dx=0.0, dy=0.0, scale=1.0):
+    """把临时画布 U 绕 pivot 旋转 deg 度（顺时针为正，即向右倾）后盖到 L 上，可再平移。用来画“前倾”“歪头”。"""
+    M = cv2.getRotationMatrix2D((float(pivot[0]), float(pivot[1])), -deg, scale)
+    M[0, 2] += dx
+    M[1, 2] += dy
+    pm = (U.rgb * U.a[..., None]).astype(F)
+    pm2 = cv2.warpAffine(pm, M, (L.w, L.h), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT, borderValue=0)
+    a2 = cv2.warpAffine(U.a, M, (L.w, L.h), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT, borderValue=0)
+    rgb = pm2 / np.maximum(a2, 1e-5)[..., None]
+    L.over(0, L.h, 0, L.w, np.clip(rgb, 0, 1).astype(F), a2)

@@ -989,3 +989,125 @@ def stair_front(L, cx, y_top, y_bot, w_top, w_bot, steps=4, seed=0, op=1.0):
         line(L, [(cx - ww / 2, yt_ + sh), (cx + ww / 2, yt_ + sh)], 2.2, 0.65 * op, INK, seed + 40 + i, dry=0.3)
     for sx in (-1, 1):
         line(L, [(cx + sx * w_top / 2, y_top), (cx + sx * w_bot / 2, y_bot)], 2.6, 0.7 * op, INK, seed + 60 + sx, dry=0.3)
+
+
+# ───────────────────────── 地面 / 栏杆 / 鼓架 ─────────────────────────
+def floor_surface(L, x0, y0, x1, y1, col, vp=(None, 420), tile_px=110, tile_h_px=46, y_ref=832, seed=0, var=0.07, joint_op=0.45, joint_w=1.6, op=1.0, mask=None, jcol=None, shade=0.08):
+    """透视的方砖地面：地平线在 vp[1]，砖在 y_ref 处宽 tile_px、高 tile_h_px；越远越小；砖缝、深浅不一的砖、积水的斑。"""
+    x0, y0, x1, y1 = int(x0), int(y0), int(x1), int(y1)
+    h, w = y1 - y0, x1 - x0
+    col = np.asarray(col, F)
+    jcol = col * 0.4 if jcol is None else np.asarray(jcol, F)
+    vx = (x0 + x1) / 2 if vp[0] is None else vp[0]
+    vy = vp[1]
+    yy, xx = np.mgrid[0:h, 0:w].astype(F)
+    xx += x0
+    yy += y0
+    zy = np.maximum(yy - vy, 8.0)
+    zref = y_ref - vy
+    X = (xx - vx) / zy
+    Z = 1.0 / zy
+    tw = tile_px / zref
+    th = tile_h_px / (zref ** 2)
+    n1 = fbm(h, w, seed + 1, 60, 3)
+    U = X / tw + (n1 - 0.5) * 0.02
+    V = Z / th + (fbm(h, w, seed + 2, 60, 3) - 0.5) * 0.02
+    ri = np.floor(V)
+    off = (ri % 2) * 0.0
+    cj = np.floor(U + off)
+    fu, fv = U + off - cj, V - ri
+    rnd = _hash(ri * 17.31 + cj * 3.77 + seed * 0.37)
+    tone = 1 + (rnd - 0.5) * 2 * var
+    jx = np.minimum(fu, 1 - fu) * tw * zy                 # 到竖缝的像素距离
+    jy = np.minimum(fv, 1 - fv) * th * zy * zy            # 到横缝的像素距离
+    jw = joint_w * (0.7 + 0.8 * fbm(h, w, seed + 3, 24, 3))
+    j = np.maximum(np.clip(1 - jx / jw, 0, 1), np.clip(1 - jy / jw, 0, 1))
+    j = j * (0.2 + 0.8 * smoothstep(0.28, 0.5, fbm(h, w, seed + 4, 70, 3)))
+    # 远处的砖缝淡掉
+    fade = np.clip((zy - 20) / 80, 0.25, 1)
+    big = fbm(h, w, seed + 5, 200, 4, 0.55, warp=40)
+    k = tone * (1 + (big - 0.5) * 0.16) * (1 + shade * (1 - np.clip((yy - y0) / max(h, 1), 0, 1)) * 0 )
+    # 近处砖面略亮的反光
+    k = k * (1 + 0.05 * np.clip((yy - 800) / 280, 0, 1))
+    rgb = col * k[..., None]
+    rgb = rgb * (1 - (j * fade)[..., None] * joint_op) + jcol * ((j * fade)[..., None] * joint_op)
+    a = np.ones((h, w), F) * op if mask is None else (mask * op).astype(F)
+    L.over(y0, y1, x0, x1, np.clip(rgb, 0, 1).astype(F), a)
+
+
+def wood_railing(L, x0, x1, y_base, h=124, post_gap=150, seed=0, op=1.0, col=None):
+    """木栏杆：望柱 + 寻杖 + 一排排竖的栏杆（步步锦的简化）+ 腰枋 + 下面的华版。"""
+    col = A['red'] * 0.92 if col is None else np.asarray(col, F)
+    dk = A['red_dk']
+    yt = y_base - h
+    n = max(int(round((x1 - x0) / post_gap)), 1)
+    pg = (x1 - x0) / n
+    # 后面一层暗（栏杆缝里透出夜色，不画）；横杆
+    rwash(L, x0, yt, x1, yt + 14, col, op=op, wob=0.7, seed=seed, tex_k=0.14, rim=0.14)
+    rwash(L, x0, yt + 14, x1, yt + 20, dk, op=0.5 * op, wob=0.5, seed=seed + 1, tex_k=0.08, rim=0.0)
+    line(L, [(x0, yt), (x1, yt)], 3.0, 0.8 * op, INK, seed + 2, dry=0.2)
+    line(L, [(x0, yt + 14), (x1, yt + 14)], 2.0, 0.6 * op, INK, seed + 3, dry=0.3)
+    ymid = yt + h * 0.62
+    rwash(L, x0, ymid, x1, ymid + 9, col, op=op, wob=0.6, seed=seed + 4, tex_k=0.12, rim=0.12)
+    line(L, [(x0, ymid), (x1, ymid)], 2.2, 0.7 * op, INK, seed + 5, dry=0.25)
+    line(L, [(x0, ymid + 9), (x1, ymid + 9)], 2.0, 0.6 * op, INK, seed + 6, dry=0.3)
+    # 竖栏
+    nb = int((x1 - x0) / 20)
+    for i in range(nb + 1):
+        xx = x0 + (x1 - x0) * i / nb
+        rwash(L, xx - 3.5, yt + 20, xx + 3.5, ymid, col, op=op, wob=0.3, seed=seed + 10 + i, tex_k=0.1, rim=0.1)
+        line(L, [(xx - 3.5, yt + 20), (xx - 3.5, ymid)], 1.2, 0.5 * op, INK, seed + 400 + i, dry=0.3, wob=0.2)
+    # 华版（下面的实板，带凹框）
+    for i in range(n):
+        xa, xb = x0 + pg * i + 20, x0 + pg * (i + 1) - 20
+        rwash(L, xa, ymid + 16, xb, y_base - 10, dk * 1.1, op=0.9 * op, wob=0.6, seed=seed + 60 + i, tex_k=0.12, rim=0.12)
+        rwash(L, xa + 10, ymid + 26, xb - 10, y_base - 20, col * 0.9, op=0.5 * op, wob=0.5, seed=seed + 90 + i, tex_k=0.08, rim=0.0)
+        boxline(L, xa, ymid + 16, xb, y_base - 10, 1.8, 0.6 * op, seed + 120 + i, 0.3)
+    rwash(L, x0, y_base - 10, x1, y_base, dk, op=op, wob=0.5, seed=seed + 150, tex_k=0.1, rim=0.1)
+    line(L, [(x0, y_base), (x1, y_base)], 2.6, 0.75 * op, INK, seed + 151, dry=0.3)
+    # 望柱
+    for i in range(n + 1):
+        xx = x0 + pg * i
+        column(L, xx, yt - 18, y_base, 20, seed=seed + 200 + i, base=False, op=op, taper=0.0, ink=0.9)
+        wash(L, [(xx - 11, yt - 18), (xx + 11, yt - 18), (xx + 7, yt - 30), (xx - 7, yt - 30)], A['red_lt'], op=op, wob=0.3, seed=seed + 250 + i, smooth=0, rim=0.14)
+        line(L, [(xx - 11, yt - 18), (xx - 7, yt - 30), (xx + 7, yt - 30), (xx + 11, yt - 18)], 1.8, 0.7 * op, INK, seed + 300 + i, dry=0.2)
+
+
+def drum_stand(L, cx, y_base, h=120, span=290, seed=0, op=1.0):
+    """鼓架：两根粗壮的立柱（上端是托鼓的凹口，雕成云头）+ 底下横着的脚木 + 中间一道撑档 + 绳子；鼓放在上面。"""
+    col, dk, lt = A['wood_lt'] * 0.92, A['wood'] * 0.8, A['wood_lt'] * 1.1
+    yt = y_base - h
+    rwash(L, cx - span / 2, yt + h * 0.46, cx + span / 2, yt + h * 0.46 + 13, col, op=op, wob=0.6, seed=seed, tex_k=0.14, rim=0.12)
+    line(L, [(cx - span / 2, yt + h * 0.46), (cx + span / 2, yt + h * 0.46)], 2.6, 0.8 * op, INK, seed + 1, dry=0.25)
+    line(L, [(cx - span / 2, yt + h * 0.46 + 13), (cx + span / 2, yt + h * 0.46 + 13)], 2.2, 0.7 * op, INK, seed + 2, dry=0.3)
+    for sg in (-1, 1):
+        px = cx + sg * span / 2
+        rwash(L, px - 74, y_base - 20, px + 74, y_base, dk, op=op, wob=0.7, seed=seed + 5 + sg, tex_k=0.12, rim=0.12)
+        rwash(L, px - 74, y_base - 20, px + 74, y_base - 14, lt, op=0.5 * op, wob=0.5, seed=seed + 6 + sg, tex_k=0.08, rim=0.0)
+        line(L, [(px - 74, y_base - 20), (px + 74, y_base - 20)], 2.6, 0.8 * op, INK, seed + 8 + sg, dry=0.25)
+        line(L, [(px - 74, y_base), (px + 74, y_base)], 2.4, 0.7 * op, INK, seed + 9 + sg, dry=0.3)
+        pts = [(px - 22, y_base - 18), (px - 18, yt + 30), (px - 30, yt + 14), (px - 28, yt - 4), (px - 8, yt - 14), (px + 8, yt - 14), (px + 28, yt - 4), (px + 30, yt + 14), (px + 18, yt + 30), (px + 22, y_base - 18)]
+        wash(L, pts, col, op=op, wob=0.7, seed=seed + 12 + sg, smooth=1, tex_k=0.16, rim=0.16)
+        wash(L, [(px + 4, yt - 12), (px + 28, yt - 4), (px + 30, yt + 14), (px + 18, yt + 30), (px + 22, y_base - 18), (px + 4, y_base - 18)], dk, op=0.5 * op, wob=0.6, seed=seed + 16 + sg, smooth=0, rim=0.0)
+        wash(L, [(px - 20, yt + 34), (px - 12, yt + 34), (px - 15, y_base - 22), (px - 20, y_base - 22)], lt, op=0.5 * op, wob=0.5, seed=seed + 18 + sg, smooth=0, rim=0.0)
+        line(L, pts + [pts[0]], 3.0, 0.85 * op, INK, seed + 20 + sg, dry=0.2, wob=0.5, smooth=True)
+        brush(L, [(px - 11, yt - 8), (px, yt + 6), (px + 11, yt - 8)], w0=2.6, color=INK, op=0.7 * op, seed=seed + 24 + sg, wob=0.3, taper=0.2)
+        brush(L, [(px - 19, yt + 14), (px - 11, yt + 7), (px - 4, yt + 14), (px - 11, yt + 21)], w0=2.0, color=INK, op=0.6 * op, seed=seed + 26 + sg, wob=0.3, taper=0.1)
+        brush(L, [(px + 19, yt + 14), (px + 11, yt + 7), (px + 4, yt + 14), (px + 11, yt + 21)], w0=2.0, color=INK, op=0.6 * op, seed=seed + 28 + sg, wob=0.3, taper=0.1)
+        for yy in (yt + h * 0.55, yt + h * 0.82):
+            rwash(L, px - 22, yy, px + 22, yy + 7, A['gold_dk'], op=0.85 * op, wob=0.4, seed=seed + 30 + int(yy), tex_k=0.05, rim=0.0)
+    brush(L, [(cx - span / 2 + 6, yt + 6), (cx, yt + 22), (cx + span / 2 - 6, yt + 6)], w0=2.8, color=A['earth_dk'], op=0.65 * op, seed=seed + 50, wob=0.8, taper=0.1)
+
+
+def roof_underside(L, x0, x1, y0, y1, seed=0, op=1.0):
+    """从下往上看到的屋檐底：暗的椽子 + 飞椽 + 望板。"""
+    rwash(L, x0, y0, x1, y1, A['wood_dk'] * 0.6, op=op, wob=0.8, seed=seed, tex_k=0.12, rim=0.0)
+    r = np.random.default_rng(seed)
+    st = []
+    n = int((x1 - x0) / 15)
+    for i in range(n):
+        xx = x0 + (x1 - x0) * (i + 0.5) / n
+        st.append((xx, y0, xx + r.normal(0, 0.3), y1, 2.2, 0.55 * op))
+    flicks(L, st, color=A['wood_lt'] * 0.7)
+    rwash(L, x0, y1 - 16, x1, y1, A['wood_dk'] * 0.45, op=op, wob=0.6, seed=seed + 1, tex_k=0.1, rim=0.0)
+    line(L, [(x0, y1), (x1, y1)], 3.0, 0.85 * op, INK, seed + 2, dry=0.2)

@@ -929,3 +929,17 @@ def shell_scales(L, poly, size=22, cols=None, seed=0, op=1.0, line=0.5, rows_shi
                 if line > 0:
                     brush(T, pts[1:-1], w0=max(size * 0.07, 1.2), color=(shade if shade is not None else mix(c, NW['slate_dk'], 0.55)), op=line * op * r.uniform(0.6, 1.0), seed=int(r.integers(1e6)), wob=0.3, taper=0.2, ss=2)
                     brush(T, [(xx - rr * 0.6, yc + rr * 0.45), (xx, yc + rr * 0.72), (xx + rr * 0.55, yc + rr * 0.5)], w0=max(size * 0.05, 1.0), color=NW['pearl'], op=0.5 * op, seed=int(r.integers(1e6)), wob=0.2, taper=0.3)
+
+
+def caustics(L, x0, y0, x1, y1, seed, n=150, col=None, op=0.3, size=(30, 120)):
+    """水底的光斑：透明的亮色小透镜（水彩）+ 细细的亮线连成网，沿横向铺开。"""
+    col = NW['pearl'] if col is None else np.asarray(col, F)
+    r = np.random.default_rng(seed)
+    for _ in range(n):
+        x, y = r.uniform(x0, x1), r.uniform(y0, y1)
+        w = r.uniform(*size)
+        h = w * r.uniform(0.10, 0.26)
+        pts = [(x - w / 2, y), (x - w * 0.22, y - h), (x + w * 0.25, y - h * 0.9), (x + w / 2, y + h * 0.1), (x + w * 0.2, y + h), (x - w * 0.25, y + h * 0.8)]
+        wash(L, pts, col, op=op * r.uniform(0.25, 0.8), wob=2, seed=int(r.integers(1e6)), smooth=2, tex_k=0.1, rim=0.0)
+        if r.random() < 0.7:
+            brush(L, [(x - w * 0.5, y + h * 0.2), (x, y - h * 0.3), (x + w * 0.5, y + h * 0.3)], w0=r.uniform(1.0, 2.2), color=col, op=op * r.uniform(0.8, 1.6), seed=int(r.integers(1e6)), wob=1.0, taper=0.4, dry=0.3)

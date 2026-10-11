@@ -265,5 +265,59 @@
   "ext": "png",
   "w": 1920,
   "h": 3400
+ },
+ "pagoda_top_far": {
+  "variants": [
+   "night",
+   "lit"
+  ],
+  "ext": "jpg",
+  "w": 2400,
+  "h": 1080
+ },
+ "pagoda_top_near": {
+  "variants": [
+   "night",
+   "lit"
+  ],
+  "ext": "png",
+  "w": 2400,
+  "h": 1080
+ },
+ "frost_forest_far": {
+  "variants": [
+   "night",
+   "lit"
+  ],
+  "ext": "jpg",
+  "w": 2900,
+  "h": 1080
+ },
+ "frost_forest_mid": {
+  "variants": [
+   "night",
+   "lit"
+  ],
+  "ext": "png",
+  "w": 2900,
+  "h": 1080
+ },
+ "frost_forest_near": {
+  "variants": [
+   "night",
+   "lit"
+  ],
+  "ext": "png",
+  "w": 2900,
+  "h": 1080
+ },
+ "palace_far": {
+  "variants": [
+   "night",
+   "lit"
+  ],
+  "ext": "jpg",
+  "w": 2900,
+  "h": 1080
  }
 }

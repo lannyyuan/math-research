@@ -13,19 +13,23 @@ def sprite(fn):
 
 
 # ───────────────────────── 公共零件 ─────────────────────────
-def hair_cap_front(L, cx, cy, a, b, seed=0, fringe=0.45, side=0.25, puff=1.12, col=None, messy=0, tuft=0):
+def hair_cap_front(L, cx, cy, a, b, seed=0, fringe=0.45, side=0.25, puff=1.12, col=None, messy=0, tuft=0, spiky=0.0):
+    """正面的头发：盖住头顶的一团（外沿可以是尖尖的乱发 spiky），额前一排刘海，两侧鬓角垂到耳边。"""
     f = fringe
-    pts = [(cx - a * 1.05, cy + b * (0.18 + side)), (cx - a * 1.1, cy - b * 0.2), (cx - a * 0.9, cy - b * 0.8 * puff), (cx - a * 0.5, cy - b * 1.1 * puff),
-           (cx, cy - b * 1.16 * puff), (cx + a * 0.5, cy - b * 1.1 * puff), (cx + a * 0.9, cy - b * 0.8 * puff), (cx + a * 1.1, cy - b * 0.2),
-           (cx + a * 1.05, cy + b * (0.18 + side)), (cx + a * 0.92, cy + b * 0.05), (cx + a * 0.8, cy - b * 0.22), (cx + a * 0.52, cy - b * (f - 0.14)),
+    r = np.random.default_rng(seed + 17)
+    arc = []
+    n = 13
+    for k, t in enumerate(np.linspace(math.pi * 1.02, math.pi * 1.98, n)):
+        rr = (1.0 + (puff - 1.0) * 1.6) * (1 + (spiky * r.uniform(-0.04, 0.2) if k % 2 else -spiky * r.uniform(0, 0.05)))
+        arc.append((cx + math.cos(t) * a * 1.12 * rr, cy + math.sin(t) * b * 1.08 * rr))
+    pts = [(cx - a * 1.05, cy + b * (0.18 + side))] + arc + [(cx + a * 1.05, cy + b * (0.18 + side)), (cx + a * 0.92, cy + b * 0.05), (cx + a * 0.8, cy - b * 0.22), (cx + a * 0.52, cy - b * (f - 0.14)),
            (cx + a * 0.24, cy - b * f), (cx - a * 0.05, cy - b * (f - 0.08)), (cx - a * 0.32, cy - b * (f + 0.02)), (cx - a * 0.58, cy - b * (f - 0.14)),
            (cx - a * 0.82, cy - b * 0.2), (cx - a * 0.92, cy + b * 0.05)]
-    p = hair_mass(L, pts, col, seed, strands=int(a * 0.6), direction=90)
+    p = hair_mass(L, pts, col, seed, strands=int(a * 0.6), direction=90, smooth=1 if spiky else 2)
     ink_outline(L, p, seed, w=1.6, op=0.5, gaps=0.35, color=INK, minseg=30, maxseg=90)
-    r = np.random.default_rng(seed + 4)
     for _ in range(tuft):   # 飞出来的发丝
         ang = math.radians(r.uniform(-150, -30))
-        bx, by = cx + math.cos(ang) * a * 0.9, cy + math.sin(ang) * b * 1.0
+        bx, by = cx + math.cos(ang) * a * 0.95, cy + math.sin(ang) * b * 1.05
         ln = r.uniform(10, 20)
         line(L, [(bx, by), (bx + math.cos(ang) * ln * 0.6 + r.normal(0, 3), by + math.sin(ang) * ln * 0.6), (bx + math.cos(ang) * ln + r.normal(0, 4), by + math.sin(ang) * ln + 3)], 1.6, INK, 0.8, int(r.integers(1e6)), 0.5, 0, 0.3)
     return p

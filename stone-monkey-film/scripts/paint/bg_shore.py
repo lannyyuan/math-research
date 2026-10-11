@@ -113,7 +113,7 @@ if 'mid' in which:
         th = 6 + (y - 680) * 0.12
         wash(M, [(x, y), (x + ln * 0.3, y - th), (x + ln * 0.7, y - th * 0.7), (x + ln, y), (x + ln * 0.5, y + th * 0.8)], hexc('#8fa3b0'), op=0.12, wob=3, seed=int(r.integers(1e6)), smooth=2, tex_k=0.1, rim=0.18, rim_w=4)
     # 沙滩背后（x<1450）水里的礁石
-    for i, (x, w, h, y) in enumerate([(640, 90, 38, 812), (1010, 70, 28, 806), (1340, 110, 46, 818)]):
+    for i, (x, w, h, y) in enumerate([(640, 90, 38, 800), (1010, 70, 28, 796), (1340, 110, 46, 810)]):
         reef_rock(M, x, y, w, h, 80 + i)
     mist(M, 0, W, 640, 40, seed=73, op=0.35, color=hexc('#dcdfdc'), scale=300)
     save_plate('shore_mid', M, variants=('night', 'lit'), gain=0.6, keep=0.15)
@@ -135,7 +135,8 @@ if 'near' in which:
     top = []
     for x in range(-60, ROAD_X0 + 41, 40):
         dune = 62 * math.exp(-(((x - 110) / 250.0) ** 2))
-        top.append((float(x), 832 + 5 * math.sin(x / 150.0) + 3 * math.sin(x / 41.0) - dune))
+        yb_ = 806 + 13 * float(smoothstep(1000, 1460, x))
+        top.append((float(x), yb_ + 4 * math.sin(x / 150.0) + 3 * math.sin(x / 41.0) - dune))
     sand_poly = top + shore + [(1190, 1140), (-60, 1140)]
     with Sub(Nn, poly=densify(sand_poly, 40), smooth=1, wob=1.0, seed=3) as T:
         fill_region(T, -60, 740, 1500, 1140, hexc('#b0a88e'), hexc('#bfb393'), seed=95, mott=0.14, gamma=1.0)

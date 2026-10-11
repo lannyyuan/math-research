@@ -3,5 +3,3 @@ out/
 public/audio/score.wav
 __pycache__/
 *.pyc
-public/bg/*.png
-public/bg/*.jpg

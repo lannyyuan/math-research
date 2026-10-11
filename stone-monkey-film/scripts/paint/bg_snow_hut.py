@@ -29,15 +29,15 @@ if 'mid' in which:
     rr = ridge_y(W, 790, 100, 93, rough=0.5, scale=420)
     mountain2(M, rr, 900, N['far2'], N['mid1'], seed=55, tex=0.8, tex_op=0.3, shade=0.6, snow=N['snow'], snow_from=0.55)
     rng = np.random.default_rng(15)
-    for i, x in enumerate(grove(rng, 40, 20, W - 20, clusters=9, spread=110)):
-        yb = float(rr[int(x)]) + 6 + (i % 4) * 8
+    for i, x in enumerate(grove(rng, 46, 20, W - 20, clusters=9, spread=110)):
+        yb = float(rr[int(x)]) + 14 + (i % 4) * 14
         conifer_dab(M, x, yb, 70 + (i * 37) % 70, seed=800 + i, col=N['pine'], dark=N['pine_dk'], op=0.85, frost_k=0.9)
     mist(M, 0, W, 805, 50, seed=56, op=0.55)
     for i, x in enumerate(grove(rng, 20, 40, W - 40, clusters=7, spread=90)):
-        if 1450 < x < 2150:      # 小屋的背后别画得太满
+        if 1450 < x < 2150 or 900 < x < 1450:      # 小屋和老梅的背后别画得太满
             continue
-        yb = float(rr[int(x)]) + 26 + (i % 3) * 14
-        pine_ink(M, x, yb, 170 + (i * 53) % 130, seed=350 + i, col=N['pine'], dark=N['pine_dk'], lean=((i % 5) - 2) * 0.02, frost_k=1.0)
+        yb = 836 + (i % 4) * 5
+        pine_ink(M, x, yb, 200 + (i * 53) % 190, seed=350 + i, col=N['pine'], dark=N['pine_dk'], lean=((i % 5) - 2) * 0.02, frost_k=1.0)
     mist(M, 0, W, 846, 50, seed=57, op=0.65)
     save_plate2('snow_hut_mid', M, variants=('night', 'lit'), gain=0.6, keep=0.15)
 
@@ -46,6 +46,10 @@ def draw_near(clear):
     Nn = Canvas(W, H)
     gy = 828 + 6 * np.sin(XS / 300.0).astype(np.float32) + 3 * np.sin(XS / 83.0).astype(np.float32)
     snow_field(Nn, gy, 1080, seed=61, tex=1.0)
+    # 雪地的起伏：低低的雪垄（蓝灰的背阴 + 上沿的墨线）
+    for k, (xa, xb, yb_, hh) in enumerate([(120, 700, 880, 22), (900, 1500, 905, 26), (1500, 2100, 925, 24), (2000, 2700, 890, 22), (300, 1000, 960, 28), (1100, 1900, 990, 24), (1800, 2600, 1010, 30), (-50, 600, 1040, 26)]):
+        tp = lumpy_top(xa, xb, yb_, hh, seed=900 + k, lumps=2, hmin=0.5)
+        snow_heap(Nn, tp, yb_, seed=950 + k, shade=0.4, lean=1, line=0.35, hatch_k=0.8)
     # 远处的雪垄（起伏）
     drift(Nn, 40, 520, 850, 40, seed=1, peak=0.4, line=0.3)
     drift(Nn, 520, 1000, 856, 34, seed=2, peak=0.55, line=0.3)
@@ -54,7 +58,7 @@ def draw_near(clear):
     tracks(Nn, 120, 1000, 846, seed=3, step=46)
     tracks(Nn, 330, 760, 884, seed=8, step=40, op=0.45, size=0.8)
     # 老梅 x≈1150
-    plum_ink(Nn, 1150, 836, 520, seed=5, flower=None, roots=False)
+    plum_ink(Nn, 1150, 820, 520, seed=5, flower=None, roots=False)
     brush(Nn, [(1172, 616), (1190, 590), (1204, 566)], w0=3.2, w1=1.2, color=N['wood_dk'] * 0.55, op=0.95, seed=77, wob=0.6, taper=0.2)
     flower_small(Nn, FLOWER[0], FLOWER[1], 11, seed=21)
     # 梅树脚下的雪窝
@@ -79,7 +83,7 @@ def draw_near(clear):
         yb = 917 + 8 * np.sin(XS / 170.0).astype(np.float32) + 4 * np.sin(XS / 53.0).astype(np.float32)
         ytc, ybc = yt.copy(), yb.copy()
         # 路在门口收拢：从门左边缘 x=1810 起；之前不画
-        ramp = np.clip((XS - 1790) / 60.0, 0, 1).astype(np.float32)
+        ramp = np.clip((XS - 1800) / 130.0, 0, 1).astype(np.float32); ramp = ramp * ramp * (3 - 2 * ramp)
         ytc = yt + (1 - ramp) * 160
         ybc = yb - (1 - ramp) * 200 + 0
         ybc = np.maximum(ybc, ytc + 4)
@@ -101,7 +105,7 @@ def draw_near(clear):
         # 门槛：横在门口的一根厚木
         slab(Nn, DOOR_X, 852, 190, 30, top_h=12, seed=44, col=N['stone'], light=N['stone_lt'])
         # 两侧堆起的雪（铲上去的）：后面一道（y≈775 以上）、前面一道（y≈920 以下），起伏不一
-        for (xa, xb, kind) in ((1950, W + 40, 'back'), (1850, W + 40, 'front')):
+        for (xa, xb, kind) in ((1950, W + 40, 'back'), (1790, W + 40, 'front')):
             x = xa
             k = 0
             while x < xb:
@@ -115,7 +119,7 @@ def draw_near(clear):
                 x += ww * rng2.uniform(0.62, 0.85)
                 k += 1
         # 门左的雪（铲到墙边）
-        drift(Nn, 1700, 1850, 846, 110, seed=8, peak=0.4, line=0.35)
+        snow_heap(Nn, lumpy_top(1620, 1840, 846, 96, seed=8, lumps=2), 846, seed=8, shade=0.55, lean=1, line=0.4)
     dry_grass(Nn, 0, 1000, 846, 12, seed=71, op=0.7, frost_k=1.0, hmin=18, hmax=44)
     dry_grass(Nn, 2250, W, 850, 10, seed=72, op=0.7, frost_k=1.0, hmin=18, hmax=44)
     snow_dust(Nn, 0, W, 560, 830, 40, seed=5, op=0.25)
