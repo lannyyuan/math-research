@@ -25,6 +25,7 @@
     "typescript": "5.6.3"
   },
   "devDependencies": {
-    "lxgw-wenkai-webfont": "1.7.0"
+    "lxgw-wenkai-webfont": "1.7.0",
+    "pptxgenjs": "4.0.1"
   }
 }
