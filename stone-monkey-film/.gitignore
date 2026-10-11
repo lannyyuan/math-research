@@ -1,0 +1,5 @@
+node_modules
+out/
+public/audio/score.wav
+__pycache__/
+*.pyc
