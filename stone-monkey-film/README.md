@@ -85,10 +85,11 @@ node scripts/qa_frames.mjs dist/xiaoshihou-dian-deng.mp4 out/qa   # 从成片按
 ## 点字看拼音、听发音（绘本网页）
 - **用法**：鼠标放在正文（和章名）里任意一个汉字上 → 字上方弹出带声调的拼音；**点一下**用真人录音念出来。触屏：轻点 = 显示并发声。设置里可整体关闭，或打开“悬停即发声”（默认关）。
 - **读音在构建期标好**（`webapp/pinyin.py`：`pypinyin` 带词语上下文 + `webapp/pinyin_overrides.json` 规则表），网页里没有转换引擎，只查表。助词“得/着/地”、“落/长/种/背/看/担”等 pypinyin 默认会错的字都在规则表里校正过；`python3 -X utf8 webapp/pinyin.py --review` 重写 `webapp/pinyin_review.md`（全书 53 个多音字 + 227 处规则改写的上下文，供人工复核）。单字试标：`python3 -X utf8 webapp/pinyin.py "他走得快"`。
-- **音频：同音只存一条，仓库里不存音频文件。** 全书 17,180 个汉字只用到 847 种“音节+声调”，打包成 **846 条**（≈3.2 MB，每条 ≈4 KB）内联进 HTML（`dist/xiaoshihou-book.html` 因此约 9.7 MB，仍是单文件、`file://` 离线可用）。来源：`Pinyin_Drill_P0` 的真人录音（807 条，只读，目录可用环境变量 `PINYIN_DRILL_DIR` 改）+ 上游 [hugolpz/audio-cmn](https://github.com/hugolpz/audio-cmn)（同一录音者、固定 revision）补下载的 18 条（缓存在 `out/pinyin_audio/`，不进 git）。`webapp/pinyin_audio_manifest.json` 只存“音节 → 来源 + SHA-256”，换了录音内容构建会报警。处理：裁首尾静音 → 单声道 22.05 kHz 32 kbps MP3。
+- **音频：同音只存一条，一共 846 个文件，存在 `webapp/pinyin_clips/{音节}{声调}.mp3`（如 `zhang3.mp3`），随仓库提交。** 全书 17,180 个汉字只用到 847 种“音节+声调”，846 条共 ≈3.2 MB（每条 ≈4 KB），构建时内联进 HTML（`dist/xiaoshihou-book.html` 因此约 9.7 MB，仍是单文件、`file://` 离线可用）。**有这个库，构建不需要 ffmpeg、Pinyin_Drill 目录和网络**；库里缺的才按来源现做并存进库（要一起提交）：`Pinyin_Drill_P0` 的真人录音（807 条，只读，目录可用环境变量 `PINYIN_DRILL_DIR` 改）+ 上游 [hugolpz/audio-cmn](https://github.com/hugolpz/audio-cmn)（同一录音者、固定 revision）的 18 条。`webapp/pinyin_audio_manifest.json` 记“音节 → 来源 + 原始 SHA-256 + 库文件 SHA-256”，库文件被改动构建会报警。处理：裁首尾静音 → 单声道 22.05 kHz 32 kbps MP3。署名与修改说明见 `webapp/pinyin_clips/ATTRIBUTION.md`。
+- **这套做法已抽成通用 skill**：`../.agents/skills/web-pinyin-audio/`（给别的中文网页/Web App 用；dsh、Codex 在本仓库内自动发现，入口是它的 `SKILL.md`）。书里的实现仍是自包含的参考实现，改动本书的规则/代码不会影响 skill，反之亦然。
 - **轻声**（的/了/着/子/们…，占 8.1%）没有录音：取该音节现成录音里最接近“低而短”的一声（优先 3、4、2、1 声）截短到 0.30 s、尾部渐弱、降音量来**模拟**；这是近似，不是真轻声（致谢里已注明，规则在 `pinyin_overrides.json` 的 `neutral`，可逐字改本调）。**构建时没有人耳验收，请家长抽听。**
 - **没有录音的**只有 `ju4`（22 处，上游也没有）：用系统自带的中文语音念单字，没有就只显示拼音。其余 99.87% 的汉字有真人发音。
 - **许可**：录音 CC-BY-SA-3.0（Chen Wang 王琛），设置面板里有“发音致谢”，标明已裁剪转码；仅供识字参考，不是教材认证录音。
-- **依赖**：构建要 `pip install pypinyin`、`ffmpeg`；不想要这个功能：`python3 -X utf8 -I webapp/build.py --no-pinyin`。
+- **依赖**：构建要 `pip install pypinyin`；`ffmpeg` 只在录音库缺音节、要现做新录音时才需要；不想要这个功能：`python3 -X utf8 -I webapp/build.py --no-pinyin`。
 - **自检**：`python3 -X utf8 -m unittest webapp/test_pinyin.py`（读音规则回归）；`CHROME=…/chrome.exe node webapp/qa_pinyin.mjs`（真浏览器：数据完整、悬停多音字按上下文显示、点击真的开始播放、标点没有气泡、开关生效、触屏轻点不翻页、无控制台报错）；`node webapp/qa.mjs` 仍要“全文逐字相同、桌面无滚动页、无控制台报错”。
 - 设计文档：[`webapp/PRD_pinyin_hover.md`](webapp/PRD_pinyin_hover.md)。

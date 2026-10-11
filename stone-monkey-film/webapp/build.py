@@ -223,7 +223,8 @@ def main():
         ntok = sum(len(q['py'].split()) for pg in pages for q in pg['paras'])
         tok_ok = sum(1 for pg in pages for q in pg['paras'] for i in q['py'].split() if i in pya)
         print(f"拼音：{ntok} 个汉字 → {len(used)} 种读音，打包 {rep['clips']} 条录音（同音共用）{rep['bytes'] / 1e6:.2f} MB"
-              f"（来自 Pinyin_Drill {rep['from_drill']} 条，上游补 {rep['from_upstream']} 条，轻声模拟 {len(rep['neutral'])} 条）；"
+              f"（来自 Pinyin_Drill {rep['from_drill']} 条，上游补 {rep['from_upstream']} 条，轻声模拟 {len(rep['neutral'])} 条；"
+              f"本次新生成 {rep['generated']} 条，其余直接取自 webapp/pinyin_clips/）；"
               f"有声音的汉字 {tok_ok}/{ntok} = {tok_ok / ntok * 100:.2f}%")
         if rep['missing']:
             print('  缺录音（只显示拼音、不出声或用系统语音）：' + ' '.join(rep['missing']))
