@@ -14,7 +14,7 @@ while read -r id a b; do
     npx remotion render src/index.ts Film "out/parts/$id.mp4" --frames="$a-$b" --muted --codec=h264 --crf=18 \
       --jpeg-quality=96 --concurrency="${CONC:-4}" --browser-executable="$BROWSER"
   fi
-  echo "file '$PWD/out/parts/$id.mp4'" >> out/parts.txt
+  echo "file '$(pwd -W 2>/dev/null || pwd)/out/parts/$id.mp4'" >> out/parts.txt
 done < out/ranges.txt
 ffmpeg -y -loglevel error -f concat -safe 0 -i out/parts.txt -c copy out/video-silent.mp4
 # 第二段编码：分场景的中间文件用 crf 18（约 300 MB），成片再压到约 50 MB（画面几乎看不出差别），并合上配乐

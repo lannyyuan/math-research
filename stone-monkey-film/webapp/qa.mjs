@@ -6,14 +6,15 @@
 //   --all 再把每一页存成 1280×720 缩略图（人工看版式用）
 import fs from 'node:fs';
 import path from 'node:path';
+import {fileURLToPath, pathToFileURL} from 'node:url';
 import {createRequire} from 'node:module';
 const require = createRequire(import.meta.url);
 const pwPath = ['/opt/node-tools/node_modules/playwright', '/opt/node22/node-tools/node_modules/playwright', 'playwright'].find((p) => { try { require.resolve(p); return true; } catch { return false; } });
 const {chromium} = require(pwPath);
-const root = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const outDir = path.resolve(root, (process.argv.find((a) => a.startsWith('--shots=')) ?? '--shots=out/book_qa').split('=')[1]);
 fs.mkdirSync(outDir, {recursive: true});
-const file = 'file://' + path.join(root, 'dist/xiaoshihou-book.html');
+const file = pathToFileURL(path.join(root, 'dist/xiaoshihou-book.html')).href;
 const norm = (t) => t.replace(/[\s“”"‘’'「」·]/g, '');
 
 // —— 独立重新抽取原文（不复用 build.py / plan.py 的解析代码）；章节顺序从 plan.py 顶部的 ORDER 读

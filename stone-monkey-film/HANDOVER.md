@@ -1,5 +1,7 @@
 # HANDOVER — 《小石猴点灯》动画短片 + 绘本网页（交接文档）
 
+> **2026-10-11 更新：下面的“没做”清单已全部补完**——13 块背景板、全部缺的精灵、S3/S4/S5 的剩余镜头、S6 整场（已注册 `s6-lamp`）、成片渲染与自检、绘本 40 帧 + 16 张补充插图。成片/网页的数字和做法见 [`README.md`](README.md)。Windows 上的跑法见 README“Windows（Git Bash）备注”。原文保留作历史记录。
+
 > 分支：`claude/admiring-johnson-lf6etl`　工程目录：`stone-monkey-film/`（和 `lighthouse-light-film/`、`snow-lamp-film/`、`skills/ink-storybook-film/` 同级）
 > 这份文档写给“在本地接手的 Claude Code”：先读完它，再动手。**额度紧张，原则：少铺开、先出成片、每完成一块就 `git commit && git push`。**
 

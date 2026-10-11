@@ -54,7 +54,7 @@ export const S7: React.FC<{len: number}> = ({len}) => {
         <Bg name="village_near" />
         <SeasonTree cx={2160} cy={330} rx={330} ry={230} w={w} t={t} />
         <Falling w={w} t={t} />
-        <GroundShadow x={SEAT.x - 20} y={GY + 4} rx={150} o={0.45} />
+        <GroundShadow x={SEAT.x - 20} y={GY - 10} rx={150} ry={12} o={0.45} />
         {/* 石娃坐在树下：上身 + 腿（腿绕髋转到水平向前，脸朝左） */}
         <Sprite name="shiwa_side_leg" x={SEAT.x} y={SEAT.y} s={KID_S} flip rot={-84} breathe={0} sway={0} />
         <Sprite name="shiwa_side_up" x={SEAT.x} y={SEAT.y} s={KID_S} flip rot={3} breathe={0.01} sway={0.4} />

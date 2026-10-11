@@ -116,7 +116,7 @@ export const S2: React.FC<{len: number}> = ({len}) => {
               <Bg name="river_bridge_high" opacity={bridgeHigh} />
               {/* 大鱼在水里：先是一双眼（盖着水的面纱），再跃出水面 */}
               <div style={{position: 'absolute', inset: 0, opacity: fishEyes}}>
-                <Sprite name="fish_front" x={1300} y={1420} s={1.25} breathe={0.01} sway={1.2} alwaysShow />
+                <Sprite name="fish_front" x={1300} y={1295} s={1.25} breathe={0.01} sway={1.2} alwaysShow />
                 <WaterVeil y0={1180} y1={1500} o={0.55} />
               </div>
               <Ripple x={1300} y={1190} r={170} p={ramp(t, C[4].t + 0.2, C[4].t + 3.5)} n={3} />

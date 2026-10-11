@@ -72,8 +72,8 @@ const ShotC: React.FC = () => {
       <Layer p={0.4} w={2400}><Bg name="hall_sea_far" /></Layer>
       <Layer p={1} w={2400}>
         <Bg name="hall_sea_near" />
-        <GroundShadow x={DRAGON.x} y={GY + 6} rx={230} o={0.4 * dragonO} />
-        <Sprite name="dragon_front" x={DRAGON.x} y={GY + 12} s={DRAGON.s} opacity={dragonO} breathe={0.01} sway={0.9} />
+        <GroundShadow x={DRAGON.x} y={GY - 6} rx={230} ry={12} o={0.4 * dragonO} />
+        <Sprite name="dragon_front" x={DRAGON.x} y={GY - 4} s={DRAGON.s} opacity={dragonO} breathe={0.01} sway={0.9} />
         <GroundShadow x={kx} y={GY + 4} rx={90} o={0.45} />
         <Pair x={kx} y={GY + 4} walk={t < T_C + 3.6 ? 6 : 0} />
       </Layer>
@@ -102,11 +102,11 @@ const ShotD: React.FC = () => {
       <Layer p={1}>
         <Bg name="spring_near" />
         <Bg name="spring_clear" opacity={spring} />
-        <Sprite name="boulder" x={bX + shake} y={GY + 6 - roll * 0} s={BOULDER.s} rot={bRot} pivot={[(1 - roll) * 260, 0]} breathe={0} sway={0} />
-        <Sprite name="flat_stone" x={1300} y={GY + 6} s={0.7} opacity={leverIn} breathe={0} sway={0} />
-        <Sprite name="lever" x={1290} y={GY - 6} s={0.62} rot={lerp(-48, -68, press)} opacity={leverIn} breathe={0} sway={0} />
+        <Sprite name="boulder" x={bX + shake} y={GY - 16} s={BOULDER.s} rot={bRot} pivot={[(1 - roll) * 260, 0]} breathe={0} sway={0} />
+        <Sprite name="flat_stone" x={1300} y={GY - 4} s={0.7} opacity={leverIn} breathe={0} sway={0} />
+        <Sprite name="lever" x={1290} y={GY - 20} s={0.62} rot={lerp(-48, -68, press)} opacity={leverIn} breathe={0} sway={0} />
         <GroundShadow x={kx} y={GY + 4} rx={90} o={0.45} />
-        <Pair x={kx} y={GY + 4 + press * 8} walk={walking ? 6 : 0} rot={press * 8} />
+        <Pair x={kx} y={GY - 2 + press * 4} walk={walking ? 6 : 0} rot={press * 8} />
         <Bubbles x={1520} y={GY} t={tt} n={22} spread={260} rise={300} o={spring} seed={9} />
         <Ripple x={1520} y={GY + 6} r={300} p={ramp(tt, 6.8, 10)} n={3} />
       </Layer>
@@ -139,8 +139,8 @@ const ShotE: React.FC = () => {
       <Layer p={0.4} w={2400}><Bg name="hall_sea_far" /></Layer>
       <Layer p={1} w={2400}>
         <Bg name="hall_sea_near" />
-        <GroundShadow x={DRAGON.x} y={GY + 6} rx={230} o={0.4} />
-        <Sprite name="dragon_front" x={DRAGON.x} y={GY + 12} s={DRAGON.s} breathe={0.01} sway={0.9} />
+        <GroundShadow x={DRAGON.x} y={GY - 6} rx={230} ry={12} o={0.4} />
+        <Sprite name="dragon_front" x={DRAGON.x} y={GY - 4} s={DRAGON.s} breathe={0.01} sway={0.9} />
         <GroundShadow x={kx} y={GY + 4} rx={90} o={0.45} />
         <Pair x={kx} y={GY + 4} flip={flipK} rot={bow * 10} walk={te > 8.5 && te < 11.5 ? 6 : 0} />
         {pearlO > 0.02 && <Pearl x={px} y={py} o={pearlO} />}
