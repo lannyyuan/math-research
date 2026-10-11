@@ -47,8 +47,8 @@ const B: React.FC = () => {
   const t = useT();
   const cam = useCam([
     {t: 7.0, ...at(1520, 520, 1.0)},
-    {t: 11.8, ...at(1500, 800, 1.7)},
-    {t: 13.0, ...at(1500, 790, 1.72)},
+    {t: 9.8, ...at(1490, 790, 1.6)},
+    {t: 13.0, ...at(1490, 790, 1.72)},
     {t: 16.0, ...at(1560, 250, 1.75)},
     {t: 19.4, ...at(1560, 240, 1.8)},
   ]);
@@ -57,8 +57,8 @@ const B: React.FC = () => {
       <Layer p={0.55}><Bg src="lh_day_far.jpg" w={2900} h={1080} /></Layer>
       <Layer p={1}>
         <Bg src="lh_day_near.png" w={2900} h={1080} />
-        <GroundShadow x={1430} y={950} rx={80} />
-        <Sprite name="grandad_hurt" x={1430} y={950} s={0.5} breathe={0.01} sway={0.3} t0={0.5} />
+        <GroundShadow x={1430} y={950} rx={110} />
+        <Sprite name="grandad_hurt" x={1430} y={950} s={0.7} breathe={0.01} sway={0.3} t0={0.5} />
       </Layer>
     </Stage>
   );
