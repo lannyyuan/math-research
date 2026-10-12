@@ -21,7 +21,7 @@ const url = (p) => (/^https?:|^file:/.test(p) ? p : pathToFileURL(path.resolve(p
 
 const problems = [], errors = [];
 const ok = (c, m) => { if (!c) problems.push(m); console.log((c ? '  ✓ ' : '  ✗ ') + m); };
-const browser = await chromium.launch({executablePath: process.env.CHROME || undefined, args: ['--no-sandbox', '--autoplay-policy=no-user-gesture-required']});
+const browser = await chromium.launch({executablePath: process.env.CHROME || undefined, args: ['--no-sandbox', '--mute-audio', '--autoplay-policy=no-user-gesture-required']});  // 静音：点击会真的触发播放，别在用户机器上出声
 const open = async (u, opts = {}, hover = true) => {
   const ctx = await browser.newContext({viewport: {width: 1280, height: 800}, ...opts});
   const page = await ctx.newPage();
