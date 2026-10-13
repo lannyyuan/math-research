@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="night">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark light">
+<meta name="description" content="《雪地里的那盏灯》——一本给 6~8 岁孩子读的识字绘本：全文 + 水彩插图 + 影片分镜。单个 HTML 文件，离线可读。">
+<title>雪地里的那盏灯</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b1537'/%3E%3Ccircle cx='32' cy='30' r='20' fill='%23ffcb62' opacity='.28'/%3E%3Ccircle cx='32' cy='30' r='9' fill='%23fff0b8'/%3E%3C/svg%3E">
+<style>
+@font-face{font-family:"WenKaiBook";font-weight:400;font-style:normal;font-display:swap;src:url(data:font/woff2;base64,{{FONT_REGULAR}}) format("woff2")}
+@font-face{font-family:"WenKaiBook";font-weight:700;font-style:normal;font-display:swap;src:url(data:font/woff2;base64,{{FONT_BOLD}}) format("woff2")}
+{{CSS}}
+</style>
+</head>
+<body>
+<noscript><p style="padding:2em;font:20px/1.8 sans-serif">这本绘本需要浏览器运行 JavaScript。请换一个浏览器，或在设置里允许 JavaScript。</p></noscript>
+<canvas id="snow" aria-hidden="true"></canvas>
+<div id="app"></div>
+<script type="application/json" id="book-data">{{DATA}}</script>
+<script>window.__IMG={{IMAGES}};</script>
+<script>
+{{JS}}
+</script>
+</body>
+</html>

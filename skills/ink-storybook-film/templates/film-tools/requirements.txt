@@ -1,0 +1,5 @@
+# 仅用于生成素材的脚本（渲染影片本身只需要 node/npm）
+numpy>=1.26      # scripts/make_music.py 合成配乐
+Pillow>=10       # scripts/contact.py、scripts/audit_warm.py
+fonttools>=4.50  # scripts/subset_font.py 裁剪字幕字体
+brotli>=1.1      # woff2 读写

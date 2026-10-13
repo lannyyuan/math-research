@@ -1,0 +1,26 @@
+/* pinyin_hover.css — 配合 pinyin_hover.js。改颜色只改下面的变量（可在页面自己的 CSS 里覆盖），不用动选择器。 */
+:root{--pyh-bg:#fffdf8;--pyh-ink:#26231d;--pyh-mute:#7b7566;--pyh-accent:#c0502d;--pyh-hl:rgba(192,80,45,.16);--pyh-shadow:rgba(0,0,0,.22);--pyh-edge:rgba(0,0,0,.12)}
+@media (prefers-color-scheme:dark){:root{--pyh-bg:#2b2a2f;--pyh-ink:#f3efe4;--pyh-mute:#a9a394;--pyh-accent:#f0a07a;--pyh-hl:rgba(240,160,122,.24);--pyh-shadow:rgba(0,0,0,.5);--pyh-edge:rgba(255,255,255,.14)}}
+.hz{border-radius:.18em}
+html[data-pyh=on] .hz{cursor:pointer;-webkit-tap-highlight-color:transparent}
+html[data-pyh=on] .hz.on,html[data-pyh=on] .hz.say{background:var(--pyh-hl);box-shadow:0 0 0 .1em var(--pyh-hl)}
+.pyb{position:fixed;z-index:2147483000;left:0;top:0;transform:translate(-50%,-100%);display:none;align-items:center;gap:.5em;padding:.3em .8em .34em;background:var(--pyh-bg);color:var(--pyh-ink);border-radius:12px;box-shadow:0 10px 28px var(--pyh-shadow),0 0 0 1px var(--pyh-edge);pointer-events:none;white-space:nowrap;font-family:system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.2;letter-spacing:.04em}
+.pyb.on{display:inline-flex}
+.pyb .py{font-size:1.55rem;font-weight:700}
+.pyb small{font-size:.8rem;color:var(--pyh-mute)}
+.pyb small[hidden]{display:none}
+.pyb .spk{display:inline-flex;width:1.15rem;height:1.15rem;color:var(--pyh-accent)}
+.pyb .spk svg{width:100%;height:100%}
+.pyb.mute .spk{opacity:.25}
+.pyb::after{content:"";position:absolute;left:calc(50% + var(--ax,0px));bottom:-6px;width:12px;height:12px;background:var(--pyh-bg);transform:translateX(-50%) rotate(45deg);border-right:1px solid var(--pyh-edge);border-bottom:1px solid var(--pyh-edge)}
+.pyb.below{transform:translate(-50%,0)}
+.pyb.below::after{bottom:auto;top:-6px;border:0;border-left:1px solid var(--pyh-edge);border-top:1px solid var(--pyh-edge)}
+.pyb.say .spk{animation:pyhPulse .45s ease-in-out infinite alternate}
+@keyframes pyhPulse{to{transform:scale(1.18);opacity:.7}}
+@media (prefers-reduced-motion:reduce){.pyb.say .spk{animation:none}}
+@media (max-width:640px){.pyb .py{font-size:1.35rem}}
+.pyh-note{margin:2em auto 1em;max-width:42em;padding:.6em 1em;font:.85rem/1.7 system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;color:var(--pyh-mute);text-align:center}
+.pyh-note button{margin:0 .5em;padding:.15em .8em;font:inherit;color:var(--pyh-accent);background:transparent;border:1px solid var(--pyh-accent);border-radius:999px;cursor:pointer}
+.pyh-note details{display:inline-block;text-align:left}
+.pyh-note summary{cursor:pointer;display:inline}
+.pyh-note a{color:inherit}

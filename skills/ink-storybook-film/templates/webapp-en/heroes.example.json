@@ -1,0 +1,123 @@
+{
+  "_about": "Which picture each page uses. A page that holds a film subtitle uses that subtitle's clean film frame (cue/NN, automatic). Pages without a subtitle take, chapter by chapter, the pictures listed here in order (img = file under out/book_img without .png; fx/fy = centre of the part to show 0-1; z = zoom; cap = small caption; alt = description for screen readers).",
+  "cover": {"img": "film/cover", "alt": "The Lighthouse Light: two children, a small robot and a reindeer walk down a snowy hill towards a bay where a lighthouse sends out a golden beam"},
+  "end": {"img": "cue/46", "fx": 0.5, "fy": 0.5, "alt": "Hazel's dark bedroom at night; through the window the lighthouse beam sweeps across the sky"},
+  "sections": {
+    "Chapter 1": [
+      {"img": "cue/01", "fx": 0.5, "fy": 0.55, "z": 1, "cap": "From the film: the little village by the sea", "alt": "Hazel and Bud on a snowy slope above the grey bay"},
+      {"img": "cue/02", "fx": 0.88, "fy": 0.32, "z": 2.0, "cap": "From the film: the tall old lighthouse across the bay", "alt": "The white lighthouse on its headland, far across the water"},
+      {"img": "cue/03", "fx": 0.5, "fy": 0.62, "z": 1.5, "cap": "From the film: the harbour and its boats", "alt": "Boats by the harbour pier"},
+      {"img": "cue/04", "fx": 0.28, "fy": 0.6, "z": 1.7, "cap": "From the film: Hazel and Bud look out to sea", "alt": "Hazel and Bud looking at the sea"},
+      {"img": "cue/04", "fx": 0.88, "fy": 0.3, "z": 2.0, "cap": "From the film: Grandad's light", "alt": "The dark lighthouse in the distance"}
+    ],
+    "Chapter 2": [
+      {"img": "cue/05", "fx": 0.62, "fy": 0.55, "z": 1.6, "cap": "From the film: the snowman with Bud's cap", "alt": "Bud and Hazel beside the snowman, which wears Bud's cap"},
+      {"img": "cue/08", "fx": 0.45, "fy": 0.6, "z": 1.5, "cap": "From the film: off to the city for the lightbulb", "alt": "Hazel and Bud walking away along the snowy slope"}
+    ],
+    "Chapter 3": [
+      {"img": "plate/city", "fx": 0.5, "fy": 0.55, "z": 1, "cap": "Extra picture: the city on Christmas Eve", "alt": "Hazel and Bud walk down a snowy street lined with tall shops; a bus is parked behind them"},
+      {"img": "plate/city", "fx": 0.3, "fy": 0.62, "z": 1.7, "cap": "Extra picture: Hazel and Bud in the busy streets", "alt": "Close-up of Hazel and Bud on the street"},
+      {"img": "plate/city", "fx": 0.7, "fy": 0.3, "z": 1.8, "cap": "Extra picture: the clock tower", "alt": "The clock tower above the roofs"},
+      {"img": "plate/city", "fx": 0.62, "fy": 0.68, "z": 1.6, "cap": "Extra picture: the bus that brought them", "alt": "The grey-blue bus on the snowy road"}
+    ],
+    "Chapter 4": [
+      {"img": "cue/09", "fx": 0.62, "fy": 0.5, "z": 1.3, "cap": "From the film: Mrs Mallet's workshop", "alt": "Mrs Mallet behind her workbench, with the big lightbulb"},
+      {"img": "cue/09", "fx": 0.36, "fy": 0.5, "z": 1.8, "cap": "From the film: a little robot waiting on the bench", "alt": "The small metal robot Bolts on the workbench"},
+      {"img": "cue/11", "fx": 0.4, "fy": 0.55, "z": 1.7, "cap": "From the film: Bolts's eyes light up", "alt": "Bolts with glowing yellow eyes"},
+      {"img": "cue/12", "fx": 0.35, "fy": 0.6, "z": 1.5, "cap": "From the film: Bolts, Hazel and Bud", "alt": "Hazel, Bud and Bolts in the workshop"}
+    ],
+    "Chapter 5": [
+      {"img": "cue/13", "fx": 0.62, "fy": 0.5, "z": 1.5, "cap": "From the film: the bus stop sign", "alt": "A sign: NO BUSES TODAY. SNOW."},
+      {"img": "cue/14", "fx": 0.62, "fy": 0.5, "z": 1.5, "cap": "From the film: the station is closed too", "alt": "The station with a sign: No trains today."}
+    ],
+    "Chapter 6": [
+      {"img": "cue/16", "fx": 0.5, "fy": 0.58, "z": 1, "cap": "From the film: out of the city, into the snow", "alt": "The snowy road with fence posts and pines"},
+      {"img": "cue/16", "fx": 0.3, "fy": 0.62, "z": 1.9, "cap": "From the film: a small brown reindeer", "alt": "The small reindeer Comet with a red collar"},
+      {"img": "cue/17", "fx": 0.62, "fy": 0.62, "z": 1.6, "cap": "From the film: it sounded like yes", "alt": "Hazel, Bud and Bolts turn to look at the reindeer"},
+      {"img": "cue/17", "fx": 0.3, "fy": 0.6, "z": 1.6, "cap": "From the film: Comet follows them", "alt": "Comet standing in the snow"}
+    ],
+    "Chapter 7": [
+      {"img": "cue/18", "fx": 0.82, "fy": 0.55, "z": 1.7, "cap": "From the film: a light in the snow", "alt": "The farmhouse windows glow in the dusk"},
+      {"img": "cue/18", "fx": 0.45, "fy": 0.6, "z": 1.4, "cap": "From the film: the farm", "alt": "The barn and the farmhouse in the snow"},
+      {"img": "cue/19", "fx": 0.55, "fy": 0.55, "z": 1.5, "cap": "From the film: the farmer and the woolly hat", "alt": "The farmer holds out a woolly hat to Bud"},
+      {"img": "cue/19", "fx": 0.3, "fy": 0.62, "z": 1.7, "cap": "From the film: Bud's new hat", "alt": "Bud wearing a woolly hat with a pompom"}
+    ],
+    "Chapter 8": [
+      {"img": "cue/20", "fx": 0.25, "fy": 0.75, "z": 1.9, "cap": "From the film: the leaf pile moves", "alt": "A pile of leaves by the barn"},
+      {"img": "cue/21", "fx": 0.35, "fy": 0.72, "z": 1.8, "cap": "From the film: Pebbles the hedgehog", "alt": "Bud holds out his hat to a hedgehog"},
+      {"img": "cue/21", "fx": 0.55, "fy": 0.6, "z": 1.3, "cap": "From the film: the hat goes into Bud's pocket", "alt": "Hazel, Bud, Comet and Bolts by the barn"}
+    ],
+    "Chapter 9": [
+      {"img": "plate/castle", "fx": 0.5, "fy": 0.55, "z": 1, "cap": "Extra picture: the old castle on the hill", "alt": "The ruined castle on a snowy hill at dusk; the friends climb the path"},
+      {"img": "plate/castle", "fx": 0.6, "fy": 0.28, "z": 1.8, "cap": "Extra picture: the tower with the dry room", "alt": "The ruined tower with a hole in its wall"},
+      {"img": "plate/castle", "fx": 0.36, "fy": 0.7, "z": 1.6, "cap": "Extra picture: tired legs, a long climb", "alt": "Hazel, Bud, Bolts and Comet on the path"},
+      {"img": "plate/castle_in", "fx": 0.5, "fy": 0.6, "z": 1, "cap": "Extra picture: a story from Bolts", "alt": "The four friends and Pebbles resting wrapped in a blanket inside the tower"},
+      {"img": "plate/castle_in", "fx": 0.62, "fy": 0.6, "z": 1.6, "cap": "Extra picture: tea and sandwiches", "alt": "Hazel and Bud on the blanket"}
+    ],
+    "Chapter 10": [
+      {"img": "plate/castle_in", "fx": 0.5, "fy": 0.55, "z": 1, "cap": "Extra picture: the storm is getting worse", "alt": "Inside the tower; snow blows past the window"},
+      {"img": "plate/castle_in", "fx": 0.8, "fy": 0.3, "z": 1.9, "cap": "Extra picture: it was nearly dark", "alt": "The arched window with the snowstorm outside"},
+      {"img": "plate/castle_in", "fx": 0.36, "fy": 0.3, "z": 1.9, "cap": "Extra picture: a round circle of torchlight", "alt": "A circle of torchlight on the stone wall, with a sleeping bat"},
+      {"img": "plate/castle_in", "fx": 0.55, "fy": 0.68, "z": 1.5, "cap": "Extra picture: together is less scary", "alt": "Hazel, Bud and Bolts side by side"}
+    ],
+    "Chapter 11": [
+      {"img": "plate/fairground", "fx": 0.5, "fy": 0.55, "z": 1, "cap": "Extra picture: the winter fairground", "alt": "The closed fairground in the snow: the helter-skelter, the big striped tent and the big wheel"},
+      {"img": "plate/fairground", "fx": 0.76, "fy": 0.42, "z": 1.8, "cap": "Extra picture: the big wheel, still and dark", "alt": "The big wheel with snow on its seats"},
+      {"img": "plate/fairground", "fx": 0.17, "fy": 0.45, "z": 1.9, "cap": "Extra picture: the helter-skelter, white with snow", "alt": "The white helter-skelter tower"},
+      {"img": "plate/fairground", "fx": 0.46, "fy": 0.55, "z": 1.7, "cap": "Extra picture: the big striped circus tent", "alt": "The blue and white striped tent"},
+      {"img": "plate/fairground", "fx": 0.85, "fy": 0.78, "z": 1.7, "cap": "Extra picture: the stalls were closed", "alt": "Snow-covered stalls"},
+      {"img": "plate/fairground", "fx": 0.34, "fy": 0.82, "z": 1.5, "cap": "Extra picture: through the big gate", "alt": "The friends walk through the fairground"}
+    ],
+    "Chapter 12": [
+      {"img": "cue/22", "fx": 0.55, "fy": 0.6, "z": 1.3, "cap": "From the film: the frozen stream", "alt": "Hazel, Bud, Comet and Bolts on the ice"},
+      {"img": "cue/26", "fx": 0.4, "fy": 0.6, "z": 1.4, "cap": "From the film: wet and shaking", "alt": "Hazel and Bud safe on the bank"}
+    ],
+    "Chapter 13": [
+      {"img": "plate/caravan", "fx": 0.5, "fy": 0.55, "z": 1, "cap": "Extra picture: the old caravan", "alt": "Inside the warm caravan: Comet, Pebbles, Bud, Hazel and Bolts"},
+      {"img": "plate/caravan", "fx": 0.2, "fy": 0.6, "z": 1.9, "cap": "Extra picture: the little stove", "alt": "The little stove with a blue flame, Pebbles warming his paws and Comet by the door"},
+      {"img": "plate/caravan", "fx": 0.55, "fy": 0.62, "z": 1.6, "cap": "Extra picture: hot chocolate", "alt": "Bud and Hazel talking about their families"},
+      {"img": "plate/caravan", "fx": 0.5, "fy": 0.3, "z": 1.9, "cap": "Extra picture: snow at the window", "alt": "The caravan window with snow falling outside"},
+      {"img": "plate/caravan", "fx": 0.82, "fy": 0.45, "z": 1.8, "cap": "Extra picture: two bunk beds", "alt": "The bunk beds with pillows and a duvet"},
+      {"img": "plate/caravan", "fx": 0.45, "fy": 0.4, "z": 1.7, "cap": "Extra picture: hot chocolate on the table", "alt": "Mugs of hot chocolate steaming on the little table"},
+      {"img": "plate/caravan", "fx": 0.78, "fy": 0.72, "z": 1.5, "cap": "Extra picture: Bolts keeps watch", "alt": "Bolts standing in the caravan"},
+      {"img": "plate/caravan", "fx": 0.3, "fy": 0.78, "z": 1.7, "cap": "Extra picture: Comet by the door", "alt": "Comet lying down by the door"}
+    ],
+    "Chapter 14": [
+      {"img": "plate/dream", "fx": 0.5, "fy": 0.55, "z": 1, "cap": "Extra picture: Hazel's dream of summer", "alt": "A bright summer beach in a dream: Hazel by sandcastles, the blue sea, boats and kites"},
+      {"img": "plate/dream", "fx": 0.38, "fy": 0.78, "z": 1.7, "cap": "Extra picture: sandcastles", "alt": "Sandcastles on the beach"},
+      {"img": "plate/dream", "fx": 0.62, "fy": 0.3, "z": 1.7, "cap": "Extra picture: kites in the sky", "alt": "Kites flying over the sea"},
+      {"img": "plate/dream", "fx": 0.5, "fy": 0.56, "z": 1.6, "cap": "Extra picture: boats on the sea", "alt": "Sailing boats on the blue sea"},
+      {"img": "plate/dream", "fx": 0.15, "fy": 0.66, "z": 1.8, "cap": "Extra picture: umbrellas and rock pools", "alt": "A striped umbrella on the sand"},
+      {"img": "plate/dream", "fx": 0.8, "fy": 0.62, "z": 1.7, "cap": "Extra picture: a ferry and a big tanker", "alt": "Ships far out at sea"},
+      {"img": "plate/dream", "fx": 0.5, "fy": 0.86, "z": 1.6, "cap": "Extra picture: Hazel at the seaside", "alt": "Hazel standing on the sand"}
+    ],
+    "Chapter 15": [
+      {"img": "cue/27", "fx": 0.5, "fy": 0.62, "z": 1.3, "cap": "From the film: the cliff path in the storm", "alt": "The friends walk along the snowy cliff path above the dark sea"}
+    ],
+    "Chapter 16": [
+      {"img": "cue/31", "fx": 0.62, "fy": 0.4, "z": 1.6, "cap": "From the film: the lighthouse, tall and dark", "alt": "The tall dark lighthouse at night"},
+      {"img": "cue/32", "fx": 0.55, "fy": 0.5, "z": 1.5, "cap": "From the film: the new lightbulb", "alt": "The big lens with the new bulb in its socket"},
+      {"img": "cue/33", "fx": 0.55, "fy": 0.6, "z": 1.5, "cap": "From the film: the old generator", "alt": "Bolts and the children beside the generator"},
+      {"img": "cue/34", "fx": 0.25, "fy": 0.7, "z": 1.7, "cap": "From the film: Bolts's battery", "alt": "Bolts with dim eyes"}
+    ],
+    "Chapter 17": [
+      {"img": "cue/39", "fx": 0.5, "fy": 0.55, "z": 1, "cap": "From the film: the boats come home", "alt": "The children on the quay"}
+    ],
+    "Chapter 18": [
+      {"img": "plate/dinner", "fx": 0.5, "fy": 0.55, "z": 1, "cap": "Extra picture: Christmas dinner", "alt": "Grandad in his armchair, Bud, Bolts on the table with Hazel and Mrs Mallet, and the Christmas tree"},
+      {"img": "plate/presents", "fx": 0.5, "fy": 0.55, "z": 1, "cap": "Extra picture: present time", "alt": "Hazel and Bud by the Christmas tree with presents"},
+      {"img": "plate/presents", "fx": 0.72, "fy": 0.5, "z": 1.8, "cap": "Extra picture: the Christmas tree", "alt": "The Christmas tree with stars, hearts and moons on it"},
+      {"img": "plate/dinner", "fx": 0.2, "fy": 0.6, "z": 1.7, "cap": "Extra picture: Grandad with his leg in a cast", "alt": "Grandad in the armchair with a blanket and a cast"},
+      {"img": "plate/dinner", "fx": 0.55, "fy": 0.72, "z": 1.7, "cap": "Extra picture: the Christmas table", "alt": "The table with the white tablecloth"},
+      {"img": "plate/presents", "fx": 0.4, "fy": 0.78, "z": 1.7, "cap": "Extra picture: Hazel and Bud open their presents", "alt": "Hazel and Bud with their presents"},
+      {"img": "plate/dinner", "fx": 0.85, "fy": 0.6, "z": 1.6, "cap": "Extra picture: Mrs Mallet comes to visit", "alt": "Mrs Mallet beside the tree"},
+      {"img": "plate/presents", "fx": 0.3, "fy": 0.35, "z": 1.8, "cap": "Extra picture: a picture of the lighthouse", "alt": "A picture of the lighthouse on the wall"},
+      {"img": "cue/43", "fx": 0.52, "fy": 0.62, "z": 1.5, "cap": "From the film: Bolts wakes up", "alt": "Bolts on the table with his eyes lit"}
+    ],
+    "Epilogue": [
+      {"img": "plate/spring", "fx": 0.5, "fy": 0.55, "z": 1, "cap": "Extra picture: spring in the garden", "alt": "Hazel in the spring garden with blossom trees, a pond and the hedgehog house"},
+      {"img": "plate/spring", "fx": 0.3, "fy": 0.62, "z": 1.9, "cap": "Extra picture: Pebbles wakes up", "alt": "The little wooden house where Pebbles slept"},
+      {"img": "plate/spring", "fx": 0.62, "fy": 0.8, "z": 1.6, "cap": "Extra picture: the pond and the frog", "alt": "The pond with a frog on a lily pad and purple flowers"}
+    ]
+  }
+}

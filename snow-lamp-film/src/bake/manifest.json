@@ -1,0 +1,92 @@
+{
+ "paper": {
+  "w": 1920,
+  "h": 1080,
+  "format": "jpeg"
+ },
+ "sky-night": {
+  "w": 2304,
+  "h": 900,
+  "format": "jpeg"
+ },
+ "sky-dawn": {
+  "w": 2304,
+  "h": 900,
+  "format": "jpeg"
+ },
+ "trees-far": {
+  "w": 3400,
+  "h": 420,
+  "format": "png"
+ },
+ "trees-mid": {
+  "w": 3400,
+  "h": 520,
+  "format": "png"
+ },
+ "snow-a": {
+  "w": 3400,
+  "h": 700,
+  "format": "png"
+ },
+ "snow-b": {
+  "w": 3400,
+  "h": 700,
+  "format": "png"
+ },
+ "mount-night": {
+  "w": 3400,
+  "h": 800,
+  "format": "png"
+ },
+ "mount-dawn": {
+  "w": 3400,
+  "h": 800,
+  "format": "png"
+ },
+ "trees-frame": {
+  "w": 3000,
+  "h": 1000,
+  "format": "png"
+ },
+ "pond": {
+  "w": 1600,
+  "h": 380,
+  "format": "png"
+ },
+ "river": {
+  "w": 1700,
+  "h": 540,
+  "format": "png"
+ },
+ "cave": {
+  "w": 1920,
+  "h": 1080,
+  "format": "png"
+ },
+ "spring-1": {
+  "w": 3400,
+  "h": 700,
+  "format": "png"
+ },
+ "spring-2": {
+  "w": 3400,
+  "h": 700,
+  "format": "png"
+ },
+ "spring-3": {
+  "w": 3400,
+  "h": 700,
+  "format": "png"
+ },
+ "slope": {
+  "w": 3400,
+  "h": 900,
+  "format": "png"
+ },
+ "room": {
+  "w": 1920,
+  "h": 1080,
+  "format": "png"
+ }
+}
