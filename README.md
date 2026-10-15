@@ -48,6 +48,7 @@
 │   ├── README.md
 │   ├── corridor-template.md     新走廊文档模板
 │   └── annotation-sheet.csv     盲标注表(压缩检验用)
+├── kids-science-video/          儿童科普动画工程(Remotion + three.js;与 MEL 研究无关,见其 README)
 └── mel-research/
     ├── README.md                附录索引
     ├── MEL-complete-report.md   单一完整版(由脚本生成,勿手改)

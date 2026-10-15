@@ -1,0 +1,5 @@
+node_modules/
+.font-cache/
+out/
+# regenerated deterministically by `npm run audio`
+public/sfx/gas-car-engine.wav

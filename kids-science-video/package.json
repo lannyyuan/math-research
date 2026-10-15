@@ -1,0 +1,36 @@
+{
+  "name": "kids-science-video",
+  "version": "1.0.0",
+  "private": true,
+  "description": "儿童科普动画（Remotion + three.js）：汽油车 / 电动车系列",
+  "scripts": {
+    "dev": "remotion studio",
+    "fonts": "python3 scripts/build_fonts.py",
+    "tts": "python3 scripts/tts.py src/gas-car/narration.json public/voice/gas-car src/gas-car/voice-timing.json",
+    "audio": "tsx scripts/make-audio.ts",
+    "check": "tsc --noEmit && tsx scripts/check-scene.ts && python3 scripts/check_glyphs.py",
+    "render:narrated": "npm run audio && remotion render GasCarVoice out/gas-car_narrated.mp4",
+    "render:subtitles": "npm run audio && remotion render GasCarSubtitles out/gas-car_subtitles-only.mp4",
+    "wmv": "bash scripts/to-wmv.sh out/gas-car_narrated.mp4 out/gas-car_subtitles-only.mp4",
+    "typecheck": "tsc --noEmit",
+    "predev": "npm run audio",
+    "keyframes": "bash scripts/keyframes.sh out/gas-car_narrated.mp4 out/keyframes.jpg"
+  },
+  "dependencies": {
+    "@react-three/fiber": "9.8.2",
+    "@remotion/cli": "4.0.535",
+    "@remotion/fonts": "4.0.535",
+    "@remotion/media": "4.0.535",
+    "@remotion/three": "4.0.535",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "remotion": "4.0.535",
+    "three": "0.186.1"
+  },
+  "devDependencies": {
+    "@types/react": "19.3.0",
+    "@types/three": "0.186.0",
+    "tsx": "4.23.15",
+    "typescript": "7.0.2"
+  }
+}
