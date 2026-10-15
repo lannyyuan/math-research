@@ -3,7 +3,9 @@
 Remotion + three.js（`@remotion/three`）制作的约 70 秒小学科普动画（1920×1080，30 fps），给 PPT 课堂播放。
 同一工程随后会做对称的「电动车」视频，所以车模、X 光材质、高亮、爆炸视图、标签、字幕、卡片都是可复用组件，风格常量集中在一处。
 
-## 交付物（`npm run render:*` 输出到 `out/`）
+## 交付物（`npm run render:*` 输出到 `out/`；已提交的副本在 `deliverables/`）
+
+`deliverables/` 收录两版 MP4 与关键帧拼图。两个 WMV 各约 95 MB（WMV8 需要高码率保证 1080p 画质），超出仓库适合存放的大小，用 `npm run wmv` 约 1 分钟即可从 MP4 重新生成。
 
 | 文件 | 内容 |
 |---|---|
