@@ -12,10 +12,20 @@ type Props = {
   readonly angle: number;
   readonly highlight?: number;
   readonly t: number;
+  readonly hubColor?: string;
+  readonly dotColor?: string;
 };
 
 /** Cartoon wheel: chunky tyre, 5-spoke rim, coloured hub dot so rotation is easy to see. */
-export const Wheel: React.FC<Props> = ({ position, side, angle, highlight = 0, t }) => {
+export const Wheel: React.FC<Props> = ({
+  position,
+  side,
+  angle,
+  highlight = 0,
+  t,
+  hubColor = COLORS.carOrangeLight,
+  dotColor = COLORS.carOrange,
+}) => {
   const g = useMemo(() => {
     const tubeR = 0.095;
     return {
@@ -46,8 +56,8 @@ export const Wheel: React.FC<Props> = ({ position, side, angle, highlight = 0, t
           />
         );
       })}
-      <Toon geometry={g.hub} color={COLORS.carOrangeLight} outline={SIZES.outline} position={[0, 0, outer * 0.6]} />
-      <Toon geometry={g.dot} color={COLORS.carOrange} outline={0} position={[0, 0.16, outer + side * 0.005]} />
+      <Toon geometry={g.hub} color={hubColor} outline={SIZES.outline} position={[0, 0, outer * 0.6]} />
+      <Toon geometry={g.dot} color={dotColor} outline={0} position={[0, 0.16, outer + side * 0.005]} />
     </group>
   );
 };

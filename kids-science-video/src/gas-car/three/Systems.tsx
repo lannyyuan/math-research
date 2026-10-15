@@ -250,10 +250,18 @@ export const Gearbox: React.FC<
   );
 };
 
-export const HalfShafts: React.FC<HL & { readonly wheel: number }> = ({ highlight, t, wheel }) => {
-  const zL0 = GBX.diffZ - 0.045;
+/** Reused by the electric car with its own differential position (defaults = gasoline car). */
+export const HalfShafts: React.FC<HL & { readonly wheel: number; readonly diffZ?: number; readonly diffX?: number; readonly diffY?: number }> = ({
+  highlight,
+  t,
+  wheel,
+  diffZ = GBX.diffZ,
+  diffX = GBX.diffX,
+  diffY = GBX.diffY,
+}) => {
+  const zL0 = diffZ - 0.045;
   const zL1 = -(CAR.trackHalf - 0.1);
-  const zR0 = GBX.diffZ + 0.03;
+  const zR0 = diffZ + 0.03;
   const zR1 = CAR.trackHalf - 0.1;
   const g = useMemo(
     () => ({
@@ -267,7 +275,7 @@ export const HalfShafts: React.FC<HL & { readonly wheel: number }> = ({ highligh
   );
   const rot = -wheel;
   return (
-    <group position={[GBX.diffX, GBX.diffY, 0]}>
+    <group position={[diffX, diffY, 0]}>
       <group rotation={[0, 0, rot]}>
         <Toon geometry={g.left} color={COLORS.shaft} highlight={highlight} t={t} position={[0, 0, (zL0 + zL1) / 2]} outline={0.003} />
         <Toon geometry={g.right} color={COLORS.shaft} highlight={highlight} t={t} position={[0, 0, (zR0 + zR1) / 2]} outline={0.003} />

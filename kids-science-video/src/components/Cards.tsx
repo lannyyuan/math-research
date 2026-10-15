@@ -11,7 +11,10 @@ export const BigTitle: React.FC<{
   readonly top: number;
   readonly size?: number;
   readonly color?: string;
-}> = ({ text, t, start, end, top, size = SIZES.titleFont, color = COLORS.ink }) => {
+  /** Card border colour and the colour of "=" (defaults: gasoline-car orange). */
+  readonly border?: string;
+  readonly accent?: string;
+}> = ({ text, t, start, end, top, size = SIZES.titleFont, color = COLORS.ink, border = COLORS.carOrangeLight, accent = COLORS.carOrange }) => {
   const out = 1 - smooth(ramp(t, end - 0.35, end));
   if (t < start || out <= 0) return null;
   const chars = [...text];
@@ -24,7 +27,7 @@ export const BigTitle: React.FC<{
           borderRadius: 60,
           background: "rgba(255,255,255,0.86)",
           boxShadow: "0 12px 30px rgba(34,50,74,0.14)",
-          border: `6px solid ${COLORS.carOrangeLight}`,
+          border: `6px solid ${border}`,
         }}
       >
         {chars.map((ch, i) => {
@@ -37,7 +40,7 @@ export const BigTitle: React.FC<{
                 fontFamily: FONT.display,
                 fontSize: size,
                 lineHeight: 1.15,
-                color: ch === "=" ? COLORS.carOrange : color,
+                color: ch === "=" ? accent : color,
                 opacity: Math.min(1, p * 1.5),
                 translate: `0px ${(1 - p) * -60}px`,
                 scale: String(Math.max(0, p)),

@@ -3,3 +3,4 @@ node_modules/
 out/
 # regenerated deterministically by `npm run audio`
 public/sfx/gas-car-engine.wav
+public/sfx/ev-motor.wav

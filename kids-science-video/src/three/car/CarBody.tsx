@@ -12,6 +12,9 @@ import { CAR } from "./carLayout";
 
 type Props = {
   readonly color?: string;
+  /** X-ray rim colour (defaults to the gasoline car's orange). */
+  readonly rim?: string;
+  readonly bumper?: string;
   readonly xray: number;
   /** 0 = gentle smile, 1 = big happy smile. */
   readonly smile: number;
@@ -74,7 +77,7 @@ const windowShapes = () => {
   return [front, rear];
 };
 
-export const CarBody: React.FC<Props> = ({ color = COLORS.carOrange, xray, smile, t }) => {
+export const CarBody: React.FC<Props> = ({ color = COLORS.carOrange, rim = COLORS.xrayRim, bumper = COLORS.bumper, xray, smile, t }) => {
   const geo = useMemo(() => {
     const lower = smoothNormals(extrudeZ(lowerShape(), CAR.bodyHalfW * 2, 0.13, 5, 48, true));
     const cabin = smoothNormals(extrudeZ(cabinShape(), CAR.cabinHalfW * 2, 0.12, 5, 32, true));
@@ -95,18 +98,18 @@ export const CarBody: React.FC<Props> = ({ color = COLORS.carOrange, xray, smile
 
   const mats = useMemo(
     () => ({
-      body: makeBodyMaterial(color),
+      body: makeBodyMaterial(color, rim),
       window: makeBodyMaterial(COLORS.window, "#8CCBFF"),
-      bumper: makeBodyMaterial(COLORS.bumper),
+      bumper: makeBodyMaterial(bumper, rim),
       head: makeBodyMaterial(COLORS.headlight, "#FFE9A8"),
       tail: makeBodyMaterial(COLORS.taillight, "#FF9C9C"),
-      well: makeBodyMaterial("#4A4F5C", "#FFB061"),
+      well: makeBodyMaterial("#4A4F5C", rim === COLORS.xrayRim ? "#FFB061" : rim),
       eye: makeToon(COLORS.eyeWhite),
       pupil: makeToon(COLORS.pupil),
       cheek: makeToon(COLORS.cheek),
       mouth: makeToon(COLORS.ink),
     }),
-    [color],
+    [color, rim, bumper],
   );
   for (const m of [mats.body, mats.window, mats.bumper, mats.head, mats.tail]) setBodyXray(m, xray);
   setBodyXray(mats.well, Math.min(1, xray * 1.4), 1 - xray);

@@ -2,10 +2,11 @@ import React from "react";
 import { COLORS, FONT, SIZES } from "../style/theme";
 
 /** Bottom-centre subtitle pill. `appear` 0..1 drives a gentle rise + fade. */
-export const Subtitle: React.FC<{ readonly text: string; readonly appear: number; readonly bottom?: number }> = ({
+export const Subtitle: React.FC<{ readonly text: string; readonly appear: number; readonly bottom?: number; readonly accent?: string }> = ({
   text,
   appear,
   bottom = 54,
+  accent = COLORS.carOrange,
 }) => {
   if (appear <= 0.001) return null;
   return (
@@ -27,7 +28,7 @@ export const Subtitle: React.FC<{ readonly text: string; readonly appear: number
           padding: "16px 44px 18px",
           borderRadius: 999,
           background: "rgba(255,255,255,0.94)",
-          border: `5px solid ${COLORS.carOrange}`,
+          border: `5px solid ${accent}`,
           boxShadow: "0 8px 22px rgba(34,50,74,0.16)",
           fontFamily: FONT.body,
           fontWeight: 700,

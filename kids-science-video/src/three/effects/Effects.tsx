@@ -98,12 +98,17 @@ export const PowerArrows: React.FC<{
 };
 
 /** Light-blue "(((" ripples of cool air flowing into the radiator (towards −X). */
-export const WindWaves: React.FC<{ readonly at: V3; readonly time: number; readonly amount: number }> = ({ at, time, amount }) => {
+export const WindWaves: React.FC<{ readonly at: V3; readonly time: number; readonly amount: number; readonly color?: string }> = ({
+  at,
+  time,
+  amount,
+  color = COLORS.coolWind,
+}) => {
   const R = 0.2;
   const arc = Math.PI * 0.6;
   // arc in the XY plane, apex pointing to −X (the direction the air travels)
   const geo = useMemo(() => torusZ(R, 0.014, arc).rotateZ(Math.PI - arc / 2), [arc]);
-  const mats = useMemo(() => Array.from({ length: 4 }, () => makeToon(COLORS.coolWind, 0.999)), []);
+  const mats = useMemo(() => Array.from({ length: 4 }, () => makeToon(color, 0.999)), [color]);
   if (amount <= 0.01) return null;
   const waves: React.ReactNode[] = [];
   for (let k = 0; k < mats.length; k++) {
@@ -143,4 +148,53 @@ export const Puffs: React.FC<{ readonly at: V3; readonly time: number; readonly 
       })}
     </group>
   );
+};
+
+/**
+ * Soft blue "current" pulses gliding along a cable (comet: bright head, fading tail).
+ * Always drawn on top like a diagram overlay; direction = path order.
+ */
+export const CurrentFlow: React.FC<{
+  readonly path: readonly V3[];
+  readonly time: number;
+  readonly amount: number;
+  readonly speed?: number;
+  readonly spacing?: number;
+  readonly size?: number;
+  readonly color?: string;
+}> = ({ path, time, amount, speed = 0.7, spacing = 0.22, size = 0.011, color = COLORS.current }) => {
+  const curve = useMemo(() => roundedPath(path, 0.05), [path]);
+  const len = useMemo(() => curve.getLength(), [curve]);
+  const geo = useMemo(() => sphere(1, 14), []);
+  const mats = useMemo(
+    () =>
+      [0.85, 0.5, 0.28, 0.14].map((o) => {
+        const m = makeGlow(color, o);
+        m.depthTest = false;
+        return m;
+      }),
+    [color],
+  );
+  const core = useMemo(() => {
+    const m = makeGlow("#FFFFFF", 0.9);
+    m.depthTest = false;
+    return m;
+  }, []);
+  if (amount <= 0.01) return null;
+  mats.forEach((m, k) => (m.opacity = [0.85, 0.5, 0.28, 0.14][k] * amount));
+  core.opacity = 0.55 * amount;
+  const off = (time * speed) % spacing;
+  const items: React.ReactNode[] = [];
+  for (let s0 = off; s0 < len; s0 += spacing) {
+    for (let k = 0; k < 4; k++) {
+      const s = s0 - k * size * 1.6;
+      if (s < 0) continue;
+      const p = curve.getPointAt(s / len);
+      const edge = Math.min(1, s / 0.06, (len - s) / 0.06);
+      const r = size * (1 - k * 0.18) * edge;
+      items.push(<mesh key={`${s0.toFixed(4)}_${k}`} geometry={geo} material={mats[k]} position={[p.x, p.y, p.z]} scale={r * 1.6} renderOrder={36} />);
+      if (k === 0) items.push(<mesh key={`${s0.toFixed(4)}_c`} geometry={geo} material={core} position={[p.x, p.y, p.z]} scale={r * 0.45} renderOrder={37} />);
+    }
+  }
+  return <group>{items}</group>;
 };

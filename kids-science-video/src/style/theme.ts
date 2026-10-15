@@ -75,6 +75,32 @@ export const COLORS = {
   coolWind: "#7FD3FF",
   oil: "#E39A2D",
   power: "#FF5A36",
+
+  // ---- electric car (cool palette, mirrors the gasoline car) ----
+  carGreen: "#36C46B",
+  carGreenDark: "#1F9A4E",
+  carGreenLight: "#86E2A8",
+  bumperGreen: "#CFF5DC",
+  xrayRimGreen: "#2FBF68",
+  battery: "#2E9C6A",
+  batteryModule: "#3FB57E",
+  batteryGlow: "#7CF0A8",
+  cell: "#D8F7E6",
+  hvCable: "#FF8C2E",
+  current: "#6FC8FF",
+  controller: "#3D7BD9",
+  controllerLed: "#8FE3FF",
+  motorHousing: "#9CC3E6",
+  stator: "#4A86B8",
+  coilA: "#5CD0FF",
+  coilB: "#6E8CFF",
+  coilC: "#4FE0C8",
+  magnetN: "#3E6FD8",
+  magnetS: "#C9D6E6",
+  speedLine: "#8FE3FF",
+  reducer: "#7FB3D9",
+  leaf: "#46C46E",
+  cleanAir: "#A9EBC4",
 } as const;
 
 /** Visual weights used by the toon shading and the label/subtitle UI. */

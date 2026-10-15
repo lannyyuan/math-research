@@ -4,11 +4,14 @@
  *  - the engine hum for the gasoline-car video, synthesised from the SAME per-frame
  *    crank data the picture uses: one soft thump per cylinder firing, and a drone
  *    whose pitch follows engine speed → rhythm always matches the animation.
+ *  - for the electric car: soft electronic blips, a rising "charging" arpeggio,
+ *    a gentle current whoosh and a quiet motor whine whose pitch follows the rotor speed
  * Run after the narration (timeline depends on it):  npx tsx scripts/make-audio.ts
  */
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { EV_DRIVE, EV_TL } from "../src/electric-car/data";
 import { GAS_DRIVE, GAS_TL } from "../src/gas-car/data";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -203,3 +206,67 @@ writeFileSync(
   JSON.stringify({ engineFrames: GAS_TL.totalFrames, firings: GAS_DRIVE.firings.length }, null, 2) + "\n",
 );
 console.log(`audio written; engine track ${GAS_TL.total.toFixed(2)}s, ${GAS_DRIVE.firings.length} firings`);
+
+// ------------------------------------------------------------------ electric car
+// (generated after the gasoline-car sounds so their deterministic noise stream is unchanged)
+const tone = (d: Float32Array, at: number, f0: number, f1: number, dur: number, amp: number) => {
+  let ph = 0;
+  const s0 = Math.round(at * SR);
+  const n = Math.round(dur * SR);
+  for (let k = 0; k < n && s0 + k < d.length; k++) {
+    const u = k / n;
+    const f = f0 + (f1 - f0) * u;
+    ph += (2 * Math.PI * f) / SR;
+    const env = Math.min(1, k / (0.004 * SR)) * Math.pow(1 - u, 2);
+    d[s0 + k] += amp * env * (Math.sin(ph) + 0.18 * Math.sin(3 * ph));
+  }
+};
+const blip = () => {
+  const d = len(0.16);
+  tone(d, 0, 880, 1560, 0.07, 1);
+  tone(d, 0.055, 1560, 1760, 0.08, 0.5);
+  return fadeEdges(normalize(d, 0.7));
+};
+const charge = () => {
+  const span = EV_TL.ev.modulesLit[1] - EV_TL.ev.modulesLit[0];
+  const per = span / (12 + 2);
+  const d = len(per * 13 + 0.5);
+  const scale = [523.3, 587.3, 659.3, 784.0, 880.0, 1046.5];
+  for (let i = 0; i < 12; i++) tone(d, i * per + per * 0.7, scale[i % 6] * (i >= 6 ? 2 : 1), scale[i % 6] * (i >= 6 ? 2 : 1), 0.18, 0.6);
+  return fadeEdges(normalize(d, 0.6), 10);
+};
+const current = () => {
+  const d = whoosh(1.3, 600, 2400);
+  const tmp = len(1.3);
+  tone(tmp, 0.05, 330, 660, 1.2, 0.25);
+  for (let i = 0; i < d.length; i++) d[i] = 0.8 * d[i] + tmp[i];
+  return fadeEdges(normalize(d, 0.55), 10);
+};
+const motor = () => {
+  const total = EV_TL.totalFrames / EV_TL.fps;
+  const d = len(total);
+  const fps = EV_TL.fps;
+  const omegaAt = (t: number) => {
+    const f = t * fps;
+    const i = Math.min(EV_DRIVE.omegaW.length - 2, Math.floor(f));
+    const u = f - i;
+    return (EV_DRIVE.omegaW[i] * (1 - u) + EV_DRIVE.omegaW[i + 1] * u) * EV_DRIVE.ratio;
+  };
+  let ph = 0;
+  let ph2 = 0;
+  for (let i = 0; i < d.length; i++) {
+    const w = omegaAt(i / SR);
+    const run = Math.min(1, w / 0.4);
+    ph += (2 * Math.PI * (150 + 170 * w)) / SR;
+    ph2 += (2 * Math.PI * 52) / SR;
+    d[i] = run * (0.55 * Math.sin(ph) + 0.18 * Math.sin(2 * ph) + 0.25 * Math.sin(ph2));
+  }
+  lowpass(d, () => 1400);
+  return fadeEdges(normalize(d, 0.5), 30);
+};
+writeWav(out("blip.wav"), blip());
+writeWav(out("charge.wav"), charge());
+writeWav(out("current.wav"), current());
+writeWav(out("ev-motor.wav"), motor());
+writeFileSync(join(ROOT, "src", "electric-car", "audio-manifest.json"), JSON.stringify({ motorFrames: EV_TL.totalFrames }, null, 2) + "\n");
+console.log(`EV audio written; motor track ${EV_TL.total.toFixed(2)}s`);
