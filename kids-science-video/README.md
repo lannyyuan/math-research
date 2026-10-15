@@ -5,7 +5,7 @@ Remotion + three.js（`@remotion/three`）制作的约 70 秒小学科普动画�
 
 ## 交付物（`npm run render:*` 输出到 `out/`；已提交的副本在 `deliverables/`）
 
-`deliverables/` 收录两版 MP4 与关键帧拼图。两个 WMV 各约 95 MB（WMV8 需要高码率保证 1080p 画质），超出仓库适合存放的大小，用 `npm run wmv` 约 1 分钟即可从 MP4 重新生成。
+`deliverables/` 收录全部四个视频（MP4 约 38 MB、WMV 约 45 MB）与关键帧拼图。
 
 | 文件 | 内容 |
 |---|---|
