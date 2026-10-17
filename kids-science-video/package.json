@@ -8,7 +8,7 @@
     "fonts": "python3 scripts/build_fonts.py",
     "tts": "python3 scripts/tts.py src/gas-car/narration.json public/voice/gas-car src/gas-car/voice-timing.json",
     "audio": "tsx scripts/make-audio.ts",
-    "check": "tsc --noEmit && tsx scripts/check-scene.ts && tsx scripts/check-scene-ev.ts && python3 scripts/check_glyphs.py",
+    "check": "tsc --noEmit && tsx scripts/check-scene.ts && tsx scripts/check-scene-ev.ts && tsx scripts/audit-ev.ts && python3 scripts/check_glyphs.py",
     "render:narrated": "npm run audio && remotion render GasCarVoice out/gas-car_narrated.mp4",
     "render:subtitles": "npm run audio && remotion render GasCarSubtitles out/gas-car_subtitles-only.mp4",
     "wmv": "bash scripts/to-wmv.sh out/gas-car_narrated.mp4 out/gas-car_subtitles-only.mp4 out/electric-car_narrated.mp4 out/electric-car_subtitles-only.mp4",
@@ -17,7 +17,8 @@
     "keyframes": "bash scripts/keyframes.sh out/gas-car_narrated.mp4 out/keyframes.jpg",
     "tts:ev": "python3 scripts/tts.py src/electric-car/narration.json public/voice/electric-car src/electric-car/voice-timing.json",
     "render:ev-narrated": "npm run audio && remotion render ElectricCarVoice out/electric-car_narrated.mp4",
-    "render:ev-subtitles": "npm run audio && remotion render ElectricCarSubtitles out/electric-car_subtitles-only.mp4"
+    "render:ev-subtitles": "npm run audio && remotion render ElectricCarSubtitles out/electric-car_subtitles-only.mp4",
+    "audit:ev": "tsx scripts/audit-ev.ts"
   },
   "dependencies": {
     "@react-three/fiber": "9.8.2",

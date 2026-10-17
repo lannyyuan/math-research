@@ -3,7 +3,20 @@ import { ramp, smooth, smoother, window } from "../lib/anim";
 import { cameraAt } from "../lib/camera";
 import { MODULES } from "./layout";
 import type { EvDrive, EvDriveState } from "./mechanics";
-import { EV_PART_IDS, EV_PARTS, EV_WHEEL_EXPLODE, type EvPartId } from "./parts";
+import {
+  EV_EXIT,
+  EV_DEPART,
+  EV_EXPLODE_ORDER,
+  EV_HALF_SHAFTS,
+  EV_LEG_TIME,
+  EV_PART_IDS,
+  EV_PARTS,
+  EV_TEARDOWN,
+  EV_WHEEL_EXIT,
+  EV_WHEEL_EXPLODE,
+  pathOffset,
+  type EvPartId,
+} from "./parts";
 import type { EvTimeline } from "./timeline";
 
 type V3 = readonly [number, number, number];
@@ -14,7 +27,10 @@ export type EvSceneState = {
   drive: EvDriveState;
   xray: number;
   hl: Record<EvPartId, number>;
+  /** Overall explode amount (the furthest-out assembly) — fades currents, speed lines… */
   explode: number;
+  /** Per-assembly explode progress 0..1 (staggered). */
+  shares: Record<EvPartId, number>;
   /** 0..1 per cell module, lit one after another. */
   modules: number[];
   batteryGlow: number;
@@ -39,8 +55,13 @@ export const evState = (tl: EvTimeline, drive: EvDrive, frame: number): EvSceneS
   const d = drive.at(frame);
 
   const xray = smooth(ramp(t, ev.xrayOn[0], ev.xrayOn[1])) * (1 - smooth(ramp(t, ev.xrayOff[0], ev.xrayOff[1])));
-  const explode =
-    smoother(ramp(t, ev.explodeOut[0], ev.explodeOut[1])) * (1 - smoother(ramp(t, ev.merge[0], ev.merge[1])));
+  const shares = {} as Record<EvPartId, number>;
+  // the merge is the teardown played backwards in time (last out, first back) — so it is as clean as the teardown
+  const tau = t < ev.merge[0] ? t - ev.explodeOut[0] : EV_TEARDOWN - (t - ev.merge[0]);
+  EV_EXPLODE_ORDER.forEach((id, k) => {
+    shares[id] = smoother(ramp(tau, EV_DEPART[k], EV_DEPART[k] + EV_LEG_TIME));
+  });
+  const explode = Math.max(...EV_PART_IDS.map((id) => shares[id]));
   const explodeGlow = 0.3 * window(t, ev.labelsIn, ev.labelsOut + 0.3, 0.5, 0.5);
   const hl = {} as Record<EvPartId, number>;
   const set = (id: EvPartId, v: number) => (hl[id] = Math.min(1, Math.max(v, explodeGlow)));
@@ -84,6 +105,7 @@ export const evState = (tl: EvTimeline, drive: EvDrive, frame: number): EvSceneS
     xray,
     hl,
     explode,
+    shares,
     modules,
     batteryGlow,
     dcCurrent,
@@ -98,12 +120,26 @@ export const evState = (tl: EvTimeline, drive: EvDrive, frame: number): EvSceneS
 
 export const evCameraPose = (tl: EvTimeline, t: number) => cameraAt(tl.camKeys, t);
 
-export const evExplodeOffset = (id: EvPartId, e: number): V3 => {
-  const o = EV_PARTS[id].explode;
-  return [o[0] * e, o[1] * e, o[2] * e];
-};
-export const evLabelAnchor = (id: EvPartId, e: number): V3 => {
+/** Where an assembly is (offset from home) at its current explode progress. */
+export const evExplodeOffset = (id: EvPartId, st: Pick<EvSceneState, "shares">): V3 =>
+  id === "halfShafts" ? evHalfShaftOffset("right", st) : pathOffset(EV_EXIT[id], EV_PARTS[id].explode, st.shares[id]);
+export const evHalfShaftOffset = (side: "left" | "right", st: Pick<EvSceneState, "shares">): V3 =>
+  pathOffset(EV_HALF_SHAFTS[side].exit, EV_HALF_SHAFTS[side].final, st.shares.halfShafts);
+export const evWheelOffset = (wheel: string, st: Pick<EvSceneState, "shares">): V3 =>
+  pathOffset(EV_WHEEL_EXIT[wheel], EV_WHEEL_EXPLODE[wheel], st.shares.wheels);
+
+export const evLabelAnchor = (id: EvPartId, st: Pick<EvSceneState, "shares">): V3 => {
   const a = EV_PARTS[id].anchor;
-  const o = id === "wheels" ? EV_WHEEL_EXPLODE.FR : EV_PARTS[id].explode;
-  return [a[0] + o[0] * e, a[1] + o[1] * e, a[2] + o[2] * e];
+  const o = id === "wheels" ? evWheelOffset("FR", st) : evExplodeOffset(id, st);
+  return [a[0] + o[0], a[1] + o[1], a[2] + o[2]];
 };
+
+/** Rigid offset of an audit group (assembly id or wheelFL…) in the current state. */
+export const evGroupOffset = (group: string, st: EvSceneState): V3 =>
+  group.startsWith("wheel")
+    ? evWheelOffset(group.slice(5), st)
+    : group === "halfShaftL"
+      ? evHalfShaftOffset("left", st)
+      : group === "halfShaftR"
+        ? evHalfShaftOffset("right", st)
+        : evExplodeOffset(group as EvPartId, st);

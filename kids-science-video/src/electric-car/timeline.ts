@@ -1,6 +1,7 @@
 /** "What happens when" for the electric-car video — mirrors the gasoline-car timeline. */
 import type { CamKey, CamPose } from "../lib/camera";
 import { scheduleNarration, type VoiceTiming } from "../lib/narration";
+import { EV_TEARDOWN } from "./parts";
 
 export const EV_SEG_ORDER = ["title", "battery", "controller", "motor", "reducer", "rear", "explode", "end"] as const;
 export type EvSegId = (typeof EV_SEG_ORDER)[number];
@@ -25,6 +26,8 @@ export const buildEvTimeline = (voice: VoiceTiming, fps = 30) => {
   const Q = seg.rear.start;
   const X = seg.explode.start;
   const N = seg.end.start;
+  // staggered teardown: last departure + one leg
+  const spread = EV_TEARDOWN;
 
   const ev = {
     xrayOn: [B + 0.05, B + 0.95] as const,
@@ -51,13 +54,13 @@ export const buildEvTimeline = (voice: VoiceTiming, fps = 30) => {
     leaf: line("rear", 3).speechStart - 0.2,
     // exploded view
     stop: [X, X + 0.8] as const,
-    explodeOut: [X + 0.4, X + 2.2] as const,
-    labelsIn: X + 1.9,
+    explodeOut: [X + 0.35, X + 0.35 + spread] as const,
+    labelsIn: X + 0.35 + spread - 0.15,
     icons: [wordAt("explode", "电池"), wordAt("explode", "电机"), wordAt("explode", "电控")] as const,
-    counter: [X + 2.2, line("explode", 2).speechEnd] as const,
+    counter: [X + 0.35 + spread, line("explode", 2).speechEnd] as const,
     labelsOut: line("explode", 3).speechStart - 0.45,
-    merge: [line("explode", 3).speechStart - 0.2, line("explode", 3).speechStart + 1.8] as const,
-    driveAway: line("explode", 3).speechStart + 2.0,
+    merge: [line("explode", 3).speechStart - 0.2, line("explode", 3).speechStart - 0.2 + spread] as const,
+    driveAway: line("explode", 3).speechStart - 0.2 + spread + 0.15,
     smile: N - 0.4,
   };
 

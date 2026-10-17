@@ -46,7 +46,7 @@ export const evLabelSchedule = (tl: EvTimeline): EvSched[] => {
       color: EV_PARTS[id].color,
       t0: ev.labelsIn + k * 0.12,
       t1: ev.labelsOut + 0.35,
-      anchor: (st) => evLabelAnchor(id, st.explode),
+      anchor: (st) => evLabelAnchor(id, st),
       dir: EV_PARTS[id].labelDir,
       small: true,
       dist: 90,

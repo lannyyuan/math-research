@@ -8,7 +8,7 @@ import { Glass } from "../../three/Glass";
 import { makeGlow, makeToon } from "../../three/materials";
 import { Toon } from "../../three/Toon";
 import { meshPhase } from "../../gas-car/mechanics";
-import { CHARGE_CABLE, CHARGE_PORT, CTRL, DC_CABLES, MODULES, MOTOR, PACK, PHASE_CABLES, RED, TERMINAL } from "../layout";
+import { CHARGE_CABLE, CHARGE_PORT, CTRL, DC_CABLES, JUNCTION, MODULES, MOTOR, PACK, PHASE_CABLES, PLUGS, RED, TERMINAL } from "../layout";
 
 type HL = { readonly highlight: number; readonly t: number };
 
@@ -32,7 +32,7 @@ export const BatteryPack: React.FC<HL & { readonly modules: number[]; readonly g
       module: rbox(m0.w, 0.085, m0.d, 0.012),
       cells: mergeGeometries(cells),
       glowBox: rbox(PACK.x1 - PACK.x0 + 0.06, PACK.y1 - PACK.y0 + 0.05, PACK.z1 - PACK.z0 + 0.06, 0.05),
-      junction: rbox(0.08, 0.07, 0.16, 0.015),
+      junction: rbox(JUNCTION.x1 - JUNCTION.x0, JUNCTION.h * 2, JUNCTION.d * 2, 0.015),
     };
   }, []);
   const glowMat = useMemo(() => makeGlow(COLORS.batteryGlow, 0.3), []);
@@ -52,7 +52,7 @@ export const BatteryPack: React.FC<HL & { readonly modules: number[]; readonly g
         );
       })}
       <Glass geometry={g.lid} color="#9EE6C0" opacity={0.18} highlight={highlight} t={t} position={[cx, (PACK.y0 + PACK.y1) / 2, 0]} />
-      <Toon geometry={g.junction} color="#2B7D58" highlight={highlight} t={t} position={[PACK.x1 + 0.01, 0.335, 0.15]} />
+      <Toon geometry={g.junction} color="#2B7D58" highlight={highlight} t={t} position={[(JUNCTION.x0 + JUNCTION.x1) / 2, JUNCTION.y, JUNCTION.z]} />
       {glow > 0.01 ? <mesh geometry={g.glowBox} material={glowMat} position={[cx, (PACK.y0 + PACK.y1) / 2, 0]} renderOrder={30} /> : null}
     </group>
   );
@@ -67,6 +67,19 @@ export const Harness: React.FC<HL> = ({ highlight, t }) => {
       charge: tubeAlong(CHARGE_CABLE, 0.012, 0.08, 48),
       port: cylZ(0.055, 0.03, 24),
       plug: cylZ(0.03, 0.02, 20),
+      // every cable ends in a connector shell that sits flush on its host's face
+      shells: PLUGS.map((p) => {
+        const dx = p.b[0] - p.a[0];
+        const dy = p.b[1] - p.a[1];
+        const dz = p.b[2] - p.a[2];
+        const L = Math.hypot(dx, dy, dz);
+        const geo = cylY(p.r, L, 18);
+        // cylY runs along +Y; turn it onto the plug's axis
+        if (Math.abs(dx) > 1e-6) geo.rotateZ(-Math.sign(dx) * Math.PI / 2);
+        else if (Math.abs(dz) > 1e-6) geo.rotateX(Math.sign(dz) * Math.PI / 2);
+        geo.translate((p.a[0] + p.b[0]) / 2, (p.a[1] + p.b[1]) / 2, (p.a[2] + p.b[2]) / 2);
+        return geo;
+      }),
     }),
     [],
   );
@@ -79,6 +92,9 @@ export const Harness: React.FC<HL> = ({ highlight, t }) => {
         <Toon key={`p${i}`} geometry={geo} color={COLORS.hvCable} highlight={highlight} t={t} outlineMode="normal" outline={0.003} />
       ))}
       <Toon geometry={g.charge} color={COLORS.hvCable} highlight={highlight} t={t} outlineMode="normal" outline={0.004} />
+      {g.shells.map((geo, i) => (
+        <Toon key={`s${i}`} geometry={geo} color="#4A5568" highlight={highlight * 0.6} t={t} outline={0.003} />
+      ))}
       <Toon geometry={g.port} color={COLORS.controller} highlight={highlight} t={t} position={CHARGE_PORT} />
       <Toon geometry={g.plug} color={COLORS.controllerLed} outline={0} position={[CHARGE_PORT[0], CHARGE_PORT[1], CHARGE_PORT[2] + 0.02]} />
     </group>
@@ -192,7 +208,7 @@ export const Motor: React.FC<HL & { readonly rotor: number; readonly current: nu
       rotor: cylZ(MOTOR.rotorR - 0.012, coreLen, 40),
       mags,
       shaft: cylZ(0.016, MOTOR.z1 + 0.05 - (RED.gearZ - 0.03), 20),
-      terminal: rbox(0.05, 0.035, 0.22, 0.01),
+      terminal: rbox(TERMINAL.x1 - TERMINAL.x0, TERMINAL.y1 - TERMINAL.y0, TERMINAL.z1 - TERMINAL.z0, 0.01),
       speed: torusZ(MOTOR.r + 0.03, 0.009, 1.05),
       speed2: torusZ(MOTOR.r + 0.055, 0.007, 0.7),
       slots: Array.from({ length: n }, (_, i) => (i * 2 * Math.PI) / n),
@@ -233,7 +249,7 @@ export const Motor: React.FC<HL & { readonly rotor: number; readonly current: nu
         ))}
         <Toon geometry={g.shaft} color={COLORS.shaft} outline={0.003} position={[0, 0, (MOTOR.z1 + 0.05 + RED.gearZ - 0.03) / 2]} />
       </group>
-      <Toon geometry={g.terminal} color="#3E5F86" highlight={highlight * 0.5} t={t} position={[TERMINAL.x - MOTOR.x, TERMINAL.y - MOTOR.y, 0.14]} rotation={[0, 0, -Math.PI / 4]} />
+      <Toon geometry={g.terminal} color="#3E5F86" highlight={highlight * 0.5} t={t} position={[TERMINAL.x - MOTOR.x, (TERMINAL.y0 + TERMINAL.y1) / 2 - MOTOR.y, (TERMINAL.z0 + TERMINAL.z1) / 2]} />
       {speedLines > 0.01
         ? speedMats.map((m, k) => (
             <group key={k} position={[0, 0, MOTOR.z1 + 0.035]} rotation={[0, 0, rotor + (k * 2 * Math.PI) / 3]}>
