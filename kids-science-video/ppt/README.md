@@ -10,7 +10,7 @@
 | `build.js` | pptxgenjs 生成整份课件（主题、版式、分节、讲稿） |
 | `fullscreen.py` | 给每个零件页的小视频加上“单击播放 + 全屏播放”的动画时序 |
 
-运行时的工作目录还需要：`img/`（两份原稿 PPT 每页导出的 2560×1440 图片和备注）、`clips/`（按 `clips.tsv` 用 ffmpeg 从 `deliverables/*_narrated.mp4` 切出的 1280×720 片段和封面），以及三段完整视频 `gas-car.mp4`、`electric-car.mp4`、`compare.mp4`。原稿图片不在仓库里。
+运行时的工作目录还需要：`img/`（两份原稿 PPT 每页导出的 2560×1440 图片和备注，以及最后一页用的小汽车图标 `icon-ev.png` / `icon-grey.png`）、`clips/`（按 `clips.tsv` 用 ffmpeg 从 `deliverables/*_narrated.mp4` 切出的 1280×720 片段和封面），以及三段完整视频 `gas-car.mp4`、`electric-car.mp4`、`compare.mp4`。原稿图片不在仓库里。
 
 ```bash
 python3 free.py car1 … ev7 && python3 place.py

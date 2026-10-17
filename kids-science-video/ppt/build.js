@@ -117,74 +117,129 @@ videoSlide({
 for (const i of [1, 2, 3, 7])
   pageSlide(`ev${i}`, "电动车", i === 7 ? "动画里没有单独讲回收刹车，可以这样讲：踩刹车时，电机反过来变成“发电机”，车轮带着它转，发出的电又存回电池。" : "");
 
-// ---------------------------------------------------------------- compare video
+// ======================================================================
+// The last three slides: compare, structure PK, China milestones.
+// ======================================================================
+const T = (s, text, o) => s.addText(text, { margin: 0, isTextBox: true, color: HEX.ink, ...o });
+const panel = (s, x, y, w, h, fill, name) =>
+  s.addShape(pres.ShapeType.roundRect, { x, y, w, h, rectRadius: 0.2, fill: { color: fill }, line: { color: fill }, objectName: name });
+const arrow = (s, x, y, w, color, name) =>
+  s.addShape(pres.ShapeType.rightArrow, { x, y, w, h: 0.3, fill: { color }, line: { color }, objectName: name });
+const LIGHT = { orange: "FCE6D2", green: "DDF2E5", brownSoft: "D9B79F", grey: "D8D3CA" };
+
+// ---------------------------------------------------------------- 15 比一比：零件数
 pres.addSection({ title: "比一比" });
 {
   const s = pres.addSlide({ masterName: "CARD", sectionTitle: "比一比" });
-  s.addText("比一比：把两辆车拆开看看", { placeholder: "title" });
-  chip(s, 0.94, 1.65, 5.6, 0.62, "汽油车：零件云，会动的零件 ≈ 2000+", HEX.orange, "gasChip");
-  chip(s, 6.79, 1.65, 5.6, 0.62, "电动车：几个大块，会动的零件 ≈ 20", HEX.green, "evChip");
-  s.addMedia({ type: "video", path: P("compare.mp4"), cover: b64("poster-compare.jpg"), x: 0.94, y: 2.45, w: 11.45, h: 3.22, objectName: "compareVideo" });
-  addBubble(s, 0.94, 5.85, 11.45, 0.95, [
+  s.addText("比一比：会动的零件有多少？", { placeholder: "title" });
+  // left: the side-by-side teardown video
+  s.addMedia({ type: "video", path: P("compare.mp4"), cover: b64("poster-compare.jpg"), x: 0.94, y: 1.6, w: 6.4, h: 3.6, objectName: "compareVideo" });
+  T(s, "▶ 点一下，看两辆车同时拆开（11 秒）", { x: 0.94, y: 5.28, w: 6.4, h: 0.4, fontSize: 15, color: "7A6A5C", objectName: "videoHint" });
+
+  // right: dot pictogram, one dot = 10 moving parts
+  const px = 7.65, pw = 4.74;
+  panel(s, px, 1.6, pw, 4.08, "FFFFFF", "dotsPanel");
+  chip(s, px + 0.22, 1.78, 1.25, 0.42, "汽油车", HEX.orange, "gasChip", 16);
+  T(s, [{ text: "≈ 2000", options: { bold: true, fontSize: 26, color: HEX.orange } }, { text: " 个", options: { fontSize: 16 } }], { x: px + 1.6, y: 1.72, w: 2.9, h: 0.52, valign: "middle", objectName: "gasCount" });
+  const cols = 20, pitch = 0.215, d = 0.15, gx = px + (pw - cols * pitch) / 2 + (pitch - d) / 2, gy = 2.38;
+  for (let i = 0; i < 200; i++)
+    s.addShape(pres.ShapeType.ellipse, { x: gx + (i % cols) * pitch, y: gy + Math.floor(i / cols) * pitch, w: d, h: d, fill: { color: HEX.orange }, line: { color: HEX.orange, width: 0 }, objectName: `gasDot${i}` });
+  const ey = gy + 10 * pitch + 0.2;
+  chip(s, px + 0.22, ey, 1.25, 0.42, "电动车", HEX.green, "evChip", 16);
+  T(s, [{ text: "≈ 20", options: { bold: true, fontSize: 26, color: HEX.green } }, { text: " 个", options: { fontSize: 16 } }], { x: px + 1.6, y: ey - 0.06, w: 1.6, h: 0.52, valign: "middle", objectName: "evCount" });
+  for (let i = 0; i < 2; i++)
+    s.addShape(pres.ShapeType.ellipse, { x: px + 3.0 + i * 0.3, y: ey + 0.12, w: 0.18, h: 0.18, fill: { color: HEX.green }, line: { color: HEX.green, width: 0 }, objectName: `evDot${i}` });
+  T(s, "每个小圆点 = 10 个会动的零件", { x: px + 0.22, y: 5.22, w: pw - 0.44, h: 0.32, fontSize: 13, color: "7A6A5C", align: "right", objectName: "dotLegend" });
+
+  addBubble(s, 0.94, 5.9, 11.45, 0.9, [
     { text: "零件越少，结构越简单：", options: { bold: true } },
-    { text: "更不容易坏、更好修，也更省力气。" },
+    { text: "电动车会动的零件只有汽油车的大约 1/100，更不容易坏、更好修。" },
   ], "takeaway");
-  s.addNotes("同时播放两段“拆车”动画（11 秒，无声，老师讲解）：左边汽油车散开成一片零件云，右边电动车只散开几个大块。请同学们数一数右边有几块：电池包、高压线束、控制器、电机、减速器、半轴、车轮。");
+  s.addNotes("左边播放两辆车同时拆开的动画（11 秒，无声）。右边每个小圆点代表 10 个会动的零件：汽油车的发动机和变速箱里，会动的零件大约 2000 个（200 个圆点）；电动车的电机和减速器，大约 20 个（2 个圆点）。这两个数是常被引用的估算，只算“会转、会滑、会上下跑”的零件，不算螺丝和车身。");
 }
 
-// ---------------------------------------------------------------- structure table
+// ---------------------------------------------------------------- 16 结构大 PK（简化版）
 {
   const s = pres.addSlide({ masterName: "CARD", sectionTitle: "比一比" });
-  s.addText("结构大 PK：电动车简单在哪里？", { placeholder: "title" });
-  const rows = [
-    ["能量", "油箱装汽油", "电池包存电"],
-    ["动力", "发动机：4 个活塞上下跑，好多零件一起配合", "电机：一通电就转，只有定子和转子"],
-    ["换挡", "变速箱：要在好几个挡之间换来换去", "单速减速器：1 个挡就够用"],
-    ["保养", "要换机油，还要散热器帮忙降温", "不用换机油"],
-    ["尾气", "排气管冒出尾气", "没有排气管，不冒烟"],
-    ["刹车", "刹车时，力气变成热，白白浪费", "回收刹车：把力气变回电，存进电池"],
-  ];
-  const head = (t, fill) => ({ text: t, options: { bold: true, color: HEX.white, fill: { color: fill }, align: "center", fontSize: 18 } });
-  const table = [[head("", HEX.brown), head("汽油车", HEX.orange), head("电动车", HEX.green)]].concat(
-    rows.map((r) => [
-      { text: r[0], options: { bold: true, color: HEX.brown, align: "center", fill: { color: HEX.bubble } } },
-      { text: r[1], options: { fill: { color: "FFF4E8" } } },
-      { text: r[2], options: { fill: { color: "EAF7EE" } } },
-    ]),
+  s.addText("结构大 PK：谁的路更短？", { placeholder: "title" });
+  const row = (y, label, color, light, parts, name) => {
+    chip(s, 0.94, y, 1.3, 0.66, label, color, `${name}Label`, 20);
+    const cw = 1.5, aw = 0.42, gap = 0.1;
+    parts.forEach((p, i) => {
+      const x = 2.5 + i * (cw + aw + 2 * gap);
+      s.addText(p, { x, y, w: cw, h: 0.66, shape: pres.ShapeType.roundRect, rectRadius: 0.15, fill: { color: light }, line: { color, width: 1.5 }, fontSize: 20, bold: true, color: HEX.ink, align: "center", valign: "middle", margin: 0, isTextBox: true, objectName: `${name}${i}` });
+      if (i < parts.length - 1) arrow(s, x + cw + gap, y + 0.18, aw, color, `${name}Arrow${i}`);
+    });
+  };
+  row(1.62, "汽油车", HEX.orange, LIGHT.orange, ["油箱", "发动机", "变速箱", "传动轴", "车轮"], "gas");
+  T(s, "还要帮手：", { x: 2.5, y: 2.45, w: 1.4, h: 0.46, fontSize: 16, color: "7A6A5C", valign: "middle", objectName: "helpersLabel" });
+  ["散热器", "机油", "排气管"].forEach((t, i) =>
+    s.addText(t, { x: 3.85 + i * 1.3, y: 2.45, w: 1.15, h: 0.46, shape: pres.ShapeType.roundRect, rectRadius: 0.12, fill: { color: "FFFFFF" }, line: { color: HEX.orange, width: 1, dashType: "dash" }, fontSize: 16, color: HEX.ink, align: "center", valign: "middle", margin: 0, isTextBox: true, objectName: `helper${i}` }),
   );
-  s.addTable(table, { x: 0.94, y: 1.6, w: 11.45, colW: [1.35, 5.05, 5.05], rowH: 0.62, fontSize: 16, color: HEX.ink, valign: "middle", border: { type: "solid", pt: 1.5, color: HEX.card }, margin: [4, 10, 4, 10], objectName: "pkTable" });
-  addBubble(s, 0.94, 6.08, 11.45, 0.72, [{ text: "电动车 = 简单的三大件（电池 · 电机 · 电控）    汽油车 = 复杂的小工厂", options: { bold: true } }], "summary");
-  s.addNotes("小结：电动车把“发动机 + 多挡变速箱 + 机油 + 排气”这一大套换成了“电池 + 电机 + 电控”三大件。零件少，坏的地方就少；刹车时电机还能反过来发电，把能量存回电池。也可以提醒同学们：电动车需要充电，旧电池要好好回收利用。");
+  row(3.2, "电动车", HEX.green, LIGHT.green, ["电池包", "电控", "电机", "减速器", "车轮"], "ev");
+
+  // energy blocks: 10 shares of energy, how many push the wheels
+  T(s, "10 份力气，有几份用来推车轮？", { x: 0.94, y: 4.35, w: 7.4, h: 0.46, fontSize: 20, bold: true, color: HEX.brown, valign: "middle", objectName: "blocksTitle" });
+  const blocks = (y, label, color, light, solid, maybe, text, name) => {
+    chip(s, 0.94, y, 1.3, 0.56, label, color, `${name}BlocksLabel`, 18);
+    for (let i = 0; i < 10; i++) {
+      const fill = i < solid ? color : i < solid + maybe ? light : "EFEAE2";
+      s.addShape(pres.ShapeType.roundRect, { x: 2.5 + i * 0.5, y: y + 0.04, w: 0.42, h: 0.48, rectRadius: 0.08, fill: { color: fill }, line: { color: fill }, objectName: `${name}Block${i}` });
+    }
+    T(s, text, { x: 7.55, y, w: 1.25, h: 0.56, fontSize: 20, bold: true, valign: "middle", objectName: `${name}BlocksValue` });
+  };
+  blocks(4.98, "汽油车", HEX.orange, "F6C9A0", 2, 1, "2～3 份", "gas");
+  blocks(5.72, "电动车", HEX.green, null, 8, 0, "8 份", "ev");
+
+  s.addText([
+    { text: "电动车：", options: { bold: true, breakLine: true, color: HEX.green } },
+    { text: "路更短，", options: { breakLine: true } },
+    { text: "力气浪费更少！" },
+  ], { x: 8.9, y: 4.45, w: 3.49, h: 1.95, shape: pres.ShapeType.roundRect, rectRadius: 0.22, fill: { color: HEX.bubble }, line: { color: HEX.bubble }, fontSize: 26, bold: true, color: C.text1, align: "center", valign: "middle", margin: 8, isTextBox: true, objectName: "summary" });
+  s.addNotes("上面两行是“动力走的路”：汽油车要经过油箱、发动机、变速箱、传动轴才到车轮，发动机还离不开散热器、机油和排气管这些帮手；电动车是电池包、电控、电机、减速器，再到车轮。\n\n下面的方块：把能量分成 10 份，汽油车只有 2～3 份真正推动车轮，其余大多变成热跑掉了；电动车有差不多 8 份。（美国能源部 fueleconomy.gov：汽油车约 12%–30%，电动车超过 77%。）\n\n可以补充：电动车刹车时，电机还能反过来发电，把力气存回电池（回收刹车）。");
 }
 
-// ---------------------------------------------------------------- China milestones (last slide)
+// ---------------------------------------------------------------- 17 中国汽车（简化版）
 pres.addSection({ title: "中国汽车" });
 {
   const s = pres.addSlide({ masterName: "CARD", sectionTitle: "中国汽车" });
-  s.addText("中国汽车：两个“世界第一”，电动车“过半”", { placeholder: "title" });
-  s.addShape(pres.ShapeType.line, { x: 2.27, y: 2.55, w: 8.79, h: 0, line: { color: HEX.border, width: 3 }, objectName: "timeline" });
-  const items = [
-    { year: "2009", color: HEX.brown, head: "汽车产量世界第一", body: "一年造了 1379 万辆车，超过美国和日本，之后一直保持第一" },
-    { year: "2023", color: HEX.brown, head: "汽车出口世界第一", body: "一年卖到国外 491 万辆，超过日本（442 万辆）" },
-    { year: "2024.7", color: HEX.green, head: "新能源车首次单月过半", body: "这个月卖出的新乘用车里，51.1% 是新能源车" },
-    { year: "2025", color: HEX.green, head: "新能源车全年过半", body: "国内全年卖出的新车里，新能源车比燃油车多" },
-  ];
-  items.forEach((it, i) => {
-    const cx = 2.27 + i * 2.93;
-    s.addShape(pres.ShapeType.ellipse, { x: cx - 0.18, y: 2.37, w: 0.36, h: 0.36, fill: { color: it.color }, line: { color: HEX.white, width: 2 }, objectName: `dot${i}` });
-    s.addText(it.year, { x: cx - 1.4, y: 1.62, w: 2.8, h: 0.65, fontSize: 36, bold: true, color: it.color, align: "center", margin: 0, isTextBox: true, objectName: `year${i}` });
-    s.addText(
-      [
-        { text: it.head, options: { bold: true, fontSize: 16, color: it.color, breakLine: true, paraSpaceAfter: 8 } },
-        { text: it.body, options: { fontSize: 17, color: HEX.ink } },
-      ],
-      { x: cx - 1.38, y: 3.0, w: 2.76, h: 2.45, shape: pres.ShapeType.roundRect, rectRadius: 0.2, fill: { color: it.color === HEX.green ? "EAF7EE" : HEX.bubble }, line: { color: it.color === HEX.green ? "EAF7EE" : HEX.bubble }, valign: "top", margin: [12, 12, 12, 12], isTextBox: true, objectName: `card${i}` },
-    );
+  s.addText("中国汽车：两个“世界第一”", { placeholder: "title" });
+  const py = 1.55, ph = 4.9, ws = [3.3, 3.3, 4.35], xs = [0.94, 4.49, 8.04];
+  const head = (i, year, title, color) => {
+    panel(s, xs[i], py, ws[i], ph, "FFFFFF", `panel${i}`);
+    T(s, year, { x: xs[i] + 0.22, y: py + 0.18, w: 1.5, h: 0.6, fontSize: 32, bold: true, color, valign: "middle", objectName: `year${i}` });
+    T(s, title, { x: xs[i] + 0.22, y: py + 0.78, w: ws[i] - 0.44, h: 0.45, fontSize: 20, bold: true, color, valign: "middle", objectName: `head${i}` });
+  };
+  const caption = (i, text) => T(s, text, { x: xs[i] + 0.22, y: py + ph - 0.85, w: ws[i] - 0.44, h: 0.7, fontSize: 17, valign: "middle", objectName: `caption${i}` });
+  const barOpts = (i, max, colors) => ({
+    x: xs[i] + 0.1, y: py + 1.35, w: ws[i] - 0.2, h: 2.55, barDir: "bar", catAxisOrientation: "maxMin", barGapWidthPct: 50,
+    chartColors: colors, dataLabelPosition: "outEnd", dataLabelFormatCode: '0"万"', valAxisMaxVal: max, valAxisMinVal: 0,
+    catAxisLabelColor: HEX.ink, catAxisLabelFontSize: 17, catAxisLabelFontFace: "+mn-lt", catAxisLineShow: false,
+    valAxisHidden: true, valGridLine: { style: "none" }, catGridLine: { style: "none" },
+    showValue: true, dataLabelFontSize: 15, dataLabelFontFace: "+mn-lt", dataLabelColor: HEX.ink, dataLabelFontBold: true, showLegend: false,
   });
-  s.addText("注：新能源车包括纯电动车和插电混动车。2024 年 7 月为乘用车零售口径（乘联会）；2025 年为国内新车销量口径（中汽协，连出口一起算约 47.9%）；产量、出口数据来自中汽协。", {
-    x: 0.94, y: 5.75, w: 11.45, h: 0.9, fontSize: 12, color: "7A6A5C", margin: 0, valign: "top", isTextBox: true, objectName: "sources",
-  });
-  s.addNotes("2009 年中国汽车产量 1379 万辆，第一次成为世界第一，以后年年第一。2023 年中国出口汽车 491 万辆，超过日本，成为出口第一（2024、2025 年继续第一，2025 年超过 700 万辆）。2024 年 7 月，新能源乘用车的零售量第一次超过一半（51.1%）；2025 年，国内全年新车销量里新能源车超过一半——新能源车第一次在一整年里卖得比燃油车多。数据来源：中国汽车工业协会、乘用车市场信息联席会。");
+
+  head(0, "2009", "造车最多", HEX.brown);
+  s.addChart(pres.ChartType.bar, [{ name: "2009 年造车数量（万辆）", labels: ["中国", "日本", "美国"], values: [1379, 793, 571] }], { ...barOpts(0, 1900, [HEX.brown, "C9C4BA", "C9C4BA"]), objectName: "productionChart" });
+  caption(0, "从这一年起，中国年年造车世界第一。");
+
+  head(1, "2023", "卖到国外最多", HEX.brown);
+  s.addChart(pres.ChartType.bar, [{ name: "2023 年出口（万辆）", labels: ["中国", "日本"], values: [491, 442] }], { ...barOpts(1, 680, [HEX.brown, "C9C4BA"]), barGapWidthPct: 90, objectName: "exportChart" });
+  caption(1, "卖到国外的车，比日本还多。");
+
+  head(2, "2025", "新能源车快到一半", HEX.green);
+  const cw = 0.74, ch = cw * 340 / 600, gap = 0.1, gx = xs[2] + (ws[2] - (5 * cw + 4 * gap)) / 2;
+  for (let i = 0; i < 10; i++)
+    s.addImage({ path: P(`img/icon-${i < 5 ? "ev" : "grey"}.png`), x: gx + (i % 5) * (cw + gap), y: py + 1.55 + Math.floor(i / 5) * (ch + 0.3), w: cw, h: ch, objectName: `car${i}` });
+  const ly = py + 1.55 + 2 * (ch + 0.3) + 0.05;
+  s.addImage({ path: P("img/icon-ev.png"), x: gx, y: ly + 0.06, w: 0.42, h: 0.24, objectName: "legendEv" });
+  T(s, "新能源车", { x: gx + 0.5, y: ly, w: 1.2, h: 0.36, fontSize: 14, color: "7A6A5C", valign: "middle", objectName: "legendEvText" });
+  s.addImage({ path: P("img/icon-grey.png"), x: gx + 1.85, y: ly + 0.06, w: 0.42, h: 0.24, objectName: "legendGas" });
+  T(s, "烧油的车", { x: gx + 2.35, y: ly, w: 1.2, h: 0.36, fontSize: 14, color: "7A6A5C", valign: "middle", objectName: "legendGasText" });
+  caption(2, "10 辆新车，约 5 辆是新能源车。");
+
+  T(s, "数据：中国汽车工业协会、OICA", { x: 0.94, y: 6.6, w: 11.45, h: 0.3, fontSize: 11, color: "7A6A5C", objectName: "sources" });
+  s.addNotes("① 2009 年，中国一年造了 1379 万辆车，超过日本（793 万）和美国（571 万），成为世界第一，到 2025 年已经连续 17 年第一（2025 年 3453 万辆）。\n② 2023 年，中国卖到国外的车有 491 万辆，超过日本（442 万），成为出口世界第一；2025 年出口 710 万辆。\n③ 2025 年，全部新车里新能源车（纯电动 + 插电混动）占 47.9%，差不多一半；只算国内卖出的新车，已经超过一半（国内乘用车 54%）。2020 年这个比例只有 5.4%，五年里涨了快 10 倍。\n数据来源：中国汽车工业协会、OICA。");
 }
 
 (async () => {
